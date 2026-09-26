@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useUserId } from '@/features/auth/lib/auth-provider';
 import { useUpdateProfile } from '@/features/profile/hooks/use-profile';
 import { Screen } from '@/shared/components/screen';
+import { useAppConfig } from '@/shared/hooks/use-app-config';
 import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
 import { Pip } from '@/shared/ui/pip';
@@ -23,6 +24,7 @@ export function DoneScreen() {
   const titleLines = t('onboarding.done.titleStart').split('\n');
   const titleLast = titleLines.pop();
   const reset = useOnboardingStore((state) => state.reset);
+  const { freeEntries } = useAppConfig();
   const setIntent = usePendingIntent((state) => state.set);
   const updateProfile = useUpdateProfile();
   const userId = useUserId();
@@ -39,7 +41,7 @@ export function DoneScreen() {
       // to be confirmed first (sign-in lands here) or the app was closed after
       // a failed save; completeOnboarding is safe to re-run.
       const draft = useOnboardingStore.getState();
-      if (!draft.saved && draft.firstName) await completeOnboarding(userId, draft);
+      if (!draft.saved && draft.firstName) await completeOnboarding(userId, draft, freeEntries);
       await updateProfile.mutateAsync({ onboarded_at: new Date().toISOString() });
       reset();
     } catch {

@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 import { useUserId } from '@/features/auth/lib/auth-provider';
+import { deviceTimeZone } from '@/shared/lib/dates';
 import { restore, snapshot } from '@/shared/lib/optimistic';
 
 import { type Profile, type ProfileUpdate, updateProfile } from '../data/profile-api';
@@ -34,4 +36,14 @@ export function useUpdateProfile() {
     onError: (_error, _patch, context) => restore(client, context?.saved),
     onSuccess: (profile) => client.setQueryData(key, profile),
   });
+}
+
+/** Keeps the profile's time zone in step with the device, so budget months start at local midnight. */
+export function useSyncTimeZone() {
+  const { data: profile } = useProfile();
+  const { mutate } = useUpdateProfile();
+  const zone = deviceTimeZone();
+  useEffect(() => {
+    if (profile && profile.time_zone !== zone) mutate({ time_zone: zone });
+  }, [profile, zone, mutate]);
 }

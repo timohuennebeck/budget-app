@@ -9,7 +9,7 @@ export interface Credentials {
 }
 
 export interface SignUpInput extends Credentials {
-  metadata: { first_name: string; currency: string; locale: string };
+  metadata: { first_name: string; currency: string; locale: string; time_zone: string };
 }
 
 export function useSignIn() {

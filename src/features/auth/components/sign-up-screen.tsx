@@ -12,7 +12,9 @@ import { ONBOARDING_STEPS } from '@/features/onboarding/lib/steps';
 import { profileQueries } from '@/features/profile/data/profile-queries';
 import { GradientPanel } from '@/shared/components/gradient-panel';
 import { Screen } from '@/shared/components/screen';
+import { useAppConfig } from '@/shared/hooks/use-app-config';
 import { cn } from '@/shared/lib/cn';
+import { deviceTimeZone } from '@/shared/lib/dates';
 import { haptics } from '@/shared/lib/haptics';
 import { queryClient } from '@/shared/lib/query-client';
 import { Button } from '@/shared/ui/button';
@@ -46,6 +48,7 @@ function legalLink(kind: LegalKind) {
 export function SignUpScreen() {
   const { t, i18n } = useTranslation();
   const signUp = useSignUp();
+  const { freeEntries } = useAppConfig();
   const { session } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -68,6 +71,7 @@ export function SignUpScreen() {
             first_name: draft.firstName,
             currency: draft.currency,
             locale: i18n.language,
+            time_zone: deviceTimeZone(),
           },
         });
         if (!result.session || !result.user) {
@@ -76,7 +80,7 @@ export function SignUpScreen() {
         }
         userId = result.user.id;
       }
-      await completeOnboarding(userId, draft);
+      await completeOnboarding(userId, draft, freeEntries);
       draft.update({ saved: true });
       await queryClient.invalidateQueries({ queryKey: profileQueries.detail(userId).queryKey });
       haptics.success();

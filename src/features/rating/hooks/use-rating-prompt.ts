@@ -1,27 +1,17 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-
-import { useEntryDates } from '@/features/entries/hooks/use-entries';
-import { persistStorage } from '@/shared/lib/storage';
+import { useEntryStats } from '@/features/entries/hooks/use-entries';
+import { useProfile, useUpdateProfile } from '@/features/profile/hooks/use-profile';
 
 const ENTRIES_BEFORE_ASKING = 10;
 
-interface RatingState {
-  asked: boolean;
-  markAsked: () => void;
-}
-
-const useRatingStore = create<RatingState>()(
-  persist((set) => ({ asked: false, markAsked: () => set({ asked: true }) }), {
-    name: 'looop-rating',
-    storage: persistStorage,
-  }),
-);
-
-/** Ask for a rating once, after the user has captured a few entries. */
+/** Ask for a rating once per account, after the user has captured a few entries. */
 export function useRatingPrompt() {
-  const asked = useRatingStore((state) => state.asked);
-  const markAsked = useRatingStore((state) => state.markAsked);
-  const { data: dates = [] } = useEntryDates(!asked);
-  return { shouldAsk: !asked && dates.length >= ENTRIES_BEFORE_ASKING, markAsked };
+  const { data: profile } = useProfile();
+  const updateProfile = useUpdateProfile();
+  const asked = !profile || !!profile.rating_prompted_at;
+  const { data: stats } = useEntryStats(!asked);
+
+  return {
+    shouldAsk: !asked && (stats?.total ?? 0) >= ENTRIES_BEFORE_ASKING,
+    markAsked: () => updateProfile.mutate({ rating_prompted_at: new Date().toISOString() }),
+  };
 }

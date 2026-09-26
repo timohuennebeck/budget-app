@@ -11,7 +11,10 @@ import { SpendBar } from '@/features/budgets/components/spend-bar';
 import { summarizeBudget } from '@/features/budgets/lib/budget-summary';
 import { CheckInCard } from '@/features/check-in/components/check-in-card';
 import type { Category } from '@/features/categories/data/categories-api';
-import { useCategories, useSetCategoryLimit } from '@/features/categories/hooks/use-categories';
+import {
+  useActiveCategories,
+  useSetCategoryLimit,
+} from '@/features/categories/hooks/use-categories';
 import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
 import { EntryList } from '@/features/entries/components/entry-list';
 import { useEntries, useRecentEntries } from '@/features/entries/hooks/use-entries';
@@ -40,7 +43,7 @@ export function OverviewScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { data: profile } = useProfile();
-  const { data: categories = [] } = useCategories();
+  const { data: categories = [] } = useActiveCategories();
   const lookup = useCategoryLookup();
   const cycle = budgetCycle(new Date(), profile?.month_start_day ?? 1);
   const { data: entries = [] } = useEntries(cycle);

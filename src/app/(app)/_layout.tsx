@@ -1,10 +1,13 @@
 import { Stack } from 'expo-router';
 
+import { useSyncTimeZone } from '@/features/profile/hooks/use-profile';
+
 export const unstable_settings = { anchor: '(tabs)' };
 
 const fromBottom = { animation: 'slide_from_bottom' } as const;
 
 export default function AppLayout() {
+  useSyncTimeZone();
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />

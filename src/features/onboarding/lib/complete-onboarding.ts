@@ -10,6 +10,7 @@ import { categoryName } from '@/features/categories/lib/category-name';
 import { hasEntries, insertEntries } from '@/features/entries/data/entries-api';
 import { acceptLegalDocuments } from '@/features/legal/data/legal-api';
 import { updateProfile } from '@/features/profile/data/profile-api';
+import { deviceTimeZone } from '@/shared/lib/dates';
 
 import type { OnboardingDraft } from '../data/onboarding-store';
 
@@ -17,13 +18,19 @@ import type { OnboardingDraft } from '../data/onboarding-store';
 // answers, chosen categories with limits, the first captured entries and
 // the accepted legal documents. Runs right after sign-up and is safe to
 // re-run when a previous attempt failed halfway (nothing is inserted twice).
-export async function completeOnboarding(userId: string, draft: OnboardingDraft) {
+// Only the first `freeEntries` drafts are saved: the database rejects more.
+export async function completeOnboarding(
+  userId: string,
+  draft: OnboardingDraft,
+  freeEntries: number,
+) {
   const locale = i18n.language;
 
   await updateProfile(userId, {
     first_name: draft.firstName,
     currency: draft.currency,
     locale,
+    time_zone: deviceTimeZone(),
     birth_date: draft.birthDate,
     budget_mode: draft.budgetMode,
     monthly_budget: draft.budgetMode === 'monthly' ? draft.monthlyBudget : null,
@@ -67,7 +74,7 @@ export async function completeOnboarding(userId: string, draft: OnboardingDraft)
 
   if (draft.entries.length && !(await hasEntries())) {
     await insertEntries(
-      draft.entries.map((entry) => ({
+      draft.entries.slice(0, freeEntries).map((entry) => ({
         profile_id: userId,
         title: entry.title,
         amount: entry.amount,

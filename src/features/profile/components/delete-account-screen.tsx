@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next';
 
 import { useDeleteAccount } from '@/features/auth/hooks/use-auth-actions';
 import { useCategories } from '@/features/categories/hooks/use-categories';
-import { useEntryDates } from '@/features/entries/hooks/use-entries';
+import { useEntryStats } from '@/features/entries/hooks/use-entries';
 import { streakDays } from '@/features/entries/lib/entry-stats';
+import { hasPlus } from '@/features/paywall/lib/plus';
 import { cancelReminders } from '@/features/reminders/lib/reminders';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
@@ -21,7 +22,7 @@ import { useProfile } from '../hooks/use-profile';
 export function DeleteAccountScreen() {
   const { t } = useTranslation();
   const { data: profile } = useProfile();
-  const { data: dates = [] } = useEntryDates();
+  const { data: stats } = useEntryStats();
   const { data: categories = [] } = useCategories();
   const deleteAccount = useDeleteAccount();
 
@@ -61,12 +62,12 @@ export function DeleteAccountScreen() {
         pipSize={212}
         title={t('profile.deleteTitle', { name: profile?.first_name ?? '' })}
         subtitle={t('profile.deleteSubtitle', {
-          entries: dates.length,
-          streak: streakDays(dates),
+          entries: stats?.total ?? 0,
+          streak: streakDays(stats?.recentDates ?? []),
           categories: categories.length,
         })}
       />
-      {profile?.plan === 'plus' ? (
+      {hasPlus(profile) ? (
         <View className="mt-[22px] flex-row items-start gap-[11px] rounded-[20px] bg-primary-tint px-4 py-3.5">
           <InfoBadge variant="solid" />
           <Text size={14} leading={1.45} className="flex-1 text-ink-soft">

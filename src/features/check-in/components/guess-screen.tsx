@@ -26,12 +26,22 @@ export function GuessScreen() {
   const state = useCheckInState();
   // The stepper starts at the anchor, so wait until last week is known.
   if (state.isLoading) return null;
-  return <GuessForm window={state.window} previous={state.previous} actual={state.actual} />;
+  return (
+    <GuessForm
+      window={state.window}
+      previous={state.previous}
+      actual={state.actual}
+      expenseCount={state.expenseCount}
+    />
+  );
 }
 
-type GuessFormProps = Pick<ReturnType<typeof useCheckInState>, 'window' | 'previous' | 'actual'>;
+type GuessFormProps = Pick<
+  ReturnType<typeof useCheckInState>,
+  'window' | 'previous' | 'actual' | 'expenseCount'
+>;
 
-function GuessForm({ window, previous, actual }: GuessFormProps) {
+function GuessForm({ window, previous, actual, expenseCount }: GuessFormProps) {
   const { t } = useTranslation();
   const { data: profile } = useProfile();
   const save = useSaveCheckIn();
@@ -45,13 +55,25 @@ function GuessForm({ window, previous, actual }: GuessFormProps) {
   const lastAccuracy = previous ? accuracyPercent(previous) : null;
 
   const reveal = () => {
-    save.mutate({ week_start: weekStart, guess, actual, skipped: false });
+    save.mutate({
+      week_start: weekStart,
+      guess,
+      actual,
+      skipped: false,
+      expense_count: expenseCount,
+    });
     haptics.success();
     router.replace('/check-in/result');
   };
 
   const skip = () => {
-    save.mutate({ week_start: weekStart, guess: null, actual, skipped: true });
+    save.mutate({
+      week_start: weekStart,
+      guess: null,
+      actual,
+      skipped: true,
+      expense_count: expenseCount,
+    });
     router.dismissAll();
   };
 

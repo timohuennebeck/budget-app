@@ -6,6 +6,7 @@ import { restore, snapshot } from '@/shared/lib/optimistic';
 
 import { type CheckIn, saveCheckIn } from '../data/check-ins-api';
 import { checkInQueries } from '../data/check-ins-queries';
+import { checkInAccuracy } from '../lib/check-in-window';
 
 const listKey = checkInQueries.list.queryKey;
 
@@ -13,7 +14,7 @@ export function useCheckIns() {
   return useQuery(checkInQueries.list);
 }
 
-type CheckInSave = Omit<TablesInsert<'weekly_check_ins'>, 'profile_id'>;
+type CheckInSave = Omit<TablesInsert<'check_ins'>, 'profile_id'>;
 
 /** Upserts this week's check-in; the result screen can read it right away. */
 export function useSaveCheckIn() {
@@ -32,10 +33,13 @@ export function useSaveCheckIn() {
           guess: null,
           actual: null,
           skipped: false,
+          expense_count: 0,
           ...current,
           ...row,
           profile_id: userId,
+          closeness: null,
         };
+        next.closeness = checkInAccuracy(next);
         const others = list.filter((checkIn) => checkIn.week_start !== row.week_start);
         return [next, ...others].sort((a, b) => b.week_start.localeCompare(a.week_start));
       });

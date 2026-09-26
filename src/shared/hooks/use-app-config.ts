@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabase';
 
 export interface AppConfig {
-  freeMonthlyEntries: number;
+  freeEntries: number;
   checkInMinEntries: number;
   checkInCloseRatio: number;
   plusPricing: { monthly: number; yearly: number; trialDays: number };
@@ -14,7 +14,7 @@ export interface AppConfig {
 
 // Used until the app_config table has loaded (and when offline).
 const defaultAppConfig: AppConfig = {
-  freeMonthlyEntries: 15,
+  freeEntries: 15,
   checkInMinEntries: 3,
   checkInCloseRatio: 0.85,
   plusPricing: { monthly: 6.99, yearly: 59.88, trialDays: 7 },
@@ -29,7 +29,7 @@ async function fetchAppConfig(): Promise<AppConfig> {
   const pricing = values.plus_pricing ?? {};
 
   return {
-    freeMonthlyEntries: Number(values.free_monthly_entries ?? defaultAppConfig.freeMonthlyEntries),
+    freeEntries: Number(values.free_entries ?? defaultAppConfig.freeEntries),
     checkInMinEntries: Number(values.check_in_min_entries ?? defaultAppConfig.checkInMinEntries),
     checkInCloseRatio: Number(values.check_in_close_ratio ?? defaultAppConfig.checkInCloseRatio),
     plusPricing: {

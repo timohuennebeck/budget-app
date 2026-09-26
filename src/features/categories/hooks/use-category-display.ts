@@ -17,23 +17,26 @@ export interface CategoryDisplay {
   keywords: string[];
 }
 
-/** The signed-in user's categories, translated and with parser keywords. */
-export function useAppCategoryDisplays(enabled = true): CategoryDisplay[] {
+/** The signed-in user's categories, translated and with parser keywords. Archived
+ * ones are left out unless `includeArchived` (old entries still show them). */
+export function useAppCategoryDisplays(enabled = true, includeArchived = false): CategoryDisplay[] {
   const { data } = useCategories(enabled);
   const { i18n } = useTranslation();
   return useMemo(
     () =>
-      (data ?? []).map((category) => ({
-        id: category.id,
-        key: category.key,
-        name: categoryName(category),
-        icon: category.icon,
-        hue: category.hue,
-        keywords: findCatalogCategory(category.key)?.keywords ?? [],
-      })),
+      (data ?? [])
+        .filter((category) => includeArchived || !category.archived_at)
+        .map((category) => ({
+          id: category.id,
+          key: category.key,
+          name: categoryName(category),
+          icon: category.icon,
+          hue: category.hue,
+          keywords: findCatalogCategory(category.key)?.keywords ?? [],
+        })),
     // Re-translate when the language changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data, i18n.language],
+    [data, includeArchived, i18n.language],
   );
 }
 

@@ -23,21 +23,32 @@ export async function fetchEntry(id: string) {
   return data;
 }
 
-/** Only the timestamps of every entry, for streaks and totals. */
-export async function fetchEntryDates() {
-  const { data, error } = await supabase.from('entries').select('occurred_at');
-  if (error) throw error;
-  return data.map((row) => new Date(row.occurred_at));
+const STREAK_WINDOW_DAYS = 60;
+
+/** Total number of entries and the dates of the last 60 days, for streaks. */
+export async function fetchEntryStats() {
+  const since = new Date(Date.now() - STREAK_WINDOW_DAYS * 86_400_000);
+  const [total, recent] = await Promise.all([
+    supabase.from('entries').select('id', { count: 'exact', head: true }),
+    supabase.from('entries').select('occurred_at').gte('occurred_at', since.toISOString()),
+  ]);
+  if (total.error) throw total.error;
+  if (recent.error) throw recent.error;
+  return {
+    total: total.count ?? 0,
+    recentDates: recent.data.map((row) => new Date(row.occurred_at)),
+  };
 }
 
-export async function countEntries({ start, end }: DateRange) {
-  const { count, error } = await supabase
-    .from('entries')
-    .select('id', { count: 'exact', head: true })
-    .gte('created_at', start.toISOString())
-    .lt('created_at', end.toISOString());
+/** Entries used in the budget month starting on `cycleStart` (YYYY-MM-DD). */
+export async function fetchEntriesAllowance(cycleStart: string) {
+  const { data, error } = await supabase
+    .from('entries_allowance')
+    .select('used')
+    .eq('cycle_start', cycleStart)
+    .maybeSingle();
   if (error) throw error;
-  return count ?? 0;
+  return data?.used ?? 0;
 }
 
 /** Whether the signed-in user has saved any entry yet. */

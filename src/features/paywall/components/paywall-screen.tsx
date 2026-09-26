@@ -24,7 +24,7 @@ const FEATURES = [
 /** Looop Plus paywall (2g). `onClose` runs after dismissing or subscribing. */
 export function PaywallScreen({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
-  const { plusPricing, freeMonthlyEntries } = useAppConfig();
+  const { plusPricing, freeEntries } = useAppConfig();
   const [plan, setPlan] = useState<PlanId>('yearly');
   const trial = useStartTrial();
   const restore = useRestorePurchases();
@@ -74,7 +74,7 @@ export function PaywallScreen({ onClose }: { onClose: () => void }) {
         {t('paywall.titleEnd')}
       </Text>
       <Text size={15} leading={1.42} className="mt-[9px] text-muted-soft">
-        {t('paywall.free', { count: freeMonthlyEntries })}
+        {t('paywall.free', { count: freeEntries })}
       </Text>
       <View className="mt-4 gap-[11px]">
         {FEATURES.map((key) => (

@@ -1,4 +1,5 @@
 import { MutationCache, QueryClient } from '@tanstack/react-query';
+import { router } from 'expo-router';
 import { Alert } from 'react-native';
 
 import i18n from '@/shared/i18n';
@@ -20,8 +21,10 @@ export const queryClient = new QueryClient({
   },
   // Optimistic mutations roll themselves back; tell the user it didn't stick.
   mutationCache: new MutationCache({
-    onError: (_error, _variables, _context, mutation) => {
+    onError: (error, _variables, _context, mutation) => {
       if (!mutation.meta?.optimistic) return;
+      // The database enforces the free plan; show the limit screen, not an error.
+      if (error.message.includes('entry_limit_reached')) return router.push('/limit');
       haptics.error();
       Alert.alert(i18n.t('common.saveFailedTitle'), i18n.t('common.saveFailedMessage'));
     },

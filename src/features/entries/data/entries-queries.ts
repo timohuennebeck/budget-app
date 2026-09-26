@@ -3,7 +3,13 @@ import type { QueryClient } from '@tanstack/react-query';
 
 import type { DateRange } from '@/shared/lib/dates';
 
-import { countEntries, type Entry, fetchEntries, fetchEntry, fetchEntryDates } from './entries-api';
+import {
+  type Entry,
+  fetchEntries,
+  fetchEntriesAllowance,
+  fetchEntry,
+  fetchEntryStats,
+} from './entries-api';
 
 export const entryQueries = createQueryKeys('entries', {
   range: ({ start, end }: DateRange) => ({
@@ -11,10 +17,10 @@ export const entryQueries = createQueryKeys('entries', {
     queryFn: () => fetchEntries({ start, end }),
   }),
   detail: (id: string) => ({ queryKey: [id], queryFn: () => fetchEntry(id) }),
-  dates: { queryKey: null, queryFn: fetchEntryDates },
-  count: (cycle: DateRange) => ({
-    queryKey: [cycle.start.toISOString()],
-    queryFn: () => countEntries(cycle),
+  stats: { queryKey: null, queryFn: fetchEntryStats },
+  allowance: (cycleStart: string) => ({
+    queryKey: [cycleStart],
+    queryFn: () => fetchEntriesAllowance(cycleStart),
   }),
 });
 

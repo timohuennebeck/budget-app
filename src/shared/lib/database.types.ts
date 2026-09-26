@@ -31,6 +31,7 @@ export type Database = {
       };
       categories: {
         Row: {
+          archived_at: string | null;
           created_at: string;
           hue: number;
           icon: string;
@@ -42,6 +43,7 @@ export type Database = {
           sort_order: number;
         };
         Insert: {
+          archived_at?: string | null;
           created_at?: string;
           hue: number;
           icon: string;
@@ -53,6 +55,7 @@ export type Database = {
           sort_order?: number;
         };
         Update: {
+          archived_at?: string | null;
           created_at?: string;
           hue?: number;
           icon?: string;
@@ -179,10 +182,12 @@ export type Database = {
           month_start_day: number;
           monthly_budget: number | null;
           onboarded_at: string | null;
-          plan: Database['public']['Enums']['subscription_plan'];
+          plus_expires_at: string | null;
+          rating_prompted_at: string | null;
           reminder_enabled: boolean;
           reminder_repeat: Database['public']['Enums']['reminder_repeat'];
           reminder_time: string;
+          time_zone: string;
           updated_at: string;
         };
         Insert: {
@@ -196,10 +201,12 @@ export type Database = {
           month_start_day?: number;
           monthly_budget?: number | null;
           onboarded_at?: string | null;
-          plan?: Database['public']['Enums']['subscription_plan'];
+          plus_expires_at?: string | null;
+          rating_prompted_at?: string | null;
           reminder_enabled?: boolean;
           reminder_repeat?: Database['public']['Enums']['reminder_repeat'];
           reminder_time?: string;
+          time_zone?: string;
           updated_at?: string;
         };
         Update: {
@@ -213,18 +220,22 @@ export type Database = {
           month_start_day?: number;
           monthly_budget?: number | null;
           onboarded_at?: string | null;
-          plan?: Database['public']['Enums']['subscription_plan'];
+          plus_expires_at?: string | null;
+          rating_prompted_at?: string | null;
           reminder_enabled?: boolean;
           reminder_repeat?: Database['public']['Enums']['reminder_repeat'];
           reminder_time?: string;
+          time_zone?: string;
           updated_at?: string;
         };
         Relationships: [];
       };
-      weekly_check_ins: {
+      check_ins: {
         Row: {
           actual: number | null;
+          closeness: number | null;
           created_at: string;
+          expense_count: number;
           guess: number | null;
           id: string;
           profile_id: string;
@@ -234,6 +245,7 @@ export type Database = {
         Insert: {
           actual?: number | null;
           created_at?: string;
+          expense_count?: number;
           guess?: number | null;
           id?: string;
           profile_id: string;
@@ -243,11 +255,30 @@ export type Database = {
         Update: {
           actual?: number | null;
           created_at?: string;
+          expense_count?: number;
           guess?: number | null;
           id?: string;
           profile_id?: string;
           skipped?: boolean;
           week_start?: string;
+        };
+        Relationships: [];
+      };
+      entries_allowance: {
+        Row: {
+          cycle_start: string;
+          profile_id: string;
+          used: number;
+        };
+        Insert: {
+          cycle_start: string;
+          profile_id: string;
+          used?: number;
+        };
+        Update: {
+          cycle_start?: string;
+          profile_id?: string;
+          used?: number;
         };
         Relationships: [];
       };
@@ -263,7 +294,6 @@ export type Database = {
       legal_doc_kind: 'terms' | 'privacy';
       platform: 'ios' | 'android' | 'web';
       reminder_repeat: 'daily' | 'weekdays';
-      subscription_plan: 'free' | 'plus';
     };
     CompositeTypes: { [_ in never]: never };
   };

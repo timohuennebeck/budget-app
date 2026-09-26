@@ -1,13 +1,5 @@
--- Local development seed: app config, placeholder legal documents and a demo
+-- Local development seed: placeholder legal documents and a demo
 -- account (timo@mail.de / looop1234) filled with the entries from the design.
-
-insert into public.app_config (key, value, description) values
-  ('free_monthly_entries', '15', 'Entries a free user can capture per budget month'),
-  ('check_in_min_entries', '3', 'Entries needed in a week before the check-in compares numbers'),
-  ('check_in_close_ratio', '0.85', 'Accuracy from which a weekly guess counts as close'),
-  ('plus_pricing', '{"monthly": 6.99, "yearly": 59.88, "trial_days": 7}', 'Looop Plus prices shown on the paywall (EUR)'),
-  ('peer_averages', '{"monthly": 1150, "categories": {"groceries": 290, "dining": 110, "cafe": 35, "shopping": 140, "transport": 60, "drugstore": 45, "health": 40, "leisure": 80}}', 'Average monthly spend of people the same age, used as budget hints'),
-  ('support_email', '"hilfe@looop.app"', 'Address opened by Profil › Hilfe');
 
 insert into public.legal_documents (kind, locale, version, content_md, effective_at)
 select kind, locale, '2026-09-15',
@@ -53,6 +45,7 @@ begin
     budget_mode = 'per_category',
     monthly_budget = 3200,
     birth_date = '1994-09-14',
+    time_zone = 'Europe/Berlin',
     reminder_enabled = true,
     onboarded_at = now()
   where id = demo_id;

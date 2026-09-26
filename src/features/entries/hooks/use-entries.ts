@@ -1,7 +1,7 @@
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useUserId } from '@/features/auth/lib/auth-provider';
-import { addDays, budgetCycle, type DateRange, startOfDay } from '@/shared/lib/dates';
+import { addDays, budgetCycle, type DateRange, startOfDay, toISODate } from '@/shared/lib/dates';
 import { restore, snapshot } from '@/shared/lib/optimistic';
 
 import {
@@ -28,13 +28,15 @@ export function useEntry(id: string) {
   return useQuery({ ...entryQueries.detail(id), enabled: !!id });
 }
 
-export function useEntryDates(enabled = true) {
-  return useQuery({ ...entryQueries.dates, enabled });
+/** Total entry count and recent dates, for streaks and the rating prompt. */
+export function useEntryStats(enabled = true) {
+  return useQuery({ ...entryQueries.stats, enabled });
 }
 
-/** Entries created in the current budget month, for the free plan limit. */
-export function useMonthlyEntryCount(monthStartDay = 1) {
-  return useQuery(entryQueries.count(budgetCycle(new Date(), monthStartDay)));
+/** Entries used in the current budget month, as counted by the database. */
+export function useEntriesUsed(monthStartDay = 1) {
+  const cycleStart = toISODate(budgetCycle(new Date(), monthStartDay).start);
+  return useQuery(entryQueries.allowance(cycleStart));
 }
 
 /** New entries carry their id (expo-crypto randomUUID) so the cache can show them at once. */
@@ -79,8 +81,8 @@ export function useCreateEntries() {
         updated_at: now,
       }));
       writeEntryLists(client, [], entries);
-      client.setQueriesData<number>({ queryKey: entryQueries.count._def }, (count) =>
-        count === undefined ? count : count + rows.length,
+      client.setQueriesData<number>({ queryKey: entryQueries.allowance._def }, (used) =>
+        used === undefined ? used : used + rows.length,
       );
     },
   );

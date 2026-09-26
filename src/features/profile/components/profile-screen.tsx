@@ -3,7 +3,7 @@ import { Linking, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useAuth } from '@/features/auth/lib/auth-provider';
-import { useCategories } from '@/features/categories/hooks/use-categories';
+import { useActiveCategories } from '@/features/categories/hooks/use-categories';
 import { useEntriesAllowance } from '@/features/paywall/hooks/use-entries-allowance';
 import { ListGroup, ListRow } from '@/shared/components/list-group';
 import { Screen } from '@/shared/components/screen';
@@ -24,7 +24,7 @@ export function ProfileScreen() {
   const { t } = useTranslation();
   const { session } = useAuth();
   const { data: profile } = useProfile();
-  const { data: categories = [] } = useCategories();
+  const { data: categories = [] } = useActiveCategories();
   const updateProfile = useUpdateProfile();
   const allowance = useEntriesAllowance();
   const { supportEmail } = useAppConfig();

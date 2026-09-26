@@ -1,3 +1,4 @@
+import { getCalendars } from 'expo-localization';
 import i18n, { t } from 'i18next';
 
 export interface DateRange {
@@ -7,6 +8,11 @@ export interface DateRange {
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** IANA time zone of the device, e.g. "Europe/Berlin". */
+export function deviceTimeZone() {
+  return getCalendars()[0]?.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
 
 function locale() {
   return i18n.language || 'en';

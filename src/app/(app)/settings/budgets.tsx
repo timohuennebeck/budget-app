@@ -4,7 +4,10 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { CategoryBudgetsScreen } from '@/features/budgets/components/category-budgets-screen';
-import { useCategories, useSetCategoryLimit } from '@/features/categories/hooks/use-categories';
+import {
+  useActiveCategories,
+  useSetCategoryLimit,
+} from '@/features/categories/hooks/use-categories';
 import { useAppCategoryDisplays } from '@/features/categories/hooks/use-category-display';
 import { useRecentEntries } from '@/features/entries/hooks/use-entries';
 import { spendByCategory } from '@/features/entries/lib/entry-stats';
@@ -16,7 +19,7 @@ import { Button } from '@/shared/ui/button';
 export default function BudgetSettings() {
   const { t } = useTranslation();
   const { data: profile } = useProfile();
-  const { data: categories = [] } = useCategories();
+  const { data: categories = [] } = useActiveCategories();
   const displays = useAppCategoryDisplays();
   const { data: recent = [] } = useRecentEntries();
   const setLimit = useSetCategoryLimit();

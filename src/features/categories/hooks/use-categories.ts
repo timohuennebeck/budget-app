@@ -13,8 +13,16 @@ import { categoryQueries } from '../data/categories-queries';
 
 const listKey = categoryQueries.list.queryKey;
 
+/** All categories, archived ones included, so old entries keep theirs. */
 export function useCategories(enabled = true) {
   return useQuery({ ...categoryQueries.list, enabled });
+}
+
+const withoutArchived = (list: Category[]) => list.filter((category) => !category.archived_at);
+
+/** Categories the user can still pick and budget. */
+export function useActiveCategories(enabled = true) {
+  return useQuery({ ...categoryQueries.list, enabled, select: withoutArchived });
 }
 
 /** New categories carry their id (expo-crypto randomUUID) so the list updates at once. */
@@ -48,6 +56,7 @@ export function useCreateCategory() {
       {
         key: null,
         monthly_limit: null,
+        archived_at: null,
         sort_order: list.length,
         created_at: new Date().toISOString(),
         ...category,
