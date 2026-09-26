@@ -139,37 +139,46 @@ sort_order integer not null
 
 ---
 
-## 4. Notifications
+## 4. Notifications sent to the user
 
-**Goal:** notification settings live in their own table instead of three columns on `profiles`. The table is also ready for server-sent pushes later.
+**Goal:** every notification Looop sends goes through the server and is recorded in one table. Nothing is scheduled on the phone any more.
 
-**Table `notification_settings`** (one row per user and type; the owner can read and write it):
-
-```sql
-profile_id uuid references profiles on delete cascade,
-type notification_type not null,       -- 'daily_reminder' | 'check_in' | 'budget_alert'
-enabled boolean not null default false,
-time time null,                        -- daily_reminder: '20:30'
-repeat reminder_repeat null,           -- daily_reminder: 'daily' | 'weekdays'
-primary key (profile_id, type)
-```
-
-**Table `push_tokens`** (the owner can insert and delete their own):
+**Table `notifications`**, one row per notification to a user:
 
 ```sql
-token text primary key,                -- Expo push token
+id uuid primary key,
 profile_id uuid references profiles on delete cascade,
-platform platform not null,
-updated_at timestamptz not null default now()
+type notification_type not null,   -- 'daily_reminder' | 'check_in_open' | 'check_in_closing'
+                                   -- | 'budget_warning' | 'budget_exceeded' | 'limit_almost_reached'
+title text not null,               -- already in the user's language
+body text not null,
+data jsonb not null default '{}',  -- deep link, e.g. {"url": "looop://capture"}
+status notification_status not null default 'queued',  -- queued | sent | failed | skipped
+scheduled_for timestamptz not null,
+sent_at timestamptz, opened_at timestamptz, error text,
+created_at timestamptz not null default now(),
+unique (profile_id, type, scheduled_for)   -- never the same reminder twice
 ```
 
-- `profiles.reminder_enabled`, `reminder_time` and `reminder_repeat` are removed. The sign-up trigger creates the three setting rows.
-- **Scheduled on the phone** (work offline, no server needed):
-  - `daily_reminder`: the existing "Heute schon was ausgegeben?"
-  - `check_in`: new, Sunday 18:00, "Dein Wochen-Check-in ist offen"
-- **`budget_alert`** ("Budget für Essen gehen überschritten") is stored but not sent yet. It needs server pushes (a scheduled function plus the Expo push service), which come later.
-- **Push tokens** are registered after login only once the app has an EAS project ID. Until then that step is skipped.
-- **Settings screen:** the Profil › Erinnerung screen stays as designed. It gets two extra switches ("Wochen-Check-in", "Budget-Warnungen") under the time picker, in the same style.
+- **Access:** users can read their own rows and set `opened_at`; only the server creates and sends them.
+
+**Supporting tables:**
+
+- `notification_settings`: one row per user and type, with on/off, time and repeat. It replaces the three reminder columns on `profiles`, and the sign-up trigger creates the rows.
+- `push_tokens`: the phone's Expo push token, saved after login.
+
+**How they get sent:**
+
+1. **Queueing:**
+   - A `pg_cron` job runs every 5 minutes and queues everything due, using each user's time zone and settings: the daily reminder at their time, the check-in on Sunday 18:00 and Monday morning.
+   - Budget and limit notifications are queued by a trigger when an entry pushes a category over 80 % or 100 %, or leaves 3 free entries.
+2. **Sending:** an edge function, `send-notifications`, sends the queued rows through Expo's push service (which delivers to Apple and Google) and marks each row `sent` or `failed`. Invalid tokens are deleted.
+3. **Texts:** in all 7 languages, stored in the function. The row keeps the exact text that was sent.
+4. **Tapping:** opening a notification sets `opened_at` and follows the deep link.
+
+**Settings screen:** Profil › Erinnerung stays as designed, plus switches for "Wochen-Check-in" and "Budget-Warnungen" in the same style.
+
+**What you need to do:** push notifications need an EAS project. Run `npx eas-cli init` once in the repo, which adds the project ID to `app.json`. Until then the app can't get a push token, so rows are queued and marked `skipped`, which is still testable.
 
 ---
 
@@ -189,8 +198,8 @@ updated_at timestamptz not null default now()
 
 ## 6. Hosted Supabase project (`budget-app`, eu-west-1)
 
-1. Apply all migrations (schema, entries allowance, captures, category presets, notifications) through the Supabase connector. **No seed:** it contains the demo account and its password.
-2. Deploy `parse-capture` and `transcribe-session` through the connector.
+1. Apply all migrations (schema, entries allowance, captures, category presets, notifications) and enable `pg_cron` through the Supabase connector. **No seed:** it contains the demo account and its password.
+2. Deploy `parse-capture`, `transcribe-session` and `send-notifications` through the connector.
 3. Regenerate `database.types.ts` from the hosted schema and compare it with my hand-written version.
 4. Run the connector's security and performance checks and fix anything they flag.
 
@@ -208,7 +217,7 @@ Same as the first build: a code-simplifier pass and a code-reviewer pass as suba
 
 | Question                              | Default                                                                                                                                                                             |
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Model                                 | `gpt-6-luna` for text and receipts. It's the cheapest; switch via `ai_model` if quality is lacking.                                                                                 |
+| Model                                 | `gpt-6-luna` for text and receipts (your choice); `ai_model` switches it.                                                                                                           |
 | Transcription                         | OpenAI Realtime only, with no on-device fallback. If it's unavailable, the app falls back to typing.                                                                                |
 | One receipt =                         | One entry: shop name and total, with the category guessed from the shop.                                                                                                            |
 | AI during onboarding (before sign-up) | Not yet. Text uses the on-device parser; a receipt photo shows the error screen with "Von Hand eingeben". Enabling it needs Supabase anonymous sign-in, which is a separate change. |
