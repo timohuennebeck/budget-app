@@ -69,7 +69,6 @@ rating_prompted_at timestamptz            -- when we last asked for an App Store
 name text not null check (char_length(name) between 1 and 40)
 icon text not null check (char_length(icon) <= 40)
 archived_at timestamptz                   -- soft delete, keeps past entries intact
-updated_at timestamptz not null default now()
 unique (profile_id, key)
 unique (id, profile_id)                   -- target for the entries composite FK
 ```
@@ -105,7 +104,7 @@ closeness numeric(4,3) generated always as (
   case when guess is null then null
        when actual is null or actual = 0 then case when guess = 0 then 1 else 0 end
        else greatest(0, 1 - abs(actual - guess) / actual) end) stored,
-created_at, updated_at,
+created_at,
 unique (profile_id, week_start)
 ```
 
