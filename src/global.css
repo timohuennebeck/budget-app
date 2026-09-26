@@ -1,0 +1,41 @@
+@import 'tailwindcss';
+@import 'uniwind';
+
+@theme {
+  --font-inter: 'Inter_400Regular';
+  --font-inter-medium: 'Inter_500Medium';
+  --font-inter-semibold: 'Inter_600SemiBold';
+  --font-inter-bold: 'Inter_700Bold';
+
+  --color-primary: #2f7cf6;
+  --color-primary-dark: #1f63d6;
+  --color-primary-soft: #dce8fc;
+  --color-primary-tint: #eaf2fe;
+  --color-primary-wash: #eff5ff;
+  --color-primary-mark: #d6e5fc;
+
+  --color-ink: #15181f;
+  --color-ink-soft: #3e4553;
+  --color-muted: #5e6676;
+  --color-muted-soft: #72798a;
+  --color-subtle: #8a92a3;
+  --color-faint: #a3abba;
+  --color-chevron: #b5bcc9;
+
+  --color-canvas: #f7f9fc;
+  --color-surface: #ffffff;
+  --color-field: #eef2f8;
+  --color-line: #edf1f6;
+  --color-line-strong: #e3e8f1;
+  --color-grabber: #d5dae3;
+  --color-dot: #d3d9e3;
+
+  --color-danger: #c92f33;
+  --color-danger-text: #ba2b2e;
+  --color-danger-soft: #ffeeec;
+  --color-success-soft: #dcf7e1;
+  --color-success: #146d34;
+
+  --color-camera: #0e1117;
+  --color-scrim: rgb(21 24 31 / 0.3);
+}
