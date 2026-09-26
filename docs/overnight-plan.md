@@ -94,9 +94,102 @@ What's left to make capture fully work, in the order I'd build it. Each step end
 
 ---
 
-## 3. Hosted Supabase project (`budget-app`, eu-west-1)
+## 3. Category catalogue in the database
 
-1. Apply the 3 migrations (schema, entries allowance, captures) through the Supabase connector. **No seed:** it contains the demo account and its password.
+**Goal:** every category a budgeting app needs lives in one table, instead of the 12 hard-coded in the app today.
+
+**Table `category_presets`** (anyone can read it, including before sign-up; only migrations write it):
+
+```sql
+key text primary key,            -- 'groceries'
+group_key text not null,         -- 'food', 'transport', …
+names jsonb not null,            -- {"en": "Groceries", "de": "Lebensmittel", …} all 7 languages
+keywords jsonb not null,         -- {"de": ["rewe", "edeka", "lidl"], "en": [...], …} for the parser and the AI
+icon text not null,              -- Phosphor icon name
+hue smallint not null,
+peer_average numeric(12,2),      -- "Ø 290 € bei Gleichaltrigen"; replaces app_config.peer_averages
+suggested boolean not null default false,   -- pre-selected in onboarding
+sort_order integer not null
+```
+
+- A user's own categories keep one row each in `categories`. `categories.key` becomes `preset_key`, pointing at `category_presets`. Custom categories have none.
+- **Single source:** the app no longer bundles the catalogue. Onboarding, "Kategorie erstellen" suggestions, the on-device parser and the AI prompt all read the table, which react-query caches.
+- The translated category names move out of the 7 locale files into `names`.
+
+**Proposed presets: 38 in 11 groups.** Existing keys stay the same.
+
+| Group         | Presets                                                                                                                                    |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Food & drink  | groceries (Lebensmittel)_, dining (Essen gehen)_, cafe (Café)*, takeaway (Lieferdienst), bars (Bars & Ausgehen)                            |
+| Transport     | transport (Mobilität / ÖPNV & Taxi)*, fuel (Tanken), parking (Parken), car (Auto & Werkstatt)                                              |
+| Housing       | housing (Miete & Wohnen), utilities (Strom & Gas), internet_phone (Internet & Handy), home (Haushalt & Einrichtung)                        |
+| Shopping      | shopping (Shopping)*, clothing (Kleidung & Schuhe), electronics (Elektronik), drugstore (Drogerie), gifts (Geschenke)                      |
+| Health & body | health (Gesundheit & Apotheke), fitness (Fitness & Sport), beauty (Friseur & Beauty)                                                       |
+| Leisure       | leisure (Freizeit), subscriptions (Abos & Streaming), events (Konzerte & Events), hobbies (Hobbys), books (Bücher & Medien), games (Games) |
+| Travel        | travel (Reisen), hotels (Hotels & Unterkünfte)                                                                                             |
+| Family & pets | kids (Kinder), pets (Haustiere), education (Bildung & Kurse)                                                                               |
+| Finance       | insurance (Versicherungen), fees (Bankgebühren), taxes (Steuern), loans (Kredite & Raten), donations (Spenden)                             |
+| Work          | work (Arbeit & Büro)                                                                                                                       |
+| Other         | other (Sonstiges)                                                                                                                          |
+
+\* pre-selected in onboarding, as in the design today.
+
+- **Income** keeps no category, as in the design. Income categories (salary, freelance, refunds) can be added the same way later.
+- Each preset gets names in all 7 languages, 5–15 keywords per language (common chains and merchants in DE/AT/CH, ES, FR, IT, PT/BR, UK/US), an icon, a hue from the design palette and a peer average.
+
+---
+
+## 4. Notifications
+
+**Goal:** notification settings live in their own table instead of three columns on `profiles`. The table is also ready for server-sent pushes later.
+
+**Table `notification_settings`** (one row per user and type; the owner can read and write it):
+
+```sql
+profile_id uuid references profiles on delete cascade,
+type notification_type not null,       -- 'daily_reminder' | 'check_in' | 'budget_alert'
+enabled boolean not null default false,
+time time null,                        -- daily_reminder: '20:30'
+repeat reminder_repeat null,           -- daily_reminder: 'daily' | 'weekdays'
+primary key (profile_id, type)
+```
+
+**Table `push_tokens`** (the owner can insert and delete their own):
+
+```sql
+token text primary key,                -- Expo push token
+profile_id uuid references profiles on delete cascade,
+platform platform not null,
+updated_at timestamptz not null default now()
+```
+
+- `profiles.reminder_enabled`, `reminder_time` and `reminder_repeat` are removed. The sign-up trigger creates the three setting rows.
+- **Scheduled on the phone** (work offline, no server needed):
+  - `daily_reminder`: the existing "Heute schon was ausgegeben?"
+  - `check_in`: new, Sunday 18:00, "Dein Wochen-Check-in ist offen"
+- **`budget_alert`** ("Budget für Essen gehen überschritten") is stored but not sent yet. It needs server pushes (a scheduled function plus the Expo push service), which come later.
+- **Push tokens** are registered after login only once the app has an EAS project ID. Until then that step is skipped.
+- **Settings screen:** the Profil › Erinnerung screen stays as designed. It gets two extra switches ("Wochen-Check-in", "Budget-Warnungen") under the time picker, in the same style.
+
+---
+
+## 5. Action Button (iOS)
+
+**Goal:** the onboarding promise works. In Settings › Action Button › Shortcut, the user picks "Looop: Ausgabe erfassen", and pressing the button opens Looop straight in voice capture.
+
+- A small **Expo config plugin** in `plugins/with-capture-intent.js` adds one Swift file, `CaptureExpenseIntent.swift`, to the iOS app during prebuild:
+  - an `AppIntent` with `openAppWhenRun = true` that opens `looop://capture/voice`
+  - an `AppShortcutsProvider` so the shortcut appears automatically, with the title in all 7 languages
+- The app handles `looop://capture/voice`. When signed in, it goes to voice capture; during onboarding, it goes to the capture step.
+- **Android** has no Action Button. The onboarding step is iOS-only already.
+- **Risk:** I can't build or run iOS here, so the Swift file and plugin are untested until your first development build. The file is short, and a compile error there is quick to fix.
+- **Widget:** still later. A widget needs a separate app extension and shared storage between app and widget, which is much more than the Action Button.
+
+---
+
+## 6. Hosted Supabase project (`budget-app`, eu-west-1)
+
+1. Apply all migrations (schema, entries allowance, captures, category presets, notifications) through the Supabase connector. **No seed:** it contains the demo account and its password.
 2. Deploy `parse-capture` and `transcribe-session` through the connector.
 3. Regenerate `database.types.ts` from the hosted schema and compare it with my hand-written version.
 4. Run the connector's security and performance checks and fix anything they flag.
@@ -105,7 +198,7 @@ What's left to make capture fully work, in the order I'd build it. Each step end
 
 ---
 
-## 4. Review
+## 7. Review
 
 Same as the first build: a code-simplifier pass and a code-reviewer pass as subagents over everything changed tonight, then fixes, re-verification and a push. I'll also refresh the design comparison page if screens changed.
 
@@ -121,7 +214,7 @@ Same as the first build: a code-simplifier pass and a code-reviewer pass as suba
 | AI during onboarding (before sign-up) | Not yet. Text uses the on-device parser; a receipt photo shows the error screen with "Von Hand eingeben". Enabling it needs Supabase anonymous sign-in, which is a separate change. |
 | Daily AI limit window                 | Rolling 24 hours, instead of midnight in the user's time zone. Simpler, and the effect is the same.                                                                                 |
 | Receipt photo retention (30 days)     | The config key exists, but the clean-up job comes later. Photos stay until then.                                                                                                    |
-| Widget and Action Button              | **Not tonight.** Both need native iOS/Android code I can't build or test here.                                                                                                      |
+| Widget                                | **Not tonight.** It needs a separate native app extension. The Action Button is included (step 5).                                                                                  |
 | RevenueCat                            | Later, as you planned.                                                                                                                                                              |
 
 ## What I can't verify here
