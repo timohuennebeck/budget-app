@@ -54,31 +54,54 @@ What's left to make capture fully work, in the order I'd build it. Each step end
 
 ---
 
-## 2. Live transcription with `expo-speech-recognition`
+## 2. Live transcription with OpenAI Realtime
 
-**Goal:** the voice screen transcribes what the user says, live, on the device.
+**Goal:** the most accurate live transcription. Words appear as the user speaks, transcribed by OpenAI and not by the phone.
 
-- Install `expo-speech-recognition` and add its config plugin with microphone and speech-recognition permission texts. Android gets `RECORD_AUDIO`.
-- Replace the simulated `use-voice-transcript.ts`:
-  - it starts listening when the screen opens, in the app language (de-DE, en-US, pt-BR and so on)
-  - it shows partial results live
-  - "stop" finishes and sends the text through step 1
-- **Permission denied:** a short message with a button to Settings, and a fallback to typing.
-- The screen's highlighting of amounts stays as it is.
-- Remove the `voiceSample` strings from all 7 languages; they're no longer needed.
-- **Web:** uses the browser's speech recognition where available.
-- **Tests:** type-check, lint and web only. Speech recognition itself needs a real phone.
+**How it works:**
+
+1. **Session:** the voice screen asks a new edge function, `transcribe-session`, for a short-lived OpenAI token. The real API key never reaches the phone. The function:
+   - checks the login and the daily AI limit (a voice session counts as one capture)
+   - logs the session in `captures` (source `voice`)
+   - creates a transcription-only Realtime session with the model from `app_config.stt_model` and the app language as a hint
+2. **Streaming:** the phone connects to OpenAI directly over **WebRTC** (`react-native-webrtc` with its Expo config plugin).
+   - WebRTC captures and streams the microphone itself, so there's no raw audio handling in JavaScript.
+   - Transcript pieces arrive over the WebRTC data channel and appear live on screen.
+3. **Stop:** the final transcript goes through `parse-capture` (step 1) and on to review.
+
+**Model:** `app_config.stt_model`. I'll use OpenAI's current live transcription model; third-party pages call it `gpt-live-transcribe`, at about $0.017 per minute, or about $0.004 for a 15-second capture. I couldn't confirm the name or price on OpenAI's own site from here, so it's a setting you can correct without a code change.
+
+**Limits and errors:**
+
+- A session stops itself after 60 seconds (`app_config.voice_max_seconds`), so a forgotten open microphone can't run up costs.
+- **Microphone permission** (texts for iOS and Android via the plugins): if denied, a short message, a button to Settings, and a fallback to typing.
+- **No network, no key, or daily limit reached:** a message plus a fallback to typing. There's no on-device speech fallback, because you want the most accurate option only.
+- **Web:** uses the browser's built-in WebRTC, so the same code path works for testing.
+
+**App changes:**
+
+- Replace the simulated `use-voice-transcript.ts` with a `useLiveTranscription()` hook. It manages the connection, partial and final text, and the timer.
+- The screen's highlighting of amounts stays.
+- Remove the `voiceSample` strings from all 7 languages.
+
+**Tests:**
+
+- The session function against a mocked OpenAI.
+- The hook's handling of transcript events, with fake data-channel messages.
+- Type-check, lint and web.
+
+**Risk:** OpenAI's API docs are blocked from this environment, so I'll build against the Realtime API as I know it: client secrets, WebRTC calls, and the `input_audio_transcription` delta/completed events. If anything was renamed, it fails on the first real test. Everything OpenAI-specific stays in one adapter file, so a fix is small. To remove that risk, allow `developers.openai.com` in this environment's network settings before you go to bed, and I'll check against the current docs.
 
 ---
 
 ## 3. Hosted Supabase project (`budget-app`, eu-west-1)
 
 1. Apply the 3 migrations (schema, entries allowance, captures) through the Supabase connector. **No seed:** it contains the demo account and its password.
-2. Deploy `parse-capture` through the connector.
+2. Deploy `parse-capture` and `transcribe-session` through the connector.
 3. Regenerate `database.types.ts` from the hosted schema and compare it with my hand-written version.
 4. Run the connector's security and performance checks and fix anything they flag.
 
-**What you need to do once:** add the OpenAI key as a Supabase secret, either in the dashboard (Edge Functions → Secrets → `OPENAI_API_KEY`) or with `supabase secrets set OPENAI_API_KEY=…`. Until then the function answers with an error and the app uses the on-device parser.
+**What you need to do once:** add the OpenAI key as a Supabase secret, either in the dashboard (Edge Functions → Secrets → `OPENAI_API_KEY`) or with `supabase secrets set OPENAI_API_KEY=…`. Until then both functions answer with an error: typed text falls back to the on-device parser, and voice falls back to typing.
 
 ---
 
@@ -93,6 +116,7 @@ Same as the first build: a code-simplifier pass and a code-reviewer pass as suba
 | Question                              | Default                                                                                                                                                                             |
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Model                                 | `gpt-6-luna` for text and receipts. It's the cheapest; switch via `ai_model` if quality is lacking.                                                                                 |
+| Transcription                         | OpenAI Realtime only, with no on-device fallback. If it's unavailable, the app falls back to typing.                                                                                |
 | One receipt =                         | One entry: shop name and total, with the category guessed from the shop.                                                                                                            |
 | AI during onboarding (before sign-up) | Not yet. Text uses the on-device parser; a receipt photo shows the error screen with "Von Hand eingeben". Enabling it needs Supabase anonymous sign-in, which is a separate change. |
 | Daily AI limit window                 | Rolling 24 hours, instead of midnight in the user's time zone. Simpler, and the effect is the same.                                                                                 |
@@ -102,5 +126,5 @@ Same as the first build: a code-simplifier pass and a code-reviewer pass as suba
 
 ## What I can't verify here
 
-- Real speech recognition, camera and a real OpenAI response. These need a phone and the API key.
-- A development build. Native modules (MMKV, speech) don't run in Expo Go.
+- Real transcription, camera and a real OpenAI response. These need a phone and the API key.
+- A development build. Native modules (MMKV, WebRTC) don't run in Expo Go.
