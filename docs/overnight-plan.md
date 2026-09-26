@@ -162,6 +162,23 @@ unique (profile_id, type, scheduled_for)   -- never the same reminder twice
 
 - **Access:** users can read their own rows and set `opened_at`; only the server creates and sends them.
 
+**Table `notifications_templates`**: the title and text of every notification, per type and language, editable in Supabase without an app release:
+
+```sql
+type notification_type not null,
+locale text not null,              -- 'en', 'de', … (all 7)
+title text not null,               -- 'Wochen-Check-in ist offen'
+body text not null,                -- 'Was schätzt du, {{name}}? Pip hat nachgezählt.'
+url text,                          -- deep link, e.g. 'looop://check-in'
+active boolean not null default true,   -- switch a type off without code
+updated_at timestamptz not null default now(),
+primary key (type, locale)
+```
+
+- **Placeholders:** `{{name}}`, `{{category}}`, `{{percent}}` and `{{remaining}}` are filled in when queueing. A missing language falls back to English.
+- **Access:** anyone signed in can read it; only migrations and the service role write it.
+- **Initial texts:** a migration inserts them for all 6 types in all 7 languages, in the app's voice ("Heute schon was ausgegeben?").
+
 **Supporting tables:**
 
 - `notification_settings`: one row per user and type, with on/off, time and repeat. It replaces the three reminder columns on `profiles`, and the sign-up trigger creates the rows.
@@ -173,7 +190,7 @@ unique (profile_id, type, scheduled_for)   -- never the same reminder twice
    - A `pg_cron` job runs every 5 minutes and queues everything due, using each user's time zone and settings: the daily reminder at their time, the check-in on Sunday 18:00 and Monday morning.
    - Budget and limit notifications are queued by a trigger when an entry pushes a category over 80 % or 100 %, or leaves 3 free entries.
 2. **Sending:** an edge function, `send-notifications`, sends the queued rows through Expo's push service (which delivers to Apple and Google) and marks each row `sent` or `failed`. Invalid tokens are deleted.
-3. **Texts:** in all 7 languages, stored in the function. The row keeps the exact text that was sent.
+3. **Texts:** from `notifications_templates` (see below), rendered in the user's language. The row keeps the exact text that was sent.
 4. **Tapping:** opening a notification sets `opened_at` and follows the deep link.
 
 **Settings screen:** Profil › Erinnerung stays as designed, plus switches for "Wochen-Check-in" and "Budget-Warnungen" in the same style.
