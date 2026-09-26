@@ -11,6 +11,8 @@
     "increase": "Mais",
     "later": "Mais tarde",
     "save": "Salvar",
+    "saveFailedMessage": "Sua alteração foi desfeita. Verifique sua conexão e tente de novo.",
+    "saveFailedTitle": "Não foi possível salvar",
     "search": "Buscar",
     "skip": "Pular",
     "today": "Hoje",

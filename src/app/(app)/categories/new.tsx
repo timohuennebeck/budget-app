@@ -1,3 +1,4 @@
+import { randomUUID } from 'expo-crypto';
 import { router } from 'expo-router';
 
 import { NewCategoryScreen } from '@/features/categories/components/new-category-screen';
@@ -10,13 +11,10 @@ export default function NewCategoryRoute() {
   return (
     <NewCategoryScreen
       header={<ScreenHeader />}
-      loading={create.isPending}
-      onSubmit={(values) =>
-        create.mutate(
-          { ...values, sort_order: categories.length },
-          { onSuccess: () => router.back() },
-        )
-      }
+      onSubmit={(values) => {
+        create.mutate({ ...values, id: randomUUID(), sort_order: categories.length });
+        router.back();
+      }}
     />
   );
 }

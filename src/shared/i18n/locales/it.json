@@ -11,6 +11,8 @@
     "increase": "Più",
     "later": "Più tardi",
     "save": "Salva",
+    "saveFailedMessage": "La modifica è stata annullata. Controlla la connessione e riprova.",
+    "saveFailedTitle": "Salvataggio non riuscito",
     "search": "Cerca",
     "skip": "Salta",
     "today": "Oggi",

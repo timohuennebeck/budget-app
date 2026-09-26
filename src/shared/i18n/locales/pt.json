@@ -11,6 +11,8 @@
     "increase": "Mais",
     "later": "Mais tarde",
     "save": "Guardar",
+    "saveFailedMessage": "A tua alteração foi anulada. Verifica a ligação e tenta outra vez.",
+    "saveFailedTitle": "Não foi possível guardar",
     "search": "Pesquisar",
     "skip": "Saltar",
     "today": "Hoje",

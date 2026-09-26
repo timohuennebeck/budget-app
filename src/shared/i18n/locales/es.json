@@ -11,6 +11,8 @@
     "increase": "Más",
     "later": "Más tarde",
     "save": "Guardar",
+    "saveFailedMessage": "Tu cambio se deshizo. Revisa tu conexión e inténtalo de nuevo.",
+    "saveFailedTitle": "No se pudo guardar",
     "search": "Buscar",
     "skip": "Omitir",
     "today": "Hoy",

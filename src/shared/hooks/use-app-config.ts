@@ -1,3 +1,4 @@
+import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
 
 import { supabase } from '@/shared/lib/supabase';
@@ -41,11 +42,11 @@ async function fetchAppConfig(): Promise<AppConfig> {
   };
 }
 
+export const appConfigQueries = createQueryKeys('app-config', {
+  all: { queryKey: null, queryFn: fetchAppConfig },
+});
+
 export function useAppConfig(): AppConfig {
-  const { data } = useQuery({
-    queryKey: ['app-config'],
-    queryFn: fetchAppConfig,
-    staleTime: Infinity,
-  });
+  const { data } = useQuery({ ...appConfigQueries.all, staleTime: Infinity });
   return data ?? defaultAppConfig;
 }

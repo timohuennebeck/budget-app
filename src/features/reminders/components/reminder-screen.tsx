@@ -26,7 +26,6 @@ interface ReminderScreenProps {
   onSubmit: (values: ReminderValues) => void;
   /** Onboarding shows Pip with a clock above the picker */
   illustrated?: boolean;
-  loading?: boolean;
 }
 
 /** Daily reminder time and repeat (2p1 in onboarding, 3h in Profil). */
@@ -37,7 +36,6 @@ export function ReminderScreen({
   submitLabel,
   onSubmit,
   illustrated,
-  loading,
 }: ReminderScreenProps) {
   const { t } = useTranslation();
   const [time, setTime] = useState(parseTime(initial.time));
@@ -49,7 +47,7 @@ export function ReminderScreen({
       footer={
         <Button
           label={submitLabel(formatted)}
-          loading={loading}
+
           haptic="success"
           onPress={() => onSubmit({ time: formatted, repeat })}
         />

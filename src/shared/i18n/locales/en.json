@@ -11,6 +11,8 @@
     "increase": "More",
     "later": "Later",
     "save": "Save",
+    "saveFailedMessage": "Your change was undone. Check your connection and try again.",
+    "saveFailedTitle": "Couldn't save",
     "search": "Search",
     "skip": "Skip",
     "today": "Today",

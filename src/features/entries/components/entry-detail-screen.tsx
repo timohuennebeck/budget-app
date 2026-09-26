@@ -40,39 +40,32 @@ function EntryDetailForm({ entry }: { entry: Entry }) {
     occurredAt: entry.occurred_at,
   }));
 
-  const save = () =>
-    update.mutate(
-      {
-        id,
-        patch: {
-          title: draft.title.trim() || entry.title,
-          amount: draft.amount,
-          total_amount: draft.totalAmount,
-          occurred_at: draft.occurredAt,
-        },
-      },
-      {
-        onSuccess: () => {
-          haptics.success();
-          router.back();
-        },
-      },
-    );
-
-  const destroy = () =>
-    remove.mutate(id, {
-      onSuccess: () => {
-        confirm.dismiss();
-        router.back();
+  const save = () => {
+    update.mutate({
+      id,
+      patch: {
+        title: draft.title.trim() || entry.title,
+        amount: draft.amount,
+        total_amount: draft.totalAmount,
+        occurred_at: draft.occurredAt,
       },
     });
+    haptics.success();
+    router.back();
+  };
+
+  const destroy = () => {
+    confirm.dismiss();
+    router.back();
+    remove.mutate(id);
+  };
 
   return (
     <Screen
       scroll
       footer={
         <View>
-          <Button label={t('common.save')} loading={update.isPending} onPress={save} />
+          <Button label={t('common.save')} onPress={save} />
           <Button
             variant="ghost-danger"
             className="mt-2.5"
@@ -102,7 +95,6 @@ function EntryDetailForm({ entry }: { entry: Entry }) {
         })}
         confirmLabel={t('common.delete')}
         cancelLabel={t('common.cancel')}
-        loading={remove.isPending}
         onConfirm={destroy}
       />
     </Screen>

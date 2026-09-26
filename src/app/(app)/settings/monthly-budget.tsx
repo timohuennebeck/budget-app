@@ -17,16 +17,13 @@ export default function MonthlyBudgetSettings() {
       initial={Number(profile.monthly_budget ?? 1000)}
       currency={profile.currency}
       submitLabel={t('common.save')}
-      loading={update.isPending}
-      onSubmit={(amount) =>
-        update.mutate(
-          {
-            monthly_budget: amount,
-            budget_mode: profile.budget_mode === 'none' ? 'monthly' : profile.budget_mode,
-          },
-          { onSuccess: () => router.back() },
-        )
-      }
+      onSubmit={(amount) => {
+        update.mutate({
+          monthly_budget: amount,
+          budget_mode: profile.budget_mode === 'none' ? 'monthly' : profile.budget_mode,
+        });
+        router.back();
+      }}
     />
   );
 }

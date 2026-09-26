@@ -23,13 +23,12 @@ export function LanguageScreen() {
 
   const save = async () => {
     await changeLanguage(selected);
-    update.mutate({ locale: selected }, { onSuccess: () => router.back() });
+    update.mutate({ locale: selected });
+    router.back();
   };
 
   return (
-    <Screen
-      scroll
-      footer={<Button label={t('common.save')} loading={update.isPending} onPress={save} />}>
+    <Screen scroll footer={<Button label={t('common.save')} onPress={save} />}>
       <ScreenHeader title={t('profile.language')} />
       <StepIntro
         title={t('profile.languageTitle')}

@@ -50,8 +50,7 @@
         }
       ],
       "expo-notifications",
-      "expo-localization",
-      "expo-sqlite"
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true,

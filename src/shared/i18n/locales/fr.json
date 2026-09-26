@@ -11,6 +11,8 @@
     "increase": "Plus",
     "later": "Plus tard",
     "save": "Enregistrer",
+    "saveFailedMessage": "Ta modification a été annulée. Vérifie ta connexion et réessaie.",
+    "saveFailedTitle": "Échec de l'enregistrement",
     "search": "Rechercher",
     "skip": "Passer",
     "today": "Aujourd'hui",

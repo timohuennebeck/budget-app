@@ -52,3 +52,6 @@ Docs: https://docs.expo.dev/eas/index.md
 - Bottom sheets: `useSheet()` + a component built on `Sheet` from `@/shared/components/sheet`; spread `sheet.controls`.
 - All user-facing text goes through i18next (`src/shared/i18n/locales/*.json`, English is the source language). Keys are type-checked against `en.json`; add new strings there first, then to every other locale.
 - Supabase: add schema changes as new files in `supabase/migrations`, then run `npm run db:types`.
+- Server data: TanStack Query with one key factory per feature (`@lukemorales/query-key-factory`) in `data/<feature>-queries.ts`. Use `useQuery(entryQueries.range(range))`; never write query keys by hand.
+- Mutations are optimistic: `snapshot()` the affected queries in `onMutate`, write the expected result to the cache, `restore()` in `onError`, invalidate the feature's `_def` in `onSettled`, and set `meta: { optimistic: true }` so a failure shows the shared alert. Create rows with a client id (`randomUUID` from `expo-crypto`), and navigate without waiting for the server.
+- Local storage: MMKV through `@/shared/lib/storage` (`storage` for values, `persistStorage` for zustand `persist`). No AsyncStorage or localStorage.

@@ -16,8 +16,10 @@ export default function CurrencySettings() {
       header={<ScreenHeader title={t('profile.currency')} />}
       initial={profile.currency}
       submitLabel={() => t('common.save')}
-      loading={update.isPending}
-      onSubmit={(currency) => update.mutate({ currency }, { onSuccess: () => router.back() })}
+      onSubmit={(currency) => {
+        update.mutate({ currency });
+        router.back();
+      }}
     />
   );
 }

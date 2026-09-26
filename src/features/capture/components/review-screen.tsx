@@ -1,3 +1,4 @@
+import { randomUUID } from 'expo-crypto';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -50,6 +51,7 @@ export function ReviewScreen() {
     }
     createEntries.mutate(
       drafts.map((draft) => ({
+        id: randomUUID(),
         title: draft.title,
         amount: draft.amount,
         total_amount: draft.totalAmount,
@@ -58,8 +60,8 @@ export function ReviewScreen() {
         source: draft.source,
         occurred_at: draft.occurredAt,
       })),
-      { onSuccess: () => router.replace(captureHref('app', 'saved')) },
     );
+    router.replace(captureHref('app', 'saved'));
   };
 
   return (
@@ -70,7 +72,6 @@ export function ReviewScreen() {
           <Button
             label={t('capture.saveEntries', { count: drafts.length })}
             disabled={drafts.length === 0}
-            loading={createEntries.isPending}
             haptic="success"
             onPress={save}
           />

@@ -24,11 +24,10 @@ export interface NewCategoryValues {
 interface NewCategoryScreenProps {
   header: ReactNode;
   onSubmit: (values: NewCategoryValues) => void;
-  loading?: boolean;
 }
 
 /** Name, icon and colour for a custom category (2e1). */
-export function NewCategoryScreen({ header, onSubmit, loading }: NewCategoryScreenProps) {
+export function NewCategoryScreen({ header, onSubmit }: NewCategoryScreenProps) {
   const { t } = useTranslation();
   const [name, setName] = useState('');
   const [icon, setIcon] = useState(customIconChoices[0]);
@@ -42,7 +41,7 @@ export function NewCategoryScreen({ header, onSubmit, loading }: NewCategoryScre
         <Button
           label={t('categories.add')}
           disabled={!name.trim()}
-          loading={loading}
+
           haptic="success"
           onPress={() => onSubmit({ name: name.trim(), icon, hue })}
         />

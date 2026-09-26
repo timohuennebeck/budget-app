@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { StepIntro } from '@/features/onboarding/components/step-intro';
-import { profileQuery } from '@/features/profile/hooks/use-profile';
+import { profileQueries } from '@/features/profile/data/profile-queries';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { haptics } from '@/shared/lib/haptics';
@@ -26,7 +26,7 @@ export function LoginScreen() {
   const [password, setPassword] = useState('');
 
   const resume = async (userId: string) => {
-    const profile = await queryClient.fetchQuery(profileQuery(userId));
+    const profile = await queryClient.fetchQuery(profileQueries.detail(userId));
     if (!profile.onboarded_at) router.replace('/done');
   };
 

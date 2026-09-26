@@ -1,10 +1,9 @@
-import 'expo-sqlite/localStorage/install';
-
 import { getLocales } from 'expo-localization';
 import i18n, { changeLanguage as applyLanguage, use as registerPlugin } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import { type LanguageCode, languages } from '@/shared/data/languages';
+import { storage } from '@/shared/lib/storage';
 
 import de from './locales/de.json';
 import en from './locales/en.json';
@@ -31,7 +30,7 @@ const supported = languages.map((language) => language.code);
 // match from the device settings: exact tag first (pt-BR), then the bare
 // language code, then English as the default.
 function initialLanguage(): LanguageCode {
-  const saved = localStorage.getItem(STORAGE_KEY) as LanguageCode | null;
+  const saved = storage.getString(STORAGE_KEY) as LanguageCode | undefined;
   if (saved && supported.includes(saved)) return saved;
   for (const locale of getLocales()) {
     const tag = locale.languageTag as LanguageCode;
@@ -51,7 +50,7 @@ registerPlugin(initReactI18next).init({
 });
 
 export function changeLanguage(code: LanguageCode) {
-  localStorage.setItem(STORAGE_KEY, code);
+  storage.set(STORAGE_KEY, code);
   return applyLanguage(code);
 }
 

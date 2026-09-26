@@ -9,7 +9,7 @@ import { OnboardingHeader } from '@/features/onboarding/components/onboarding-he
 import { StepIntro } from '@/features/onboarding/components/step-intro';
 import { completeOnboarding } from '@/features/onboarding/lib/complete-onboarding';
 import { ONBOARDING_STEPS } from '@/features/onboarding/lib/steps';
-import { profileKey } from '@/features/profile/hooks/use-profile';
+import { profileQueries } from '@/features/profile/data/profile-queries';
 import { GradientPanel } from '@/shared/components/gradient-panel';
 import { Screen } from '@/shared/components/screen';
 import { cn } from '@/shared/lib/cn';
@@ -78,7 +78,7 @@ export function SignUpScreen() {
       }
       await completeOnboarding(userId, draft);
       draft.update({ saved: true });
-      await queryClient.invalidateQueries({ queryKey: profileKey(userId) });
+      await queryClient.invalidateQueries({ queryKey: profileQueries.detail(userId).queryKey });
       haptics.success();
       router.replace('/plus');
     } catch (error) {

@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware';
 import { categoryCatalog } from '@/features/categories/data/category-catalog';
 import type { DraftEntry } from '@/features/capture/lib/types';
 import type { Enums } from '@/shared/lib/database.types';
-import { persistStorage } from '@/shared/lib/persist-storage';
+import { persistStorage } from '@/shared/lib/storage';
 
 export interface CustomCategoryDraft {
   /** Local id, used as category key until the row exists */

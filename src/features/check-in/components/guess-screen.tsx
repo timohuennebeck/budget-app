@@ -44,29 +44,23 @@ function GuessForm({ window, previous, actual }: GuessFormProps) {
   const weekStart = toISODate(window.week.start);
   const lastAccuracy = previous ? accuracyPercent(previous) : null;
 
-  const reveal = () =>
-    save.mutate(
-      { week_start: weekStart, guess, actual, skipped: false },
-      {
-        onSuccess: () => {
-          haptics.success();
-          router.replace('/check-in/result');
-        },
-      },
-    );
+  const reveal = () => {
+    save.mutate({ week_start: weekStart, guess, actual, skipped: false });
+    haptics.success();
+    router.replace('/check-in/result');
+  };
 
-  const skip = () =>
-    save.mutate(
-      { week_start: weekStart, guess: null, actual, skipped: true },
-      { onSuccess: () => router.dismissAll() },
-    );
+  const skip = () => {
+    save.mutate({ week_start: weekStart, guess: null, actual, skipped: true });
+    router.dismissAll();
+  };
 
   return (
     <Screen
       gradient="sky"
       footer={
         <View>
-          <Button label={t('checkIn.reveal')} loading={save.isPending} onPress={reveal} />
+          <Button label={t('checkIn.reveal')} onPress={reveal} />
           <Button variant="ghost" className="mt-2.5" label={t('checkIn.skipWeek')} onPress={skip} />
         </View>
       }>

@@ -21,14 +21,11 @@ export default function ReminderSettings() {
       title={t('reminders.title')}
       initial={{ time: profile.reminder_time.slice(0, 5), repeat: profile.reminder_repeat }}
       submitLabel={() => t('common.save')}
-      loading={update.isPending}
       onSubmit={async ({ time, repeat }) => {
         const granted = await requestNotificationPermission();
         if (granted) await scheduleReminder(time, repeat);
-        update.mutate(
-          { reminder_time: time, reminder_repeat: repeat, reminder_enabled: granted },
-          { onSuccess: () => router.back() },
-        );
+        update.mutate({ reminder_time: time, reminder_repeat: repeat, reminder_enabled: granted });
+        router.back();
       }}
     />
   );

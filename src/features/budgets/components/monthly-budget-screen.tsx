@@ -15,7 +15,6 @@ interface MonthlyBudgetScreenProps {
   currency: string;
   submitLabel: string;
   onSubmit: (amount: number) => void;
-  loading?: boolean;
 }
 
 const QUICK = [800, 1000, 1200, 1500];
@@ -27,7 +26,6 @@ export function MonthlyBudgetScreen({
   currency,
   submitLabel,
   onSubmit,
-  loading,
 }: MonthlyBudgetScreenProps) {
   const { t } = useTranslation();
   const { peerAverages } = useAppConfig();
@@ -35,8 +33,7 @@ export function MonthlyBudgetScreen({
   const money = (value: number) => formatMoney(value, { currency, compact: true });
 
   return (
-    <Screen
-      footer={<Button label={submitLabel} loading={loading} onPress={() => onSubmit(amount)} />}>
+    <Screen footer={<Button label={submitLabel} onPress={() => onSubmit(amount)} />}>
       {header}
       <StepIntro title={t('budgets.monthlyTitle')} subtitle={t('budgets.monthlySubtitle')} />
       <Card className="mt-7 px-[18px] pt-[26px] pb-[22px]">

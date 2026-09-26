@@ -18,17 +18,10 @@ interface CurrencyScreenProps {
   /** Receives the currency name to build e.g. "Weiter mit Euro" */
   submitLabel: (name: string) => string;
   onSubmit: (currency: string) => void;
-  loading?: boolean;
 }
 
 /** Currency choice (2e14), used in onboarding and Profil › Währung. */
-export function CurrencyScreen({
-  header,
-  initial,
-  submitLabel,
-  onSubmit,
-  loading,
-}: CurrencyScreenProps) {
+export function CurrencyScreen({ header, initial, submitLabel, onSubmit }: CurrencyScreenProps) {
   const { t } = useTranslation();
   const [selected, setSelected] = useState(initial);
   const [query, setQuery] = useState('');
@@ -51,7 +44,7 @@ export function CurrencyScreen({
       footer={
         <Button
           label={submitLabel(name(selected))}
-          loading={loading}
+
           onPress={() => onSubmit(selected)}
         />
       }>

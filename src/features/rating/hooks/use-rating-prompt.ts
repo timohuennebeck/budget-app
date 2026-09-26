@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import { useEntryDates } from '@/features/entries/hooks/use-entries';
-import { persistStorage } from '@/shared/lib/persist-storage';
+import { persistStorage } from '@/shared/lib/storage';
 
 const ENTRIES_BEFORE_ASKING = 10;
 
