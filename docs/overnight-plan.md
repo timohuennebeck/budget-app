@@ -98,7 +98,7 @@ What's left to make capture fully work, in the order I'd build it. Each step end
 
 **Goal:** every category a budgeting app needs lives in one table, instead of the 12 hard-coded in the app today.
 
-**Table `category_presets`** (anyone can read it, including before sign-up; only migrations write it):
+**Table `categories_presets`** (anyone can read it, including before sign-up; only migrations write it):
 
 ```sql
 key text primary key,            -- 'groceries'
@@ -112,7 +112,7 @@ suggested boolean not null default false,   -- pre-selected in onboarding
 sort_order integer not null
 ```
 
-- A user's own categories keep one row each in `categories`. `categories.key` becomes `preset_key`, pointing at `category_presets`. Custom categories have none.
+- A user's own categories keep one row each in `categories`. `categories.key` becomes `preset_key`, pointing at `categories_presets`. Custom categories have none.
 - **Single source:** the app no longer bundles the catalogue. Onboarding, "Kategorie erstellen" suggestions, the on-device parser and the AI prompt all read the table, which react-query caches.
 - The translated category names move out of the 7 locale files into `names`.
 
