@@ -13,6 +13,7 @@ import { ScreenHeader } from '@/shared/components/screen-header';
 import { StatusHero } from '@/shared/components/status-hero';
 import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
+import { InfoBadge } from '@/shared/ui/info-badge';
 import { Text } from '@/shared/ui/text';
 
 import { useProfile } from '../hooks/use-profile';
@@ -67,11 +68,7 @@ export function DeleteAccountScreen() {
       />
       {profile?.plan === 'plus' ? (
         <View className="mt-[22px] flex-row items-start gap-[11px] rounded-[20px] bg-primary-tint px-4 py-3.5">
-          <View className="mt-px size-[22px] items-center justify-center rounded-full bg-primary">
-            <Text size={14} weight="semibold" className="text-white">
-              i
-            </Text>
-          </View>
+          <InfoBadge variant="solid" />
           <Text size={14} leading={1.45} className="flex-1 text-ink-soft">
             {t('profile.deletePlusNote')}
           </Text>

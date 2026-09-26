@@ -2,7 +2,6 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { CategoryPill } from '@/features/categories/components/category-pill';
 import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
 import { EntryRow } from '@/features/entries/components/entry-row';
 import { countByCategory, spendByCategory } from '@/features/entries/lib/entry-stats';
@@ -19,6 +18,7 @@ import { Text } from '@/shared/ui/text';
 
 import { useCheckInState } from '../hooks/use-check-in-state';
 import { guessAccuracy } from '../lib/check-in-window';
+import { AccuracyPill } from './accuracy-pill';
 import { CheckInHeader } from './check-in-header';
 
 // Reveal (5g-b): guess and actual side by side, accuracy pill and the
@@ -100,11 +100,7 @@ export function ResultScreen() {
             </Text>{' '}
             {difference >= 0 ? t('checkIn.more') : t('checkIn.less')}
           </Text>
-          <CategoryPill
-            size="md"
-            hue={close ? 150 : 25}
-            label={t('checkIn.accuracy', { percent: Math.round(accuracy * 100) })}
-          />
+          <AccuracyPill size="md" accuracy={accuracy} />
         </View>
       </Card>
 

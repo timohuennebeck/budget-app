@@ -7,7 +7,6 @@ import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store'
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { cn } from '@/shared/lib/cn';
-import { formatShortDate } from '@/shared/lib/dates';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
@@ -20,6 +19,7 @@ import { useParsePreview } from '../hooks/use-parse-preview';
 import { captureHref } from '../lib/capture-routes';
 import { CaptureTips, type TipTargets } from './capture-tips';
 import { RecognizedBadge } from './recognized-badge';
+import { TodayLabel } from './today-label';
 
 const SUGGESTIONS = [
   'capture.suggestionDining',
@@ -107,15 +107,7 @@ export function CaptureTextScreen({ mode, initialText, onClose }: CaptureTextScr
           />
         </View>
       }>
-      <ScreenHeader
-        leading="close"
-        onLeadingPress={onClose}
-        trailing={
-          <Text size={15} className="text-muted-soft">
-            {formatShortDate(new Date())}
-          </Text>
-        }
-      />
+      <ScreenHeader leading="close" onLeadingPress={onClose} trailing={<TodayLabel />} />
       <Text variant="display" leading={1.08} className="mt-[22px]">
         {t('capture.title', { name: firstName })}
       </Text>

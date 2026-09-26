@@ -8,7 +8,6 @@ import { entryAmount, entrySubtitle, entryVisual } from '@/features/entries/lib/
 import { useEntryAllowance } from '@/features/paywall/hooks/use-entry-allowance';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
-import { formatShortDate } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
@@ -22,6 +21,7 @@ import { useCaptureContext } from '../hooks/use-capture-context';
 import { captureHref } from '../lib/capture-routes';
 import { draftsTotal } from '../lib/parse-entries';
 import type { DraftEntry } from '../lib/types';
+import { TodayLabel } from './today-label';
 
 // "Passt alles?" (2xe2): parsed drafts before saving. Rows Pip wasn't sure
 // about are highlighted with a quick confirm / edit choice.
@@ -86,14 +86,7 @@ export function ReviewScreen() {
           />
         </View>
       }>
-      <ScreenHeader
-        leading="close"
-        trailing={
-          <Text size={15} className="text-muted-soft">
-            {formatShortDate(new Date())}
-          </Text>
-        }
-      />
+      <ScreenHeader leading="close" trailing={<TodayLabel />} />
       <Text variant="display" className="mt-[22px]">
         {t('capture.reviewTitle')}
       </Text>

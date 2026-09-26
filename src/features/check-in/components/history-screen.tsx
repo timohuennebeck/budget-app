@@ -1,26 +1,24 @@
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { CategoryPill } from '@/features/categories/components/category-pill';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { ListGroup } from '@/shared/components/list-group';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { StatusHero } from '@/shared/components/status-hero';
-import { useAppConfig } from '@/shared/hooks/use-app-config';
 import { addDays, formatWeekRange, fromISODate } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { Text } from '@/shared/ui/text';
 
 import { useCheckIns } from '../hooks/use-check-ins';
 import { checkInAccuracy } from '../lib/check-in-window';
+import { AccuracyPill } from './accuracy-pill';
 
 /** Past weekly check-ins with guess, actual and accuracy. */
 export function HistoryScreen() {
   const { t } = useTranslation();
   const { data: checkIns = [] } = useCheckIns();
   const currency = useCurrency();
-  const { checkInCloseRatio } = useAppConfig();
 
   return (
     <Screen scroll>
@@ -49,12 +47,7 @@ export function HistoryScreen() {
                       : `${formatMoney(Number(checkIn.guess), { currency, compact: true })} → ${formatMoney(Number(checkIn.actual ?? 0), { currency })}`}
                   </Text>
                 </View>
-                {accuracy !== null ? (
-                  <CategoryPill
-                    hue={accuracy >= checkInCloseRatio ? 150 : 25}
-                    label={t('checkIn.accuracy', { percent: Math.round(accuracy * 100) })}
-                  />
-                ) : null}
+                {accuracy !== null ? <AccuracyPill accuracy={accuracy} /> : null}
               </View>
             );
           })}

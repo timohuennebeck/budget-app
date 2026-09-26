@@ -44,7 +44,7 @@ export function formatMoney(amount: number, { currency, signed, compact }: Forma
 
 // Splits "5.884,50 €" into a large whole part and a smaller remainder so the
 // hero amounts can render the cents at a reduced size like the design.
-export function formatMoneyParts(amount: number, { currency, signed }: FormatOptions): MoneyParts {
+export function formatMoneyParts(amount: number, currency: string): MoneyParts {
   const parts = formatter(currency, false, Math.abs(amount)).formatToParts(Math.abs(amount));
   const splitAt = parts.findIndex((part) => part.type === 'decimal');
   const head = splitAt === -1 ? parts : parts.slice(0, splitAt);
@@ -55,9 +55,9 @@ export function formatMoneyParts(amount: number, { currency, signed }: FormatOpt
   const rest = tail.map((part) => part.value).join('');
 
   if (currencyFirst) {
-    return { whole: signFor(amount, signed) + whole + rest, rest: '' };
+    return { whole: signFor(amount) + whole + rest, rest: '' };
   }
-  return { whole: signFor(amount, signed) + whole.trim(), rest };
+  return { whole: signFor(amount) + whole.trim(), rest };
 }
 
 export function currencySymbol(currency: string) {

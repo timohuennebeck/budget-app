@@ -12,6 +12,7 @@ import { useAppConfig } from '@/shared/hooks/use-app-config';
 import { budgetCycle, daysBetween, formatMonth } from '@/shared/lib/dates';
 import { gradients } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
+import { InfoBadge } from '@/shared/ui/info-badge';
 import { Pip } from '@/shared/ui/pip';
 import { Text } from '@/shared/ui/text';
 
@@ -86,11 +87,7 @@ export function LimitScreen() {
         <PlanOptions selected={plan} onSelect={setPlan} />
       </View>
       <View className="mt-4 flex-row items-start gap-2.5 px-1">
-        <View className="mt-px size-5 items-center justify-center rounded-full bg-primary-soft">
-          <Text size={12} weight="semibold" className="text-primary">
-            i
-          </Text>
-        </View>
+        <InfoBadge />
         <Text size={14} leading={1.45} className="flex-1 text-muted-soft">
           {t('limit.keepEntries')}
         </Text>

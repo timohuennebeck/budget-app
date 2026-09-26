@@ -29,6 +29,8 @@ export interface OnboardingDraft {
   birthDate: string | null;
   entries: DraftEntry[];
   captureTipsSeen: boolean;
+  /** Set once completeOnboarding has written the answers to the account */
+  saved: boolean;
 }
 
 interface OnboardingState extends OnboardingDraft {
@@ -55,6 +57,7 @@ const initialDraft: OnboardingDraft = {
   birthDate: null,
   entries: [],
   captureTipsSeen: false,
+  saved: false,
 };
 
 // Answers collected before an account exists. Persisted so closing the app

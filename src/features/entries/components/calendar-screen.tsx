@@ -31,8 +31,11 @@ import { groupByDay } from '../lib/entry-stats';
 import { CalendarDay, type DayTone } from './calendar-day';
 import { EntryRow } from './entry-row';
 
-const compactNumber = (value: number) =>
-  `${value > 0 ? '+' : '−'}${Math.round(Math.abs(value)).toLocaleString()}`;
+const compactNumber = (value: number) => {
+  const rounded = Math.round(value);
+  const sign = rounded > 0 ? '+' : rounded < 0 ? '−' : '';
+  return `${sign}${Math.abs(rounded).toLocaleString()}`;
+};
 
 // Monthly calendar (4b3): each day shows its net amount; tapping a day
 // opens a sheet with that day's entries.

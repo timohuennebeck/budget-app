@@ -1,7 +1,7 @@
 import { useShallow } from 'zustand/react/shallow';
 
 import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store';
-import { useProfile } from '@/features/profile/hooks/use-profile';
+import { useCurrency, useProfile } from '@/features/profile/hooks/use-profile';
 
 import type { CaptureMode } from '../data/capture-store';
 
@@ -11,6 +11,7 @@ export function useCaptureContext(mode: CaptureMode) {
     useShallow((state) => ({ firstName: state.firstName, currency: state.currency })),
   );
   const { data: profile } = useProfile();
+  const currency = useCurrency();
   if (mode === 'onboarding') return draft;
-  return { firstName: profile?.first_name ?? '', currency: profile?.currency ?? 'EUR' };
+  return { firstName: profile?.first_name ?? '', currency };
 }

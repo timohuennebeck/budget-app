@@ -36,7 +36,7 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-/** The signed-in user's id; only call inside protected (app) routes. */
+/** The signed-in user's id, or '' while signed out (writes then fail RLS). */
 export function useUserId() {
   const { session } = useAuth();
   return session?.user.id ?? '';

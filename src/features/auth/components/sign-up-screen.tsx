@@ -77,6 +77,7 @@ export function SignUpScreen() {
         userId = result.user.id;
       }
       await completeOnboarding(userId, draft);
+      draft.update({ saved: true });
       await queryClient.invalidateQueries({ queryKey: profileKey(userId) });
       haptics.success();
       router.replace('/plus');
