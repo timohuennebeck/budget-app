@@ -148,40 +148,40 @@ sort_order integer not null
 ```sql
 id uuid primary key,
 profile_id uuid references profiles on delete cascade,
-type notification_type not null,   -- 'daily_reminder' | 'check_in_open' | 'check_in_closing'
+kind notification_kind not null,   -- 'daily_reminder' | 'check_in_open' | 'check_in_closing'
                                    -- | 'budget_warning' | 'budget_exceeded' | 'limit_almost_reached'
 title text not null,               -- already in the user's language
-body text not null,
+content text not null,
 data jsonb not null default '{}',  -- deep link, e.g. {"url": "looop://capture"}
 status notification_status not null default 'queued',  -- queued | sent | failed | skipped
 scheduled_for timestamptz not null,
 sent_at timestamptz, opened_at timestamptz, error text,
 created_at timestamptz not null default now(),
-unique (profile_id, type, scheduled_for)   -- never the same reminder twice
+unique (profile_id, kind, scheduled_for)   -- never the same reminder twice
 ```
 
 - **Access:** users can read their own rows and set `opened_at`; only the server creates and sends them.
 
-**Table `notifications_templates`**: the title and text of every notification, per type and language, editable in Supabase without an app release:
+**Table `notifications_templates`**: the title and text of every notification, per kind and language, editable in Supabase without an app release:
 
 ```sql
-type notification_type not null,
+kind notification_kind not null,
 locale text not null,              -- 'en', 'de', … (all 7)
 title text not null,               -- 'Wochen-Check-in ist offen'
-body text not null,                -- 'Was schätzt du, {{name}}? Pip hat nachgezählt.'
+content text not null,                -- 'Was schätzt du, {{name}}? Pip hat nachgezählt.'
 url text,                          -- deep link, e.g. 'looop://check-in'
-active boolean not null default true,   -- switch a type off without code
+active boolean not null default true,   -- switch a kind off without code
 updated_at timestamptz not null default now(),
-primary key (type, locale)
+primary key (kind, locale)
 ```
 
 - **Placeholders:** `{{name}}`, `{{category}}`, `{{percent}}` and `{{remaining}}` are filled in when queueing. A missing language falls back to English.
 - **Access:** anyone signed in can read it; only migrations and the service role write it.
-- **Initial texts:** a migration inserts them for all 6 types in all 7 languages, in the app's voice ("Heute schon was ausgegeben?").
+- **Initial texts:** a migration inserts them for all 6 kinds in all 7 languages, in the app's voice ("Heute schon was ausgegeben?").
 
 **Supporting tables:**
 
-- `notification_settings`: one row per user and type, with on/off, time and repeat. It replaces the three reminder columns on `profiles`, and the sign-up trigger creates the rows.
+- `notification_settings`: one row per user and kind, with on/off, time and repeat. It replaces the three reminder columns on `profiles`, and the sign-up trigger creates the rows.
 - `push_tokens`: the phone's Expo push token, saved after login.
 
 **How they get sent:**
