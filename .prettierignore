@@ -1,0 +1,6 @@
+node_modules
+dist
+.expo
+supabase/.temp
+src/uniwind-types.d.ts
+src/shared/lib/database.types.ts
