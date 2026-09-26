@@ -176,7 +176,7 @@
     "yearlyNote": "{{amount}} all'anno"
   },
   "limit": {
-    "counter": "{{used}} di {{total}}",
+    "counter": "{{remaining}} di {{total}}",
     "header": "Movimenti",
     "keepEntries": "I movimenti già registrati restano salvati e visibili.",
     "resets_one": "Domani avrai di nuovo {{limit}} movimenti.",

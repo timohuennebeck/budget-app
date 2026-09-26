@@ -1,5 +1,5 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import { useMemo, useRef, useState } from 'react';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { ScrollView, type TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -35,6 +35,16 @@ export function EntriesScreen() {
   const lookup = useCategoryLookup();
   const monthSheet = useSheet();
   const searchInput = useRef<TextInput>(null);
+
+  // "Suchen" on Start opens this tab with ?search=1; focus the field and
+  // clear the param so the next visit from Start focuses it again.
+  useFocusEffect(
+    useCallback(() => {
+      if (search !== '1') return;
+      searchInput.current?.focus();
+      router.setParams({ search: undefined });
+    }, [search]),
+  );
 
   const [month, setMonth] = useState(() => new Date());
   const [query, setQuery] = useState('');
@@ -114,7 +124,6 @@ export function EntriesScreen() {
           value={query}
           onChangeText={setQuery}
           clearable
-          autoFocus={search === '1'}
           returnKeyType="search"
         />
         <ScrollView

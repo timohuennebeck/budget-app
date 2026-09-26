@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { cancelReminders } from '@/features/reminders/lib/reminders';
 import { supabase } from '@/shared/lib/supabase';
 
 export interface Credentials {
@@ -40,6 +41,8 @@ export function useSignOut() {
     mutationFn: async () => {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
+      // Reminders are local notifications, so they'd outlive the session.
+      await cancelReminders();
     },
   });
 }

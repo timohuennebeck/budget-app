@@ -71,7 +71,7 @@ export function LimitScreen() {
           </ProgressRing>
           <View className="absolute -bottom-0.5 self-center rounded-full bg-primary px-3.5 py-1.5">
             <Text size={14} weight="semibold" className="text-white">
-              {t('limit.counter', { used: allowance.remaining, total: allowance.limit })}
+              {t('limit.counter', { remaining: allowance.remaining, total: allowance.limit })}
             </Text>
           </View>
         </View>

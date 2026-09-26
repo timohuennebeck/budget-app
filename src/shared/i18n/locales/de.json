@@ -176,7 +176,7 @@
     "yearlyNote": "{{amount}} pro Jahr"
   },
   "limit": {
-    "counter": "{{used}} von {{total}}",
+    "counter": "{{remaining}} von {{total}}",
     "header": "Einträge",
     "keepEntries": "Deine bisherigen Einträge bleiben gespeichert und sichtbar.",
     "resets_one": "Morgen hast du wieder {{limit}} Einträge.",

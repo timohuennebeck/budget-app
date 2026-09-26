@@ -176,7 +176,7 @@
     "yearlyNote": "{{amount}} por ano"
   },
   "limit": {
-    "counter": "{{used}} de {{total}}",
+    "counter": "{{remaining}} de {{total}}",
     "header": "Registos",
     "keepEntries": "Os teus registos anteriores continuam guardados e visíveis.",
     "resets_one": "Amanhã voltas a ter {{limit}} registos.",
