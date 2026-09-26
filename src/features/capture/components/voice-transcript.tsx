@@ -1,6 +1,6 @@
 import { Text } from '@/shared/ui/text';
 
-const AMOUNT_TOKEN = /(\d+(?:[.,]\d{1,2})?\s?(?:€|eur|euro|\$|£|chf)?)/i;
+const AMOUNT_TOKEN = /((?:€|\$|£)?\s?\d+(?:[.,]\d{1,2})?\s?(?:€|eur|euro|\$|£|chf)?)/i;
 
 interface VoiceTranscriptProps {
   transcript: string;

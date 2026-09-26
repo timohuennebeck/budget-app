@@ -18,7 +18,7 @@ interface FormatOptions {
 const MINUS = '−';
 
 function locale() {
-  return i18n.language || 'de';
+  return i18n.language || 'en';
 }
 
 function formatter(currency: string, compact: boolean, amount: number) {

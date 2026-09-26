@@ -19,7 +19,7 @@ export function LanguageScreen() {
   const { t } = useTranslation();
   const { data: profile } = useProfile();
   const update = useUpdateProfile();
-  const [selected, setSelected] = useState(findLanguage(profile?.locale ?? 'de').code);
+  const [selected, setSelected] = useState(findLanguage(profile?.locale ?? 'en').code);
 
   const save = async () => {
     await changeLanguage(selected);

@@ -207,9 +207,9 @@
     "last30Days": "{{amount}} in the last 30 days",
     "library": "Choose from Photos",
     "listening": "Listening",
-    "noAmountMessage": "Add an amount to each entry, e.g. “12€ Uber”.",
+    "noAmountMessage": "Add an amount to each entry, e.g. “€12 Uber”.",
     "noAmountTitle": "No amount found",
-    "placeholder": "e.g. 40€ groceries, 12€ Uber, coffee 3.50€",
+    "placeholder": "e.g. €40 groceries, €12 Uber, coffee €3.50",
     "processingTitle": "Pip is sorting your entries.",
     "receipt": "Receipt",
     "recognized": "recognized",
@@ -250,7 +250,7 @@
     "total": "Total",
     "typeInstead": "Enter manually",
     "voice": "Speak",
-    "voiceSample": "40€ groceries, 12€ Uber, lunch 18€ split, and twenty-three at dm",
+    "voiceSample": "€40 groceries, €12 Uber, lunch €18 split, and twenty-three at dm",
     "whichCategory": "Which category?"
   },
   "entries": {
@@ -283,7 +283,7 @@
   },
   "overview": {
     "available": "Available",
-    "averagePerDay": "Ø {{amount}} per day",
+    "averagePerDay": "Avg. {{amount}} per day",
     "budgets": "Budgets",
     "daysLeft_one": "· {{count}} day",
     "daysLeft_other": "· {{count}} days",
@@ -307,7 +307,7 @@
     "monthlyTitle": "How much do you want\nto spend per month?",
     "noLimit": "No limit",
     "over": "over · of {{limit}}",
-    "peerAverage": "Ø {{amount}} for people your age"
+    "peerAverage": "Avg. {{amount}} for people your age"
   },
   "checkIn": {
     "accuracy": "{{percent}}% accurate",

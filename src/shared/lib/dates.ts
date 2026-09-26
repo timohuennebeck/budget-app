@@ -9,7 +9,7 @@ export interface DateRange {
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 function locale() {
-  return i18n.language || 'de';
+  return i18n.language || 'en';
 }
 
 export function startOfDay(date: Date) {

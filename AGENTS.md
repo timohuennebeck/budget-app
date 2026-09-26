@@ -50,5 +50,5 @@ Docs: https://docs.expo.dev/eas/index.md
 - Use `useSafeAreaInsets()` for anything that touches the screen edges (see `Screen`).
 - Every pressable goes through `@/shared/ui/pressable` (or `Button` / `IconButton` / `Chip`) so main actions trigger haptics.
 - Bottom sheets: `useSheet()` + a component built on `Sheet` from `@/shared/components/sheet`; spread `sheet.controls`.
-- All user-facing text goes through i18next (`src/shared/i18n/locales/*.json`, German is the source language). Keys are type-checked against `de.json`.
+- All user-facing text goes through i18next (`src/shared/i18n/locales/*.json`, English is the source language). Keys are type-checked against `en.json`; add new strings there first, then to every other locale.
 - Supabase: add schema changes as new files in `supabase/migrations`, then run `npm run db:types`.

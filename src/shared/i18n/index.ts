@@ -29,7 +29,7 @@ const supported = languages.map((language) => language.code);
 
 // Uses the language picked in the app if there is one, otherwise the best
 // match from the device settings: exact tag first (pt-BR), then the bare
-// language code, then German as the default.
+// language code, then English as the default.
 function initialLanguage(): LanguageCode {
   const saved = localStorage.getItem(STORAGE_KEY) as LanguageCode | null;
   if (saved && supported.includes(saved)) return saved;
@@ -39,7 +39,7 @@ function initialLanguage(): LanguageCode {
     const code = locale.languageCode as LanguageCode;
     if (code && supported.includes(code)) return code;
   }
-  return 'de';
+  return 'en';
 }
 
 registerPlugin(initReactI18next).init({

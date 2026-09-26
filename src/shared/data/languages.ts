@@ -10,8 +10,8 @@ export interface Language {
 }
 
 export const languages: Language[] = [
-  { code: 'de', name: 'Deutsch', flag: 'de' },
   { code: 'en', name: 'English', flag: 'gb' },
+  { code: 'de', name: 'Deutsch', flag: 'de' },
   { code: 'es', name: 'Español', flag: 'es' },
   { code: 'fr', name: 'Français', flag: 'fr' },
   { code: 'it', name: 'Italiano', flag: 'it' },
@@ -19,6 +19,7 @@ export const languages: Language[] = [
   { code: 'pt-BR', name: 'Português (Brasil)', flag: 'br' },
 ];
 
+/** Falls back to English, the source language. */
 export function findLanguage(code: string) {
   return languages.find((language) => language.code === code) ?? languages[0];
 }
