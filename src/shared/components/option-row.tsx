@@ -12,18 +12,10 @@ interface OptionRowProps {
   leading?: ReactNode;
   selected: boolean;
   onPress: () => void;
-  className?: string;
 }
 
 /** Selectable card row (language, currency): blue ring and check when chosen. */
-export function OptionRow({
-  title,
-  subtitle,
-  leading,
-  selected,
-  onPress,
-  className,
-}: OptionRowProps) {
+export function OptionRow({ title, subtitle, leading, selected, onPress }: OptionRowProps) {
   return (
     <Pressable
       haptic="select"
@@ -34,7 +26,6 @@ export function OptionRow({
       className={cn(
         'flex-row items-center gap-3.5 rounded-[20px] bg-surface px-3.5 py-3',
         selected ? 'border-2 border-primary' : 'border border-line',
-        className,
       )}>
       {leading}
       <View className="flex-1 gap-px">

@@ -30,7 +30,7 @@ function PlanCard({ title, price, note, badge, selected, onPress }: PlanCardProp
       accessibilityLabel={title}
       className={cn(
         'flex-1 gap-0.5 rounded-[22px] bg-surface p-4',
-        selected ? 'border-2 border-primary' : 'border border-[#E0E7F2]',
+        selected ? 'border-2 border-primary' : 'border border-line-card',
       )}>
       {badge ? (
         <View className="absolute -top-[11px] left-3.5 h-[22px] justify-center rounded-full bg-primary px-2.5">
@@ -48,7 +48,7 @@ function PlanCard({ title, price, note, badge, selected, onPress }: PlanCardProp
       <Text size={21} weight="semibold" tracking={-0.02} className="mt-[22px]">
         {price}
       </Text>
-      <Text size={14} className="text-[#8A91A0]">
+      <Text size={14} className="text-hint">
         {t('paywall.perMonth')}
       </Text>
       <Text size={13} className="mt-1 text-muted-soft">

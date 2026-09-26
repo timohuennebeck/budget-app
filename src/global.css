@@ -21,12 +21,14 @@
   --color-subtle: #8a92a3;
   --color-faint: #a3abba;
   --color-chevron: #b5bcc9;
+  --color-hint: #8a91a0;
 
   --color-canvas: #f7f9fc;
   --color-surface: #ffffff;
   --color-field: #eef2f8;
   --color-line: #edf1f6;
   --color-line-strong: #e3e8f1;
+  --color-line-card: #e0e7f2;
   --color-grabber: #d5dae3;
   --color-dot: #d3d9e3;
 

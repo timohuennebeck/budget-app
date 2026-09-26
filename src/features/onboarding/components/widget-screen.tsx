@@ -46,7 +46,7 @@ export function WidgetScreen() {
       <View className="mt-[18px] gap-3.5 rounded-[26px] bg-ink p-[18px]">
         <View className="flex-row gap-3.5">
           <View className="h-[156px] w-[156px] rounded-[22px] bg-surface p-3.5">
-            <Text size={11} weight="medium" tracking={0.1} className="text-[#8A91A0] uppercase">
+            <Text size={11} weight="medium" tracking={0.1} className="text-hint uppercase">
               {t('common.today')}
             </Text>
             <View className="mt-1.5 flex-row items-baseline">

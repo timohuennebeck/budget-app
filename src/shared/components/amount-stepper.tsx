@@ -15,12 +15,13 @@ export interface AmountStepperProps {
   onChange: (value: number) => void;
   currency: string;
   step?: number;
-  min?: number;
-  max?: number;
   /** `lg` is used inside sheets, `md` inside cards */
   size?: 'md' | 'lg';
   hint?: string;
 }
+
+const MIN = 0;
+const MAX = 1_000_000;
 
 const sizes = {
   md: { number: 64, symbol: 36, caret: 52 },
@@ -34,8 +35,6 @@ export function AmountStepper({
   onChange,
   currency,
   step = 10,
-  min = 0,
-  max = 1_000_000,
   size = 'md',
   hint,
 }: AmountStepperProps) {
@@ -44,7 +43,7 @@ export function AmountStepper({
   const [draft, setDraft] = useState<string | null>(null);
   const metrics = sizes[size];
 
-  const clamp = (next: number) => Math.min(max, Math.max(min, next));
+  const clamp = (next: number) => Math.min(MAX, Math.max(MIN, next));
   const stepBy = (direction: 1 | -1) => {
     const next = clamp(Math.round(value / step) * step + direction * step);
     if (next !== value) haptics.select();
@@ -60,7 +59,7 @@ export function AmountStepper({
           iconSize={18}
           haptic="none"
           accessibilityLabel={t('common.decrease')}
-          disabled={value <= min}
+          disabled={value <= MIN}
           onPress={() => stepBy(-1)}
         />
         <Pressable
@@ -94,7 +93,7 @@ export function AmountStepper({
           iconSize={18}
           haptic="none"
           accessibilityLabel={t('common.increase')}
-          disabled={value >= max}
+          disabled={value >= MAX}
           onPress={() => stepBy(1)}
         />
       </View>

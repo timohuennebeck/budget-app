@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Alert, View } from 'react-native';
 import { Trans, useTranslation } from 'react-i18next';
 
+import type { LegalKind } from '@/features/legal/data/legal-api';
 import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store';
 import { OnboardingHeader } from '@/features/onboarding/components/onboarding-header';
 import { StepIntro } from '@/features/onboarding/components/step-intro';
@@ -30,6 +31,17 @@ const STRENGTH_LABELS = [
   'auth.strength.strong',
   'auth.strength.veryStrong',
 ] as const;
+
+function legalLink(kind: LegalKind) {
+  return (
+    <Text
+      size={12.5}
+      weight="semibold"
+      className="text-ink-soft"
+      onPress={() => router.push({ pathname: '/legal/[kind]', params: { kind } })}
+    />
+  );
+}
 
 export function SignUpScreen() {
   const { t, i18n } = useTranslation();
@@ -86,27 +98,10 @@ export function SignUpScreen() {
             loading={saving}
             onPress={submit}
           />
-          <Text size={12.5} leading={1.5} className="px-4 text-center text-[#8A91A0]">
+          <Text size={12.5} leading={1.5} className="px-4 text-center text-hint">
             <Trans
               i18nKey="auth.legalNotice"
-              components={{
-                terms: (
-                  <Text
-                    size={12.5}
-                    weight="semibold"
-                    className="text-ink-soft"
-                    onPress={() => router.push('/legal/terms')}
-                  />
-                ),
-                privacy: (
-                  <Text
-                    size={12.5}
-                    weight="semibold"
-                    className="text-ink-soft"
-                    onPress={() => router.push('/legal/privacy')}
-                  />
-                ),
-              }}
+              components={{ terms: legalLink('terms'), privacy: legalLink('privacy') }}
             />
           </Text>
         </View>

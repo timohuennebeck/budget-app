@@ -15,6 +15,12 @@ import { Text } from '@/shared/ui/text';
 
 type StepState = 'done' | 'active' | 'pending';
 
+const labelColors: Record<StepState, string> = {
+  done: 'text-ink',
+  active: 'text-muted-soft',
+  pending: 'text-faint',
+};
+
 function Spinner() {
   const rotation = useSharedValue(0);
   useEffect(() => {
@@ -58,16 +64,7 @@ export function ProcessingSteps({ steps }: { steps: { label: string; state: Step
       {steps.map((step) => (
         <View key={step.label} className="flex-row items-center gap-3">
           <StepMark state={step.state} />
-          <Text
-            size={17}
-            leading={1.35}
-            className={
-              step.state === 'done'
-                ? 'text-ink'
-                : step.state === 'active'
-                  ? 'text-muted-soft'
-                  : 'text-faint'
-            }>
+          <Text size={17} leading={1.35} className={labelColors[step.state]}>
             {step.label}
           </Text>
         </View>

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { useProfile } from '@/features/profile/hooks/use-profile';
+import { useCurrency, useProfile } from '@/features/profile/hooks/use-profile';
 import { AmountStepper, QuickAmounts } from '@/shared/components/amount-stepper';
 import { Screen } from '@/shared/components/screen';
 import { toISODate } from '@/shared/lib/dates';
@@ -27,7 +27,7 @@ export function GuessScreen() {
   const { window, previous, actual } = useCheckInState();
   const { data: profile } = useProfile();
   const save = useSaveCheckIn();
-  const currency = profile?.currency ?? 'EUR';
+  const currency = useCurrency();
 
   const anchor = roundTen(Number(previous?.actual ?? actual) || 250);
   const [guess, setGuess] = useState(anchor);
@@ -68,7 +68,7 @@ export function GuessScreen() {
       <Text variant="body" className="mt-2.5">
         {t('checkIn.guessSubtitle')}
       </Text>
-      <Card className="mt-7 border-[#E0E7F2] px-[18px] pt-[26px] pb-[22px]">
+      <Card className="mt-7 border-line-card px-[18px] pt-[26px] pb-[22px]">
         <AmountStepper
           value={guess}
           onChange={setGuess}

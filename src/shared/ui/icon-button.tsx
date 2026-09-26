@@ -16,7 +16,6 @@ export interface IconButtonProps {
   accessibilityLabel: string;
   haptic?: HapticKind;
   disabled?: boolean;
-  className?: string;
 }
 
 const backgrounds: Record<Variant, string> = {
@@ -46,7 +45,6 @@ export function IconButton({
   accessibilityLabel,
   haptic,
   disabled,
-  className,
 }: IconButtonProps) {
   return (
     <Pressable
@@ -55,7 +53,7 @@ export function IconButton({
       disabled={disabled}
       accessibilityLabel={accessibilityLabel}
       hitSlop={8}
-      className={cn('items-center justify-center rounded-full', backgrounds[variant], className)}
+      className={cn('items-center justify-center rounded-full', backgrounds[variant])}
       style={[{ width: size, height: size }, variant === 'surface' && shadows.card]}>
       <Icon name={icon} size={iconSize ?? Math.round(size * 0.42)} color={iconColors[variant]} />
     </Pressable>

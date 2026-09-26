@@ -117,7 +117,7 @@ const registry = {
 
 export type IconName = keyof typeof registry;
 
-export function isIconName(value: string): value is IconName {
+function isIconName(value: string): value is IconName {
   return value in registry;
 }
 

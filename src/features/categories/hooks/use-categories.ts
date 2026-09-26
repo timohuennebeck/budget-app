@@ -10,7 +10,7 @@ import {
   updateCategory,
 } from '../data/categories-api';
 
-export const categoriesKey = ['categories'] as const;
+const categoriesKey = ['categories'] as const;
 
 export function useCategories(enabled = true) {
   return useQuery({ queryKey: categoriesKey, queryFn: fetchCategories, enabled });

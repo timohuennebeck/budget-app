@@ -17,9 +17,13 @@ interface FormatOptions {
 
 const MINUS = '−';
 
+function locale() {
+  return i18n.language || 'de';
+}
+
 function formatter(currency: string, compact: boolean, amount: number) {
   const hideFraction = compact && Number.isInteger(amount);
-  return new Intl.NumberFormat(i18n.language || 'de', {
+  return new Intl.NumberFormat(locale(), {
     style: 'currency',
     currency,
     minimumFractionDigits: hideFraction ? 0 : 2,
@@ -57,7 +61,7 @@ export function formatMoneyParts(amount: number, { currency, signed }: FormatOpt
 }
 
 export function currencySymbol(currency: string) {
-  const parts = new Intl.NumberFormat(i18n.language || 'de', {
+  const parts = new Intl.NumberFormat(locale(), {
     style: 'currency',
     currency,
   }).formatToParts(0);
@@ -66,7 +70,7 @@ export function currencySymbol(currency: string) {
 
 /** Editable amount without currency or grouping: "12,50" (de) or "12.50" (en). */
 export function formatAmountInput(amount: number) {
-  return new Intl.NumberFormat(i18n.language || 'de', {
+  return new Intl.NumberFormat(locale(), {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
     useGrouping: false,

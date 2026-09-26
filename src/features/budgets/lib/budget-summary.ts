@@ -31,10 +31,19 @@ export interface BudgetSummary {
   cards: BudgetCard[];
 }
 
+type BudgetProfile = Pick<Profile, 'budget_mode' | 'monthly_budget' | 'month_start_day'>;
+
+// The monthly budget wins; category limits add up to a total otherwise.
+function plannedTotal(profile: BudgetProfile, categoryTotal: number) {
+  if (profile.budget_mode === 'none') return null;
+  if (profile.monthly_budget !== null) return Number(profile.monthly_budget);
+  return categoryTotal > 0 ? categoryTotal : null;
+}
+
 // Everything the overview needs from one pass over the cycle's entries: the
 // hero number, the coloured spend bar and one card per limited category.
 export function summarizeBudget(
-  profile: Pick<Profile, 'budget_mode' | 'monthly_budget' | 'month_start_day'>,
+  profile: BudgetProfile,
   categories: Category[],
   entries: Entry[],
   now = new Date(),
@@ -47,15 +56,7 @@ export function summarizeBudget(
   const categoryTotal = roundMoney(
     limited.reduce((sum, category) => sum + Number(category.monthly_limit), 0),
   );
-  // The monthly budget wins; category limits add up to a total otherwise.
-  const total =
-    profile.budget_mode === 'none'
-      ? null
-      : profile.monthly_budget !== null
-        ? Number(profile.monthly_budget)
-        : categoryTotal > 0
-          ? categoryTotal
-          : null;
+  const total = plannedTotal(profile, categoryTotal);
 
   const daysLeft = Math.max(1, daysBetween(now, cycle.end));
   const daysPassed = Math.max(1, daysBetween(cycle.start, now) + 1);

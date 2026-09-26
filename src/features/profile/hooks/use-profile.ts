@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useAuth } from '@/features/auth/lib/auth-provider';
 
@@ -6,14 +6,13 @@ import { fetchProfile, type Profile, type ProfileUpdate, updateProfile } from '.
 
 export const profileKey = (userId: string) => ['profile', userId] as const;
 
+export const profileQuery = (userId: string) =>
+  queryOptions({ queryKey: profileKey(userId), queryFn: () => fetchProfile(userId) });
+
 export function useProfile() {
   const { session } = useAuth();
   const userId = session?.user.id;
-  return useQuery({
-    queryKey: profileKey(userId ?? ''),
-    queryFn: () => fetchProfile(userId!),
-    enabled: !!userId,
-  });
+  return useQuery({ ...profileQuery(userId ?? ''), enabled: !!userId });
 }
 
 /** The profile's currency, EUR until the profile has loaded. */

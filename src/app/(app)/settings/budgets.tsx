@@ -8,7 +8,7 @@ import { useCategories, useSetCategoryLimit } from '@/features/categories/hooks/
 import { useAppCategoryDisplays } from '@/features/categories/hooks/use-category-display';
 import { useRecentEntries } from '@/features/entries/hooks/use-entries';
 import { spendByCategory } from '@/features/entries/lib/entry-stats';
-import { useProfile, useUpdateProfile } from '@/features/profile/hooks/use-profile';
+import { useCurrency, useProfile, useUpdateProfile } from '@/features/profile/hooks/use-profile';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { formatMoney } from '@/shared/lib/money';
 import { Button } from '@/shared/ui/button';
@@ -21,7 +21,7 @@ export default function BudgetSettings() {
   const { data: recent = [] } = useRecentEntries();
   const setLimit = useSetCategoryLimit();
   const updateProfile = useUpdateProfile();
-  const currency = profile?.currency ?? 'EUR';
+  const currency = useCurrency();
 
   const items = useMemo(() => {
     const totals = spendByCategory(recent);

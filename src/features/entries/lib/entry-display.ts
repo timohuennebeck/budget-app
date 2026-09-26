@@ -26,17 +26,17 @@ export function entryVisual(
   return category ? { icon: category.icon, hue: category.hue } : UNKNOWN_VISUAL;
 }
 
+function subtitleDetail(entry: EntryLike) {
+  if (entry.total_amount) return t('entries.split');
+  if (entry.is_favorite) return t('entries.favorite');
+  return entry.occurred_at ? formatTime(new Date(entry.occurred_at)) : null;
+}
+
 /** "Essen gehen · halbe-halbe", "Café · Favorit" or "Mobilität · 09:12". */
 export function entrySubtitle(entry: EntryLike, categoryLabel: string | undefined) {
   const label =
     entry.kind === 'income' ? t('entries.income') : (categoryLabel ?? t('entries.noCategory'));
-  const detail = entry.total_amount
-    ? t('entries.split')
-    : entry.is_favorite
-      ? t('entries.favorite')
-      : entry.occurred_at
-        ? formatTime(new Date(entry.occurred_at))
-        : null;
+  const detail = subtitleDetail(entry);
   return detail ? `${label} · ${detail}` : label;
 }
 

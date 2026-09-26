@@ -1,8 +1,3 @@
-import { Stack } from 'expo-router';
+import { CaptureLayout } from '@/features/capture/components/capture-layout';
 
-import { useResetCaptureOnClose } from '@/features/capture/data/capture-store';
-
-export default function CaptureLayout() {
-  useResetCaptureOnClose();
-  return <Stack screenOptions={{ headerShown: false }} />;
-}
+export default CaptureLayout;

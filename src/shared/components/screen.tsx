@@ -19,7 +19,6 @@ export interface ScreenProps {
   /** Keep space for the native tab bar */
   tabBar?: boolean;
   className?: string;
-  contentClassName?: string;
 }
 
 // Base layout for every screen: canvas background, optional gradient, safe
@@ -33,7 +32,6 @@ export function Screen({
   inset = 20,
   tabBar,
   className,
-  contentClassName,
 }: ScreenProps) {
   const insets = useSafeAreaInsets();
   const bottom = tabBar ? 16 : Math.max(insets.bottom, 16) + 8;
@@ -42,14 +40,14 @@ export function Screen({
   const body = scroll ? (
     <ScrollView
       className="flex-1"
-      contentContainerClassName={cn('grow', contentClassName)}
+      contentContainerClassName="grow"
       contentContainerStyle={[padding, { paddingBottom: footer ? 16 : bottom }]}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}>
       {children}
     </ScrollView>
   ) : (
-    <View className={cn('flex-1', contentClassName)} style={padding}>
+    <View className="flex-1" style={padding}>
       {children}
     </View>
   );

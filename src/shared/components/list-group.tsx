@@ -42,18 +42,9 @@ interface ListRowProps {
   accessory?: ReactNode;
   onPress?: () => void;
   destructive?: boolean;
-  chevron?: boolean;
 }
 
-export function ListRow({
-  title,
-  subtitle,
-  value,
-  accessory,
-  onPress,
-  destructive,
-  chevron = !destructive,
-}: ListRowProps) {
+export function ListRow({ title, subtitle, value, accessory, onPress, destructive }: ListRowProps) {
   return (
     <Pressable
       onPress={onPress}
@@ -76,7 +67,7 @@ export function ListRow({
         </Text>
       ) : null}
       {accessory}
-      {chevron ? <Icon name="caret-right" size={11} color={colors.chevron} /> : null}
+      {destructive ? null : <Icon name="caret-right" size={11} color={colors.chevron} />}
     </Pressable>
   );
 }

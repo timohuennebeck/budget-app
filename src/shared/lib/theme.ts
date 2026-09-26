@@ -13,6 +13,7 @@ export const colors = {
   subtle: '#8A92A3',
   faint: '#A3ABBA',
   chevron: '#B5BCC9',
+  grabber: '#D5DAE3',
   canvas: '#F7F9FC',
   white: '#FFFFFF',
   calendarRed: '#DB4241',

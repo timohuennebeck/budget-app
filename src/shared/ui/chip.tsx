@@ -18,7 +18,6 @@ export interface ChipProps {
   trailingIcon?: IconName;
   /** Stretch to share the row with sibling chips */
   fill?: boolean;
-  className?: string;
 }
 
 const containers: Record<Variant, string> = {
@@ -47,7 +46,6 @@ export function Chip({
   size = 'md',
   trailingIcon,
   fill,
-  className,
 }: ChipProps) {
   const strong = variant === 'selected' || variant === 'dark';
   const content = (
@@ -68,7 +66,6 @@ export function Chip({
     heights[size],
     fill && 'flex-1',
     containers[variant],
-    className,
   );
 
   if (!onPress) return <View className={classes}>{content}</View>;

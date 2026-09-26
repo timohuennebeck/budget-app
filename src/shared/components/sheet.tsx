@@ -57,7 +57,7 @@ export function Sheet({ open, onClose, children, title, height }: SheetProps) {
       backdropComponent={Backdrop}
       onDismiss={onClose}
       backgroundStyle={{ borderRadius: 36, backgroundColor: colors.white }}
-      handleIndicatorStyle={{ width: 36, height: 5, backgroundColor: '#D5DAE3' }}>
+      handleIndicatorStyle={{ width: 36, height: 5, backgroundColor: colors.grabber }}>
       <BottomSheetView
         style={{ paddingHorizontal: 20, paddingBottom: 26, flex: height ? 1 : undefined }}>
         {title ? (

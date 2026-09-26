@@ -12,7 +12,7 @@ export interface AppConfig {
 }
 
 // Used until the app_config table has loaded (and when offline).
-export const defaultAppConfig: AppConfig = {
+const defaultAppConfig: AppConfig = {
   freeMonthlyEntries: 15,
   checkInMinEntries: 3,
   checkInCloseRatio: 0.85,

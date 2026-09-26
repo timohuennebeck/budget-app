@@ -73,7 +73,7 @@ export function RatingScreen() {
         ))}
       </View>
       <View className="mt-5 gap-2.5 rounded-3xl border border-line-strong bg-surface px-[18px] py-4">
-        <Text size={13} weight="medium" tracking={0.06} className="text-[#8A91A0] uppercase">
+        <Text size={13} weight="medium" tracking={0.06} className="text-hint uppercase">
           {t('rating.yourReview')}
         </Text>
         <TextInput

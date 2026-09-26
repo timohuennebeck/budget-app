@@ -34,7 +34,7 @@ function ModeCard({ title, description, tags, pose, selected, onPress }: ModeCar
       accessibilityLabel={title}
       className={cn(
         'min-h-[200px] flex-1 justify-end overflow-hidden rounded-[28px] bg-surface px-[22px] py-5',
-        selected ? 'border-2 border-primary' : 'border border-[#E0E7F2]',
+        selected ? 'border-2 border-primary' : 'border border-line-card',
       )}>
       <View className="absolute top-0 right-3 bottom-0 justify-center">
         <Pip pose={pose} size={120} />

@@ -12,9 +12,8 @@ import { addDays, formatWeekRange, fromISODate } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { Text } from '@/shared/ui/text';
 
-import type { CheckIn } from '../data/check-ins-api';
 import { useCheckIns } from '../hooks/use-check-ins';
-import { accuracyPercent, guessAccuracy } from '../lib/check-in-window';
+import { checkInAccuracy } from '../lib/check-in-window';
 
 /** Past weekly check-ins with guess, actual and accuracy. */
 export function HistoryScreen() {
@@ -22,9 +21,6 @@ export function HistoryScreen() {
   const { data: checkIns = [] } = useCheckIns();
   const currency = useCurrency();
   const { checkInCloseRatio } = useAppConfig();
-  // Same rule as the result screen: unrounded accuracy vs. the config ratio.
-  const isClose = (checkIn: CheckIn) =>
-    guessAccuracy(Number(checkIn.guess), Number(checkIn.actual ?? 0)) >= checkInCloseRatio;
 
   return (
     <Screen scroll>
@@ -40,7 +36,7 @@ export function HistoryScreen() {
         <ListGroup className="mt-6">
           {checkIns.map((checkIn) => {
             const start = fromISODate(checkIn.week_start);
-            const accuracy = accuracyPercent(checkIn);
+            const accuracy = checkInAccuracy(checkIn);
             return (
               <View key={checkIn.id} className="flex-row items-center gap-3 px-[18px] py-[15px]">
                 <View className="flex-1">
@@ -55,8 +51,8 @@ export function HistoryScreen() {
                 </View>
                 {accuracy !== null ? (
                   <CategoryPill
-                    hue={isClose(checkIn) ? 150 : 25}
-                    label={t('checkIn.accuracy', { percent: accuracy })}
+                    hue={accuracy >= checkInCloseRatio ? 150 : 25}
+                    label={t('checkIn.accuracy', { percent: Math.round(accuracy * 100) })}
                   />
                 ) : null}
               </View>

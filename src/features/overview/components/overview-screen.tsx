@@ -10,13 +10,14 @@ import { AvailableHero } from '@/features/budgets/components/available-hero';
 import { SpendBar } from '@/features/budgets/components/spend-bar';
 import { summarizeBudget } from '@/features/budgets/lib/budget-summary';
 import { CheckInCard } from '@/features/check-in/components/check-in-card';
+import type { Category } from '@/features/categories/data/categories-api';
 import { useCategories, useSetCategoryLimit } from '@/features/categories/hooks/use-categories';
 import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
 import { EntryList } from '@/features/entries/components/entry-list';
 import { useEntries, useRecentEntries } from '@/features/entries/hooks/use-entries';
 import { groupByDay, spendByCategory } from '@/features/entries/lib/entry-stats';
 import { usePendingIntent } from '@/features/onboarding/data/pending-intent';
-import { useProfile } from '@/features/profile/hooks/use-profile';
+import { useCurrency, useProfile } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
 import { SectionHeader } from '@/shared/components/section-header';
 import { useSheet } from '@/shared/components/sheet';
@@ -55,7 +56,7 @@ export function OverviewScreen() {
     }, [consumeIntent]),
   );
 
-  const currency = profile?.currency ?? 'EUR';
+  const currency = useCurrency();
   const summary = useMemo(
     () => (profile ? summarizeBudget(profile, categories, entries) : null),
     [profile, categories, entries],
@@ -63,6 +64,7 @@ export function OverviewScreen() {
   const groups = useMemo(() => groupByDay(entries).slice(0, RECENT_DAYS), [entries]);
   const recentTotals = useMemo(() => spendByCategory(recent), [recent]);
   const editing = categories.find((category) => category.id === editingId);
+  const nameOf = (category: Category) => lookup.get(category.id)?.name ?? category.name;
   const money = (value: number) => formatMoney(value, { currency, compact: true });
 
   if (!profile || !summary) return null;
@@ -138,7 +140,7 @@ export function OverviewScreen() {
               cards={summary.cards}
               currency={currency}
               editingId={editingId}
-              nameFor={(card) => lookup.get(card.category.id)?.name ?? card.category.name}
+              nameFor={(card) => nameOf(card.category)}
               onEdit={(id) => {
                 setEditingId(id);
                 sheet.present();
@@ -170,7 +172,7 @@ export function OverviewScreen() {
           sheet.dismiss();
           setEditingId(null);
         }}
-        title={editing ? (lookup.get(editing.id)?.name ?? editing.name) : ''}
+        title={editing ? nameOf(editing) : ''}
         currency={currency}
         initial={editing?.monthly_limit ?? null}
         reference={editing ? (recentTotals.get(editing.id) ?? 100) : 100}

@@ -15,7 +15,7 @@ import {
   updateEntry,
 } from '../data/entries-api';
 
-export const entriesKey = ['entries'] as const;
+const entriesKey = ['entries'] as const;
 
 export function useEntries(range: DateRange, enabled = true) {
   return useQuery({

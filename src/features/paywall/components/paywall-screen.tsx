@@ -40,7 +40,7 @@ export function PaywallScreen({ onClose }: { onClose: () => void }) {
             loading={trial.isPending}
             onPress={() => trial.mutate(plan, { onSuccess: onClose })}
           />
-          <Text size={13.5} leading={1.45} className="mt-[11px] text-center text-[#8A91A0]">
+          <Text size={13.5} leading={1.45} className="mt-[11px] text-center text-hint">
             {t('paywall.disclaimer', {
               amount: formatMoney(plusPricing.yearly, { currency: PLUS_CURRENCY }),
             })}

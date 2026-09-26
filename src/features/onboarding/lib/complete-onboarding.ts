@@ -37,45 +37,29 @@ export async function completeOnboarding(userId: string, draft: OnboardingDraft)
   const categoryIds = [...new Set([...draft.categoryIds, ...usedIds])];
   const existing = await fetchCategories();
 
-  // Matches a draft id (catalog key or custom draft id) to a saved row.
-  const findSaved = (id: string, rows: typeof existing) => {
+  // The row a draft id (catalog key or custom draft id) becomes.
+  const describe = (id: string) => {
     const catalog = findCatalogCategory(id);
-    if (catalog) return rows.find((row) => row.key === catalog.key);
+    if (catalog) {
+      const { key, icon, hue } = catalog;
+      return { key, name: categoryName({ key, name: '' }), icon, hue };
+    }
     const custom = draft.customCategories.find((category) => category.id === id);
-    return custom ? rows.find((row) => row.key === null && row.name === custom.name) : undefined;
+    return custom && { key: null, name: custom.name, icon: custom.icon, hue: custom.hue };
+  };
+  const findSaved = (id: string, rows: typeof existing) => {
+    const category = describe(id);
+    if (!category) return undefined;
+    return rows.find((row) =>
+      category.key ? row.key === category.key : row.key === null && row.name === category.name,
+    );
   };
 
   const rows = categoryIds.flatMap((id, index): CategoryInsert[] => {
-    if (findSaved(id, existing)) return [];
+    const category = describe(id);
+    if (!category || findSaved(id, existing)) return [];
     const limit = draft.budgetMode === 'per_category' ? (draft.categoryLimits[id] ?? null) : null;
-    const catalog = findCatalogCategory(id);
-    if (catalog) {
-      return [
-        {
-          profile_id: userId,
-          key: catalog.key,
-          name: categoryName({ key: catalog.key, name: '' }),
-          icon: catalog.icon,
-          hue: catalog.hue,
-          monthly_limit: limit,
-          sort_order: index,
-        },
-      ];
-    }
-    const custom = draft.customCategories.find((category) => category.id === id);
-    return custom
-      ? [
-          {
-            profile_id: userId,
-            key: null,
-            name: custom.name,
-            icon: custom.icon,
-            hue: custom.hue,
-            monthly_limit: limit,
-            sort_order: index,
-          },
-        ]
-      : [];
+    return [{ profile_id: userId, ...category, monthly_limit: limit, sort_order: index }];
   });
 
   const created = rows.length ? await insertCategories(rows) : [];

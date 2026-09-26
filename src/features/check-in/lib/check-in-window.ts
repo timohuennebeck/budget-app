@@ -45,8 +45,14 @@ export function guessAccuracy(guess: number, actual: number) {
   return Math.max(0, 1 - Math.abs(actual - guess) / actual);
 }
 
-/** Accuracy of a saved check-in in percent, or null when it was skipped. */
-export function accuracyPercent({ guess, actual }: Pick<CheckIn, 'guess' | 'actual'>) {
+/** 0…1 accuracy of a saved check-in, or null when it was skipped. */
+export function checkInAccuracy({ guess, actual }: Pick<CheckIn, 'guess' | 'actual'>) {
   if (guess === null) return null;
-  return Math.round(guessAccuracy(Number(guess), Number(actual ?? 0)) * 100);
+  return guessAccuracy(Number(guess), Number(actual ?? 0));
+}
+
+/** Accuracy of a saved check-in in percent, or null when it was skipped. */
+export function accuracyPercent(checkIn: Pick<CheckIn, 'guess' | 'actual'>) {
+  const accuracy = checkInAccuracy(checkIn);
+  return accuracy === null ? null : Math.round(accuracy * 100);
 }

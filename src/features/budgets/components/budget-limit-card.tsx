@@ -30,7 +30,7 @@ export function BudgetLimitCard({
     <Pressable
       onPress={onPress}
       accessibilityLabel={name}
-      className="flex-1 gap-3.5 rounded-[22px] border border-[#E0E7F2] bg-surface p-3.5">
+      className="flex-1 gap-3.5 rounded-[22px] border border-line-card bg-surface p-3.5">
       <View className="flex-row items-start justify-between">
         <CategoryAvatar icon={icon} hue={hue} />
         <View className="size-8 items-center justify-center rounded-full bg-field">

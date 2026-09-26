@@ -44,7 +44,7 @@ export function LegalDocumentScreen({ kind }: { kind: LegalKind }) {
             {t(kind === 'terms' ? 'legal.terms' : 'legal.privacy')}
           </Text>
           {document ? (
-            <Text size={13.5} className="text-[#8A91A0]">
+            <Text size={13.5} className="text-hint">
               {t('legal.effective', {
                 date: formatLongDate(new Date(document.effective_at)),
                 version: document.version,
