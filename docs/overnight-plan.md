@@ -1,6 +1,6 @@
-# Plan: AI capture, live transcription, hosted Supabase
+# Plan: AI capture, transcription, categories, notifications, Action Button
 
-What's left to make capture fully work, in the order I'd build it. Each step ends with type-check, lint, Prettier, the tests named in that step, a commit and a push to `main`.
+What's left to make the app fully work, in the order I'd build it. Each step ends with type-check, lint, Prettier, the tests named in that step, a commit and a push to `main`.
 
 **Already done:** split bills (halbe-halbe) are removed everywhere (commit `refactor: remove split bills`).
 
@@ -120,10 +120,10 @@ sort_order integer not null
 
 | Group         | Presets                                                                                                                                    |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| Food & drink  | groceries (Lebensmittel)_, dining (Essen gehen)_, cafe (Café)*, takeaway (Lieferdienst), bars (Bars & Ausgehen)                            |
-| Transport     | transport (Mobilität / ÖPNV & Taxi)*, fuel (Tanken), parking (Parken), car (Auto & Werkstatt)                                              |
+| Food & drink  | groceries (Lebensmittel) ★, dining (Essen gehen) ★, cafe (Café) ★, takeaway (Lieferdienst), bars (Bars & Ausgehen)                         |
+| Transport     | transport (Mobilität / ÖPNV & Taxi) ★, fuel (Tanken), parking (Parken), car (Auto & Werkstatt)                                             |
 | Housing       | housing (Miete & Wohnen), utilities (Strom & Gas), internet_phone (Internet & Handy), home (Haushalt & Einrichtung)                        |
-| Shopping      | shopping (Shopping)*, clothing (Kleidung & Schuhe), electronics (Elektronik), drugstore (Drogerie), gifts (Geschenke)                      |
+| Shopping      | shopping (Shopping) ★, clothing (Kleidung & Schuhe), electronics (Elektronik), drugstore (Drogerie), gifts (Geschenke)                     |
 | Health & body | health (Gesundheit & Apotheke), fitness (Fitness & Sport), beauty (Friseur & Beauty)                                                       |
 | Leisure       | leisure (Freizeit), subscriptions (Abos & Streaming), events (Konzerte & Events), hobbies (Hobbys), books (Bücher & Medien), games (Games) |
 | Travel        | travel (Reisen), hotels (Hotels & Unterkünfte)                                                                                             |
@@ -132,7 +132,7 @@ sort_order integer not null
 | Work          | work (Arbeit & Büro)                                                                                                                       |
 | Other         | other (Sonstiges)                                                                                                                          |
 
-\* pre-selected in onboarding, as in the design today.
+★ pre-selected in onboarding, as in the design today.
 
 - **Income** keeps no category, as in the design. Income categories (salary, freelance, refunds) can be added the same way later.
 - Each preset gets names in all 7 languages, 5–15 keywords per language (common chains and merchants in DE/AT/CH, ES, FR, IT, PT/BR, UK/US), an icon, a hue from the design palette and a peer average.
@@ -181,7 +181,7 @@ primary key (kind, locale)
 
 **Supporting tables:**
 
-- `notification_settings`: one row per user and kind, with on/off, time and repeat. It replaces the three reminder columns on `profiles`, and the sign-up trigger creates the rows.
+- `notifications_settings`: one row per user and kind, with on/off, time and repeat. It replaces the three reminder columns on `profiles`, and the sign-up trigger creates the rows.
 - `push_tokens`: the phone's Expo push token, saved after login.
 
 **How they get sent:**
@@ -190,7 +190,7 @@ primary key (kind, locale)
    - A `pg_cron` job runs every 5 minutes and queues everything due, using each user's time zone and settings: the daily reminder at their time, the check-in on Sunday 18:00 and Monday morning.
    - Budget and limit notifications are queued by a trigger when an entry pushes a category over 80 % or 100 %, or leaves 3 free entries.
 2. **Sending:** an edge function, `send-notifications`, sends the queued rows through Expo's push service (which delivers to Apple and Google) and marks each row `sent` or `failed`. Invalid tokens are deleted.
-3. **Texts:** from `notifications_templates` (see below), rendered in the user's language. The row keeps the exact text that was sent.
+3. **Texts:** from `notifications_templates` (above), rendered in the user's language. The row keeps the exact text that was sent.
 4. **Tapping:** opening a notification sets `opened_at` and follows the deep link.
 
 **Settings screen:** Profil › Erinnerung stays as designed, plus switches for "Wochen-Check-in" and "Budget-Warnungen" in the same style.
