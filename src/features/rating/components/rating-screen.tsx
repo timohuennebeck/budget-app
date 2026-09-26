@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { GradientBackground } from '@/shared/components/gradient-background';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { colors } from '@/shared/lib/theme';
@@ -39,14 +38,15 @@ export function RatingScreen() {
 
   return (
     <Screen
+      gradient="mist"
+      gradientHeight={440}
       scroll
       footer={
         <View>
           <Button label={t('rating.send')} haptic="success" onPress={send} />
-          <Button variant="ghost" className="mt-1" label={t('rating.notNow')} onPress={close} />
+          <Button variant="ghost" className="mt-2.5" label={t('rating.notNow')} onPress={close} />
         </View>
       }>
-      <GradientBackground name="mist" height={440} />
       <ScreenHeader leading="close" onLeadingPress={close} />
       <Pip pose="thumbs-up-stars" size={148} style={{ alignSelf: 'center' }} />
       <Text variant="title" size={28} className="mt-[18px] text-center">

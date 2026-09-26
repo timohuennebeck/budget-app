@@ -20,6 +20,8 @@ import { completeOnboarding } from '../lib/complete-onboarding';
 export function DoneScreen() {
   const { t } = useTranslation();
   const firstName = useOnboardingStore((state) => state.firstName);
+  const titleLines = t('onboarding.done.titleStart').split('\n');
+  const titleLast = titleLines.pop();
   const reset = useOnboardingStore((state) => state.reset);
   const setIntent = usePendingIntent((state) => state.set);
   const updateProfile = useUpdateProfile();
@@ -60,7 +62,7 @@ export function DoneScreen() {
           />
           <Button
             variant="ghost"
-            className="mt-1"
+            className="mt-2.5"
             label={t('onboarding.done.overview')}
             onPress={() => finish(null)}
           />
@@ -70,13 +72,25 @@ export function DoneScreen() {
         <Pip pose="success" size={240} />
       </View>
       <View className="gap-2.5 px-1">
-        <Text variant="display" leading={1.15}>
-          {t('onboarding.done.titleStart')}
-          <Text variant="display" className="text-primary-dark">
-            {` ${firstName} `}
-          </Text>
-          {t('onboarding.done.titleEnd')}
-        </Text>
+        <View>
+          {titleLines.length ? (
+            <Text variant="display" leading={1.15}>
+              {titleLines.join('\n')}
+            </Text>
+          ) : null}
+          {/* The name sits in a pill, which nested Text cannot draw on native */}
+          <View className="flex-row flex-wrap items-center">
+            <Text variant="display" leading={1.15}>{`${titleLast} `}</Text>
+            <View className="rounded-[10px] bg-primary-mark px-[9px]">
+              <Text variant="display" leading={1.15} className="text-primary-dark">
+                {firstName}
+              </Text>
+            </View>
+            <Text variant="display" leading={1.15}>
+              {t('onboarding.done.titleEnd')}
+            </Text>
+          </View>
+        </View>
         <Text variant="body" weight="medium" className="text-muted">
           {t('onboarding.done.subtitle')}
         </Text>

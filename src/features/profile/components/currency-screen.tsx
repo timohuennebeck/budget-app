@@ -60,6 +60,7 @@ export function CurrencyScreen({
       <TextField
         containerClassName="mt-[22px]"
         size="md"
+        variant="filled"
         leadingIcon="magnifying-glass"
         value={query}
         onChangeText={setQuery}

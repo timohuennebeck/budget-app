@@ -35,7 +35,7 @@ export function NotificationsScreen() {
           <Button label={t('onboarding.notifications.allow')} loading={asking} onPress={allow} />
           <Button
             variant="ghost"
-            className="mt-1"
+            className="mt-2.5"
             label={t('common.later')}
             onPress={() => router.push('/action-button')}
           />

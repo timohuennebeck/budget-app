@@ -16,6 +16,8 @@ export interface TextFieldProps extends TextInputProps {
   /** Shows a clear button while there is text */
   clearable?: boolean;
   size?: 'md' | 'lg';
+  /** `filled` is the borderless grey search field */
+  variant?: 'outline' | 'filled';
   containerClassName?: string;
 }
 
@@ -26,6 +28,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
     revealable,
     clearable,
     size = 'lg',
+    variant = 'outline',
     containerClassName,
     secureTextEntry,
     onFocus,
@@ -49,9 +52,11 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
       ) : null}
       <View
         className={cn(
-          'flex-row items-center gap-2.5 bg-surface px-4',
+          'flex-row items-center gap-2.5 px-4',
           size === 'lg' ? 'h-14 rounded-[18px]' : 'h-[46px] rounded-[18px]',
-          focused ? 'border-2 border-primary' : 'border border-line-strong',
+          variant === 'filled'
+            ? 'h-[50px] rounded-2xl bg-field'
+            : cn('bg-surface', focused ? 'border-2 border-primary' : 'border border-line-strong'),
         )}>
         {leadingIcon ? <Icon name={leadingIcon} size={17} color={colors.subtle} /> : null}
         <TextInput

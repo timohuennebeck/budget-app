@@ -7,7 +7,6 @@ import { useCategories } from '@/features/categories/hooks/use-categories';
 import { useEntryDates } from '@/features/entries/hooks/use-entries';
 import { streakDays } from '@/features/entries/lib/entry-stats';
 import { cancelReminders } from '@/features/reminders/lib/reminders';
-import { GradientBackground } from '@/shared/components/gradient-background';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { StatusHero } from '@/shared/components/status-hero';
@@ -37,6 +36,8 @@ export function DeleteAccountScreen() {
 
   return (
     <Screen
+      gradient="mist"
+      gradientHeight={440}
       footer={
         <View>
           <Button
@@ -47,13 +48,12 @@ export function DeleteAccountScreen() {
           />
           <Button
             variant="ghost"
-            className="mt-1"
+            className="mt-2.5"
             label={t('profile.keepAccount')}
             onPress={() => router.back()}
           />
         </View>
       }>
-      <GradientBackground name="mist" height={440} />
       <ScreenHeader title={t('profile.deleteAccount')} />
       <StatusHero
         className="mt-6"

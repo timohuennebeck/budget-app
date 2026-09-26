@@ -60,7 +60,11 @@ export function formatMoneyParts(amount: number, currency: string): MoneyParts {
   return { whole: signFor(amount) + whole.trim(), rest };
 }
 
+// Intl prints the ISO code for these; the design uses the local short form.
+const SYMBOL_OVERRIDES: Record<string, string> = { CHF: 'Fr.' };
+
 export function currencySymbol(currency: string) {
+  if (SYMBOL_OVERRIDES[currency]) return SYMBOL_OVERRIDES[currency];
   const parts = new Intl.NumberFormat(locale(), {
     style: 'currency',
     currency,

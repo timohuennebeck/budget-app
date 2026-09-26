@@ -23,13 +23,22 @@ const roundTen = (value: number) => roundToStep(value, 10);
 // "Was schätzt du?" (5f): same stepper as Monatsbudget, with last week's
 // accuracy as a nudge. Saving reveals the real number.
 export function GuessScreen() {
+  const state = useCheckInState();
+  // The stepper starts at the anchor, so wait until last week is known.
+  if (state.isLoading) return null;
+  return <GuessForm window={state.window} previous={state.previous} actual={state.actual} />;
+}
+
+type GuessFormProps = Pick<ReturnType<typeof useCheckInState>, 'window' | 'previous' | 'actual'>;
+
+function GuessForm({ window, previous, actual }: GuessFormProps) {
   const { t } = useTranslation();
-  const { window, previous, actual } = useCheckInState();
   const { data: profile } = useProfile();
   const save = useSaveCheckIn();
   const currency = useCurrency();
 
-  const anchor = roundTen(Number(previous?.actual ?? actual) || 250);
+  // Anchor on last week's real spend, never this week's: that is the answer.
+  const anchor = roundTen(Number(previous?.actual) || 250);
   const [guess, setGuess] = useState(anchor);
   const options = [roundTen(anchor * 0.7), roundTen(anchor * 0.85), anchor, roundTen(anchor * 1.2)];
   const weekStart = toISODate(window.week.start);
@@ -58,7 +67,7 @@ export function GuessScreen() {
       footer={
         <View>
           <Button label={t('checkIn.reveal')} loading={save.isPending} onPress={reveal} />
-          <Button variant="ghost" className="mt-1" label={t('checkIn.skipWeek')} onPress={skip} />
+          <Button variant="ghost" className="mt-2.5" label={t('checkIn.skipWeek')} onPress={skip} />
         </View>
       }>
       <CheckInHeader window={window} />

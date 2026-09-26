@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -10,7 +9,6 @@ import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { useAppConfig } from '@/shared/hooks/use-app-config';
 import { budgetCycle, daysBetween, formatMonth } from '@/shared/lib/dates';
-import { gradients } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { InfoBadge } from '@/shared/ui/info-badge';
 import { Pip } from '@/shared/ui/pip';
@@ -35,6 +33,8 @@ export function LimitScreen() {
 
   return (
     <Screen
+      gradient="sky"
+      gradientHeight={380}
       footer={
         <View>
           <Button
@@ -44,22 +44,13 @@ export function LimitScreen() {
           />
           <Button
             variant="ghost"
-            className="mt-1"
+            className="mt-2.5"
             label={t('limit.wait', { month: formatMonth(cycle.end) })}
             onPress={() => router.back()}
           />
         </View>
       }>
-      <LinearGradient
-        colors={gradients.sky}
-        locations={[0, 0.64, 1]}
-        style={{
-          marginHorizontal: -20,
-          marginTop: -4,
-          paddingHorizontal: 20,
-          paddingBottom: 22,
-          alignItems: 'center',
-        }}>
+      <View className="items-center pb-[22px]">
         <ScreenHeader
           leading="close"
           translucent
@@ -76,7 +67,7 @@ export function LimitScreen() {
             </Text>
           </View>
         </View>
-      </LinearGradient>
+      </View>
       <Text variant="title" className="mt-5 text-center">
         {t('limit.title')}
       </Text>

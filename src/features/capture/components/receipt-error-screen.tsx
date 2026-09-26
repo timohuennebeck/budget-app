@@ -40,7 +40,7 @@ export function ReceiptErrorScreen({ mode }: { mode: CaptureMode }) {
           />
           <Button
             variant="ghost"
-            className="mt-1"
+            className="mt-2.5"
             label={t('capture.typeInstead')}
             onPress={() => router.dismissTo(captureHref(mode, 'index'))}
           />

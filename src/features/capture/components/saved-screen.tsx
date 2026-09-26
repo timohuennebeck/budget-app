@@ -98,6 +98,7 @@ export function SavedScreen({ mode }: { mode: CaptureMode }) {
         <Pip pose="success" size={230} />
       </View>
       <StatusHero
+        subtitleClassName="max-w-none"
         title={onlyIncome ? t('capture.incomeSaved') : t('capture.saved')}
         subtitle={
           onlyIncome

@@ -32,7 +32,7 @@ export function FewEntriesScreen() {
           <Button label={t('checkIn.addMissing')} onPress={() => router.push('/capture')} />
           <Button
             variant="ghost"
-            className="mt-1"
+            className="mt-2.5"
             label={t('checkIn.guessAnyway')}
             onPress={() => router.replace('/check-in/guess')}
           />

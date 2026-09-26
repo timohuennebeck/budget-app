@@ -15,6 +15,7 @@ import {
   roundMoney,
 } from '@/shared/lib/money';
 import { colors } from '@/shared/lib/theme';
+import { FittedInput } from '@/shared/ui/fitted-input';
 import { Icon } from '@/shared/ui/icon';
 import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
@@ -104,7 +105,8 @@ export function EntryEditor({
           <Text size={52} weight="bold" tracking={-0.05} leading={1}>
             {value.kind === 'income' ? '+' : '−'}
           </Text>
-          <TextInput
+          <FittedInput
+            size={52}
             value={amountDraft ?? formatAmountInput(value.amount)}
             onChangeText={setAmountDraft}
             onFocus={() => setAmountDraft(formatAmountInput(value.amount))}
@@ -112,9 +114,21 @@ export function EntryEditor({
             onSubmitEditing={commitAmount}
             keyboardType="decimal-pad"
             returnKeyType="done"
-            selectionColor={colors.primary}
-            className="font-inter-bold text-ink"
-            style={{ fontSize: 52, letterSpacing: -2.6, padding: 0 }}
+            caretHidden
+            selectTextOnFocus
+            renderValue={(amount) => {
+              const [whole, cents] = amount.split(/(?=[.,])/);
+              return (
+                <>
+                  {whole}
+                  {cents ? (
+                    <Text size={28} weight="bold" tracking={-0.05}>
+                      {cents}
+                    </Text>
+                  ) : null}
+                </>
+              );
+            }}
           />
           <Text size={28} weight="bold" tracking={-0.05} leading={1}>
             {` ${currencySymbol(currency)}`}

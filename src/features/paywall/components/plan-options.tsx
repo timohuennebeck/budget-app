@@ -69,7 +69,7 @@ export function PlanOptions({ selected, onSelect }: PlanOptionsProps) {
   const { plusPricing } = useAppConfig();
   const currency = PLUS_CURRENCY;
   const yearlyMonthly = roundMoney(plusPricing.yearly / 12);
-  const saving = Math.round((1 - yearlyMonthly / plusPricing.monthly) * 100);
+  const saving = Math.floor((1 - yearlyMonthly / plusPricing.monthly) * 100);
 
   return (
     <View className="flex-row gap-3">

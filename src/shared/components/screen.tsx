@@ -13,6 +13,8 @@ export interface ScreenProps {
   /** Rendered above everything, e.g. coach marks or popovers with a scrim */
   overlay?: ReactNode;
   gradient?: GradientName;
+  /** Limit the gradient to the top part of the screen, in px */
+  gradientHeight?: number;
   scroll?: boolean;
   /** Horizontal padding; the app screens use 16, flows use 20 */
   inset?: 16 | 20;
@@ -28,13 +30,14 @@ export function Screen({
   footer,
   overlay,
   gradient,
+  gradientHeight,
   scroll,
   inset = 20,
   tabBar,
   className,
 }: ScreenProps) {
   const insets = useSafeAreaInsets();
-  const bottom = tabBar ? 16 : Math.max(insets.bottom, 16) + 8;
+  const bottom = tabBar ? 16 : Math.max(insets.bottom, 16);
   const padding = { paddingHorizontal: inset };
 
   const body = scroll ? (
@@ -47,7 +50,7 @@ export function Screen({
       {children}
     </ScrollView>
   ) : (
-    <View className="flex-1" style={padding}>
+    <View className="flex-1" style={[padding, footer ? null : { paddingBottom: bottom }]}>
       {children}
     </View>
   );
@@ -57,7 +60,7 @@ export function Screen({
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       className={cn('flex-1 bg-canvas', className)}
       style={{ paddingTop: insets.top + 4 }}>
-      {gradient ? <GradientBackground name={gradient} /> : null}
+      {gradient ? <GradientBackground name={gradient} height={gradientHeight} /> : null}
       {body}
       {footer ? (
         <View style={[padding, { paddingBottom: bottom, paddingTop: 12 }]}>{footer}</View>

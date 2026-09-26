@@ -43,7 +43,7 @@ export function ConfirmSheet({
         loading={loading}
         onPress={onConfirm}
       />
-      <Button className="mt-1" variant="ghost" label={cancelLabel} onPress={controls.onClose} />
+      <Button className="mt-2.5" variant="ghost" label={cancelLabel} onPress={controls.onClose} />
     </Sheet>
   );
 }

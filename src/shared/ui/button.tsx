@@ -7,7 +7,7 @@ import { Icon, type IconName } from './icon';
 import { Pressable, type HapticKind } from './pressable';
 import { Text } from './text';
 
-type Variant = 'primary' | 'danger' | 'ghost' | 'link' | 'outline';
+type Variant = 'primary' | 'danger' | 'ghost' | 'ghost-danger' | 'link' | 'outline';
 type Size = 'lg' | 'md' | 'sm';
 
 export interface ButtonProps {
@@ -27,6 +27,7 @@ const container: Record<Variant, string> = {
   danger: 'bg-danger',
   outline: 'bg-surface border border-line-strong',
   ghost: '',
+  'ghost-danger': '',
   link: '',
 };
 
@@ -41,6 +42,7 @@ const labelColor: Record<Variant, string> = {
   danger: 'text-white',
   outline: 'text-ink-soft',
   ghost: 'text-ink-soft',
+  'ghost-danger': 'text-danger-text',
   link: 'text-primary',
 };
 
@@ -56,6 +58,9 @@ export function Button({
   className,
 }: ButtonProps) {
   const filled = variant === 'primary' || variant === 'danger';
+  // Large text-only buttons sit under a primary action as a plain text line,
+  // like the design; the hit slop keeps the touch target at full size.
+  const textOnly = size === 'lg' && (variant === 'ghost' || variant === 'ghost-danger');
   const textSize = size === 'lg' ? (filled ? 17.5 : 16) : size === 'md' ? 15.5 : 15;
 
   return (
@@ -64,9 +69,10 @@ export function Button({
       disabled={disabled || loading}
       onPress={onPress}
       accessibilityLabel={label}
+      hitSlop={textOnly ? 15 : undefined}
       className={cn(
         'flex-row items-center justify-center gap-2 rounded-full',
-        heights[size],
+        textOnly ? 'h-[30px] px-6' : heights[size],
         container[variant],
         className,
       )}>

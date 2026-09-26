@@ -45,7 +45,7 @@ export function CaptureDock({ firstName }: { firstName: string }) {
           accessibilityLabel={t('capture.camera')}
           onPress={() => open('/capture/camera')}
         />
-        <View style={shadows.primary}>
+        <View className="rounded-full" style={shadows.primary}>
           <IconButton
             icon="microphone"
             variant="primary"

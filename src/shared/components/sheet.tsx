@@ -38,11 +38,24 @@ export function Sheet({ open, onClose, children, title, height }: SheetProps) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const ref = useRef<BottomSheetModal>(null);
+  const presented = useRef(false);
 
+  // Only dismiss a sheet that was presented: dismissing an unmounted modal
+  // leaves gorhom in a "dismissing" state that blocks every later present().
   useEffect(() => {
-    if (open) ref.current?.present();
-    else ref.current?.dismiss();
+    if (open) {
+      presented.current = true;
+      ref.current?.present();
+    } else if (presented.current) {
+      presented.current = false;
+      ref.current?.dismiss();
+    }
   }, [open]);
+
+  const handleDismiss = () => {
+    presented.current = false;
+    onClose();
+  };
 
   return (
     <BottomSheetModal
@@ -55,7 +68,7 @@ export function Sheet({ open, onClose, children, title, height }: SheetProps) {
       keyboardBehavior="interactive"
       keyboardBlurBehavior="restore"
       backdropComponent={Backdrop}
-      onDismiss={onClose}
+      onDismiss={handleDismiss}
       backgroundStyle={{ borderRadius: 36, backgroundColor: colors.white }}
       handleIndicatorStyle={{ width: 36, height: 5, backgroundColor: colors.grabber }}>
       <BottomSheetView

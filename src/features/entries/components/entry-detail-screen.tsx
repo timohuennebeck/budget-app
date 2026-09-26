@@ -74,8 +74,8 @@ function EntryDetailForm({ entry }: { entry: Entry }) {
         <View>
           <Button label={t('common.save')} loading={update.isPending} onPress={save} />
           <Button
-            variant="ghost"
-            className="mt-1"
+            variant="ghost-danger"
+            className="mt-2.5"
             label={t('entries.delete')}
             haptic="warning"
             onPress={confirm.present}
@@ -94,7 +94,6 @@ function EntryDetailForm({ entry }: { entry: Entry }) {
       />
       <ConfirmSheet
         {...confirm.controls}
-        pose="dizzy"
         destructive
         title={t('entries.deleteTitle')}
         message={t('entries.deleteMessage', {

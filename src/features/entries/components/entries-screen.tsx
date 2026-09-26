@@ -129,8 +129,11 @@ export function EntriesScreen() {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          className="-mx-4 mt-3 grow-0"
-          contentContainerStyle={{ paddingHorizontal: 16, gap: 8 }}>
+          className="-mx-4 mt-3"
+          // Fixed height: on web a horizontal ScrollView inside a growing
+          // column otherwise stretches and pushes the list off-screen.
+          style={{ height: 36, flexGrow: 0, flexShrink: 0 }}
+          contentContainerStyle={{ paddingHorizontal: 16, gap: 8, alignItems: 'center' }}>
           <Chip
             label={t('entries.all')}
             size="sm"

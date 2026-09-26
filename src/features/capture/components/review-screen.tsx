@@ -8,6 +8,7 @@ import { entryAmount, entrySubtitle, entryVisual } from '@/features/entries/lib/
 import { useEntryAllowance } from '@/features/paywall/hooks/use-entry-allowance';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
+import { formatDayLabel } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
@@ -75,7 +76,7 @@ export function ReviewScreen() {
           />
           <Button
             variant="ghost"
-            className="mt-1"
+            className="mt-2.5"
             label={t('capture.addMore')}
             onPress={() => {
               appendMore();
@@ -109,10 +110,11 @@ export function ReviewScreen() {
                 key={draft.id}
                 {...visual}
                 title={draft.title}
-                subtitle={entrySubtitle(
-                  { ...draft, total_amount: draft.totalAmount },
-                  category?.name,
-                )}
+                subtitle={
+                  draft.totalAmount
+                    ? entrySubtitle({ ...draft, total_amount: draft.totalAmount }, category?.name)
+                    : `${entrySubtitle(draft, category?.name)} · ${formatDayLabel(new Date(draft.occurredAt))}`
+                }
                 amount={amount}
                 originalAmount={original}
                 chevron

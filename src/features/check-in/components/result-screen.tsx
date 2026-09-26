@@ -39,7 +39,7 @@ export function ResultScreen() {
 
   const totals = spendByCategory(entries);
   const counts = countByCategory(entries);
-  const biggest = [...totals.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3);
+  const biggest = [...totals.entries()].sort((a, b) => b[1] - a[1]).slice(0, 2);
 
   return (
     <Screen
@@ -50,7 +50,7 @@ export function ResultScreen() {
           <Button label={t('common.done')} onPress={() => router.dismissAll()} />
           <Button
             variant="ghost"
-            className="mt-1"
+            className="mt-2.5"
             label={t('checkIn.viewHistory')}
             onPress={() => router.replace('/check-in/history')}
           />

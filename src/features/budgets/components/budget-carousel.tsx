@@ -27,7 +27,8 @@ export function BudgetCarousel({
 }: BudgetCarouselProps) {
   const { width } = useWindowDimensions();
   const [offset, setOffset] = useState(0);
-  const perPage = Math.max(1, Math.floor((width - EDGE * 2 + GAP) / (BUDGET_CARD_WIDTH + GAP)));
+  // A peeking second card counts as on the page, so 4 cards give 2 dots.
+  const perPage = Math.max(1, Math.round((width - EDGE * 2 + GAP) / (BUDGET_CARD_WIDTH + GAP)));
   const pages = Math.max(1, Math.ceil(cards.length / perPage));
   const page = Math.min(pages - 1, Math.round(offset / ((BUDGET_CARD_WIDTH + GAP) * perPage)));
 

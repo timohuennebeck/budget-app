@@ -29,7 +29,7 @@ export function LogoutScreen() {
           <Button label={t('profile.staySignedIn')} onPress={() => router.back()} />
           <Button
             variant="ghost"
-            className="mt-1"
+            className="mt-2.5"
             label={t('profile.signOut')}
             loading={signOut.isPending}
             onPress={() => signOut.mutate()}

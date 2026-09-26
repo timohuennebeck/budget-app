@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
+import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { DateWheelPicker } from '@/shared/components/date-wheel-picker';
@@ -43,7 +44,13 @@ export function BirthdayScreen() {
         <Text size={40} weight="semibold" tracking={-0.04}>
           {formatBirthDate(date)}
         </Text>
-        <DateWheelPicker value={date} onChange={setDate} maxYear={new Date().getFullYear() - 13} />
+        <View className="mt-[18px]">
+          <DateWheelPicker
+            value={date}
+            onChange={setDate}
+            maxYear={new Date().getFullYear() - 13}
+          />
+        </View>
       </Card>
     </Screen>
   );

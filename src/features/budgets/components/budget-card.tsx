@@ -18,7 +18,7 @@ interface BudgetCardProps {
   highlighted?: boolean;
 }
 
-export const BUDGET_CARD_WIDTH = 156;
+export const BUDGET_CARD_WIDTH = 186;
 
 /** Remaining budget of one category; turns red once over the limit. */
 export function BudgetCard({

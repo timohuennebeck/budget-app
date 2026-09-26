@@ -10,11 +10,20 @@ interface StatusHeroProps {
   pipSize?: number;
   title: string;
   subtitle?: ReactNode;
+  /** e.g. `max-w-none` for a subtitle that spans the screen */
+  subtitleClassName?: string;
   className?: string;
 }
 
 /** Centered Pip + title + subtitle block for success, empty and error states. */
-export function StatusHero({ pose, pipSize = 160, title, subtitle, className }: StatusHeroProps) {
+export function StatusHero({
+  pose,
+  pipSize = 160,
+  title,
+  subtitle,
+  subtitleClassName,
+  className,
+}: StatusHeroProps) {
   return (
     <View className={cn('items-center', className)}>
       {pose ? <Pip pose={pose} size={pipSize} /> : null}
@@ -22,7 +31,7 @@ export function StatusHero({ pose, pipSize = 160, title, subtitle, className }: 
         {title}
       </Text>
       {subtitle ? (
-        <Text variant="body" className="mt-3 max-w-[300px] text-center">
+        <Text variant="body" className={cn('mt-3 max-w-[300px] text-center', subtitleClassName)}>
           {subtitle}
         </Text>
       ) : null}

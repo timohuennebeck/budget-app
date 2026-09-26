@@ -6,6 +6,7 @@ import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { currencySymbol } from '@/shared/lib/money';
 import { Chip } from '@/shared/ui/chip';
+import { FittedInput } from '@/shared/ui/fitted-input';
 import { IconButton } from '@/shared/ui/icon-button';
 import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
@@ -66,8 +67,9 @@ export function AmountStepper({
           haptic="none"
           onPress={() => input.current?.focus()}
           className="flex-row items-center">
-          <TextInput
+          <FittedInput
             ref={input}
+            size={metrics.number}
             value={draft ?? String(value)}
             onChangeText={(text) => setDraft(text.replace(/\D/g, '').slice(0, 7))}
             onFocus={() => setDraft(String(value))}
@@ -79,8 +81,6 @@ export function AmountStepper({
             returnKeyType="done"
             caretHidden
             selectTextOnFocus
-            className="font-inter-bold text-ink"
-            style={{ fontSize: metrics.number, letterSpacing: -0.05 * metrics.number, padding: 0 }}
           />
           <View className="mx-1 w-[3px] rounded-sm bg-primary" style={{ height: metrics.caret }} />
           <Text size={metrics.symbol} weight="bold" tracking={-0.05}>

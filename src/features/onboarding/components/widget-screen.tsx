@@ -35,7 +35,7 @@ export function WidgetScreen() {
           <Button label={t('onboarding.widget.add')} onPress={next} />
           <Button
             variant="ghost"
-            className="mt-1"
+            className="mt-2.5"
             label={t('onboarding.widget.later')}
             onPress={next}
           />
@@ -62,9 +62,21 @@ export function WidgetScreen() {
               <Icon name="plus" size={18} color={colors.white} />
             </View>
           </View>
-          <View className="flex-1 flex-row flex-wrap content-start gap-3.5">
-            {['#23272F', '#2A2F38', '#272B34', '#20242C'].map((color) => (
-              <Placeholder key={color} size={63} radius={18} color={color} />
+          {/* 2×2 app icons filling the space next to the widget */}
+          <View className="flex-1 gap-3.5">
+            {[
+              ['#23272F', '#2A2F38'],
+              ['#272B34', '#20242C'],
+            ].map((row) => (
+              <View key={row[0]} className="flex-1 flex-row gap-3.5">
+                {row.map((color) => (
+                  <View
+                    key={color}
+                    className="flex-1 rounded-[18px]"
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </View>
             ))}
           </View>
         </View>

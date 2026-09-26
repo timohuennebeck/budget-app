@@ -46,7 +46,7 @@ function ModeCard({ title, description, tags, pose, selected, onPress }: ModeCar
       <Text size={15.5} leading={1.4} className="mt-2 max-w-[196px] text-[#4A5263]">
         {description}
       </Text>
-      <View className="mt-3.5 max-w-[200px] flex-row flex-wrap gap-1.5">
+      <View className="mt-3.5 max-w-[205px] flex-row flex-wrap gap-1.5">
         {tags.map((tag) => (
           <View key={tag} className="rounded-full bg-field px-[11px] py-1.5">
             <Text size={13} className="text-[#3B3944]">
@@ -76,7 +76,7 @@ export function BudgetTypeScreen() {
           />
           <Button
             variant="ghost"
-            className="mt-1"
+            className="mt-2.5"
             label={t('onboarding.budgetType.skip')}
             onPress={() => {
               update({ budgetMode: 'none' });

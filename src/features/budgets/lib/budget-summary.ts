@@ -77,7 +77,8 @@ export function summarizeBudget(
         amount: byCategory.get(category.id)!,
       }))
       .sort((a, b) => b.amount - a.amount),
-    cards: limited.map((category) => {
+    // The per-category cards only show in that mode; totals still use limits.
+    cards: (profile.budget_mode === 'per_category' ? limited : []).map((category) => {
       const categorySpent = byCategory.get(category.id) ?? 0;
       const limit = Number(category.monthly_limit);
       return {

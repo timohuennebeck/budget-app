@@ -51,7 +51,7 @@ export default function BudgetSettings() {
           <Button label={t('common.done')} onPress={() => router.back()} />
           <Button
             variant="ghost"
-            className="mt-1"
+            className="mt-2.5"
             label={t('categories.create')}
             onPress={() => router.push('/categories/new')}
           />

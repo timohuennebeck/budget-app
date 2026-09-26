@@ -44,7 +44,7 @@ export function DraftEditScreen({ id }: { id: string }) {
           />
           <Button
             variant="ghost"
-            className="mt-1"
+            className="mt-2.5"
             label={t('capture.removeDraft')}
             haptic="warning"
             onPress={() => {

@@ -37,7 +37,7 @@ export function ActionButtonScreen({ header, onDone, laterLabel }: ActionButtonS
               onDone();
             }}
           />
-          <Button variant="ghost" className="mt-1" label={laterLabel} onPress={onDone} />
+          <Button variant="ghost" className="mt-2.5" label={laterLabel} onPress={onDone} />
         </View>
       }>
       {header}

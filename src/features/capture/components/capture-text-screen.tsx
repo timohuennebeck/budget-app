@@ -1,9 +1,10 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { type LayoutChangeEvent, TextInput, View } from 'react-native';
+import { type LayoutRectangle, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store';
+import { MeasuredView } from '@/shared/components/measured-view';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { cn } from '@/shared/lib/cn';
@@ -57,10 +58,8 @@ export function CaptureTextScreen({ mode, initialText, onClose }: CaptureTextScr
   const [focused, setFocused] = useState(false);
   const [targets, setTargets] = useState<TipTargets>({});
   // Coach marks need window coordinates of the controls they point at.
-  const measure = (key: keyof TipTargets) => (event: LayoutChangeEvent) =>
-    event.currentTarget.measureInWindow((x, y, width, height) =>
-      setTargets((current) => ({ ...current, [key]: { x, y, width, height } })),
-    );
+  const measure = (key: keyof TipTargets) => (rect: LayoutRectangle) =>
+    setTargets((current) => ({ ...current, [key]: rect }));
 
   const addSuggestion = (phrase: string) =>
     setText(text.trim() ? `${text.trim()}, ${phrase} ` : `${phrase} `);
@@ -79,7 +78,7 @@ export function CaptureTextScreen({ mode, initialText, onClose }: CaptureTextScr
       }
       footer={
         <View className="flex-row gap-2.5">
-          <View onLayout={measure('camera')}>
+          <MeasuredView onMeasure={measure('camera')}>
             <IconButton
               icon="camera"
               variant="soft"
@@ -88,8 +87,8 @@ export function CaptureTextScreen({ mode, initialText, onClose }: CaptureTextScr
               accessibilityLabel={t('capture.camera')}
               onPress={() => router.push(captureHref(mode, 'camera'))}
             />
-          </View>
-          <View onLayout={measure('microphone')}>
+          </MeasuredView>
+          <MeasuredView onMeasure={measure('microphone')}>
             <IconButton
               icon="microphone"
               variant="soft"
@@ -98,7 +97,7 @@ export function CaptureTextScreen({ mode, initialText, onClose }: CaptureTextScr
               accessibilityLabel={t('capture.voice')}
               onPress={() => router.push(captureHref(mode, 'voice'))}
             />
-          </View>
+          </MeasuredView>
           <Button
             className="flex-1"
             label={t('capture.sort')}
@@ -115,8 +114,8 @@ export function CaptureTextScreen({ mode, initialText, onClose }: CaptureTextScr
         {t('capture.subtitle')}
       </Text>
 
-      <View
-        onLayout={measure('text')}
+      <MeasuredView
+        onMeasure={measure('text')}
         className={cn(
           'mt-[22px] min-h-[190px] rounded-3xl bg-surface p-[18px]',
           focused || text ? 'border-2 border-primary' : 'border border-line-strong',
@@ -134,7 +133,7 @@ export function CaptureTextScreen({ mode, initialText, onClose }: CaptureTextScr
           className="flex-1 font-inter-medium text-[21px] leading-[30px] text-ink"
           style={{ textAlignVertical: 'top', letterSpacing: -0.3 }}
         />
-      </View>
+      </MeasuredView>
 
       <View className="mt-3 flex-row flex-wrap gap-2">
         {SUGGESTIONS.map((key) => (
