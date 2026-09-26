@@ -40,6 +40,13 @@ export async function countEntries({ start, end }: DateRange) {
   return count ?? 0;
 }
 
+/** Whether the signed-in user has saved any entry yet. */
+export async function hasEntries() {
+  const { data, error } = await supabase.from('entries').select('id').limit(1);
+  if (error) throw error;
+  return data.length > 0;
+}
+
 export async function insertEntries(rows: EntryInsert[]) {
   const { data, error } = await supabase.from('entries').insert(rows).select();
   if (error) throw error;

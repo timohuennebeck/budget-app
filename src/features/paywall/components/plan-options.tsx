@@ -8,7 +8,7 @@ import { CheckBadge } from '@/shared/ui/check-badge';
 import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 
-import type { PlanId } from '../lib/purchases';
+import { type PlanId, PLUS_CURRENCY } from '../lib/purchases';
 
 interface PlanCardProps {
   title: string;
@@ -67,7 +67,7 @@ interface PlanOptionsProps {
 export function PlanOptions({ selected, onSelect }: PlanOptionsProps) {
   const { t } = useTranslation();
   const { plusPricing } = useAppConfig();
-  const currency = 'EUR';
+  const currency = PLUS_CURRENCY;
   const yearlyMonthly = roundMoney(plusPricing.yearly / 12);
   const saving = Math.round((1 - yearlyMonthly / plusPricing.monthly) * 100);
 

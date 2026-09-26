@@ -7,18 +7,24 @@ import { ListGroup } from '@/shared/components/list-group';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { StatusHero } from '@/shared/components/status-hero';
+import { useAppConfig } from '@/shared/hooks/use-app-config';
 import { addDays, formatWeekRange, fromISODate } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { Text } from '@/shared/ui/text';
 
+import type { CheckIn } from '../data/check-ins-api';
 import { useCheckIns } from '../hooks/use-check-ins';
-import { accuracyPercent } from '../lib/check-in-window';
+import { accuracyPercent, guessAccuracy } from '../lib/check-in-window';
 
 /** Past weekly check-ins with guess, actual and accuracy. */
 export function HistoryScreen() {
   const { t } = useTranslation();
   const { data: checkIns = [] } = useCheckIns();
   const currency = useCurrency();
+  const { checkInCloseRatio } = useAppConfig();
+  // Same rule as the result screen: unrounded accuracy vs. the config ratio.
+  const isClose = (checkIn: CheckIn) =>
+    guessAccuracy(Number(checkIn.guess), Number(checkIn.actual ?? 0)) >= checkInCloseRatio;
 
   return (
     <Screen scroll>
@@ -49,7 +55,7 @@ export function HistoryScreen() {
                 </View>
                 {accuracy !== null ? (
                   <CategoryPill
-                    hue={accuracy >= 85 ? 150 : 25}
+                    hue={isClose(checkIn) ? 150 : 25}
                     label={t('checkIn.accuracy', { percent: accuracy })}
                   />
                 ) : null}

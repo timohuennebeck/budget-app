@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import { View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
@@ -39,6 +39,7 @@ export function SavedScreen({ mode }: { mode: CaptureMode }) {
   const categories = useCaptureCategories(mode);
   const { data: recent = [] } = useRecentEntries(mode === 'app');
   const ratingPrompt = useRatingPrompt();
+  const navigation = useNavigation();
 
   const onlyIncome = drafts.length > 0 && drafts.every((draft) => draft.kind === 'income');
   const monthly =
@@ -86,7 +87,9 @@ export function SavedScreen({ mode }: { mode: CaptureMode }) {
   const next = () => {
     if (mode === 'onboarding') return router.replace('/categories');
     if (ratingPrompt.shouldAsk) return router.replace('/rating');
-    router.dismissAll();
+    // Close the whole capture modal. dismissAll() would only pop the nested
+    // capture stack back to the text screen when the flow started there.
+    navigation.getParent()?.goBack();
   };
 
   return (

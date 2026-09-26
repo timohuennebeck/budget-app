@@ -12,7 +12,7 @@ import { Pip } from '@/shared/ui/pip';
 import { Text } from '@/shared/ui/text';
 
 import { useRestorePurchases, useStartTrial } from '../hooks/use-purchase';
-import type { PlanId } from '../lib/purchases';
+import { type PlanId, PLUS_CURRENCY } from '../lib/purchases';
 import { PlanOptions } from './plan-options';
 
 const FEATURES = [
@@ -42,7 +42,7 @@ export function PaywallScreen({ onClose }: { onClose: () => void }) {
           />
           <Text size={13.5} leading={1.45} className="mt-[11px] text-center text-[#8A91A0]">
             {t('paywall.disclaimer', {
-              amount: formatMoney(plusPricing.yearly, { currency: 'EUR' }),
+              amount: formatMoney(plusPricing.yearly, { currency: PLUS_CURRENCY }),
             })}
           </Text>
           <Button

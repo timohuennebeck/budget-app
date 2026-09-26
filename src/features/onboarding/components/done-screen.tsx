@@ -23,10 +23,17 @@ export function DoneScreen() {
 
   // The guard switch unmounts this screen, so await instead of callbacks.
   const finish = async (intent: 'capture' | null) => {
+    if (updateProfile.isPending) return;
     setIntent(intent);
     haptics.success();
-    await updateProfile.mutateAsync({ onboarded_at: new Date().toISOString() });
-    reset();
+    try {
+      await updateProfile.mutateAsync({ onboarded_at: new Date().toISOString() });
+      reset();
+    } catch {
+      // Stay here so the user can retry; don't open capture on a later visit.
+      setIntent(null);
+      haptics.error();
+    }
   };
 
   return (

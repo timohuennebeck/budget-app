@@ -31,7 +31,8 @@ export function VoiceScreen({ mode }: { mode: CaptureMode }) {
   const finish = () => {
     stop();
     setText(transcript);
-    router.replace(captureHref(mode, preview.count ? 'processing' : 'index', { source: 'voice' }));
+    if (preview.count) router.replace(captureHref(mode, 'processing', { source: 'voice' }));
+    else router.dismissTo(captureHref(mode, 'index'));
   };
 
   return (

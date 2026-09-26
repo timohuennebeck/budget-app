@@ -27,7 +27,9 @@ export function RatingScreen() {
 
   const close = () => {
     markAsked();
-    router.dismissAll();
+    // Rating replaced the capture modal, so going back returns to wherever
+    // capture was opened from (e.g. the check-in), not always to the tabs.
+    router.back();
   };
 
   const send = async () => {

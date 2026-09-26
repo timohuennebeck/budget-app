@@ -11,7 +11,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -31,12 +31,16 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
   // profile is marked as onboarded; only then the app becomes available.
   const isOnboarded = !!session && !!profile.data?.onboarded_at;
   const ready = fontsLoaded && !isLoading && (!session || !profile.isPending);
+  // Only the first render waits for the profile. Signing in or up later
+  // must not unmount the navigator (and the screen awaiting the sign-up).
+  const [booted, setBooted] = useState(false);
+  if (ready && !booted) setBooted(true);
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync();
   }, [ready]);
 
-  if (!ready) return null;
+  if (!booted && !ready) return null;
 
   return (
     <Stack screenOptions={{ headerShown: false }}>

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { create } from 'zustand';
 
 import type { DraftEntry } from '../lib/types';
@@ -43,3 +44,10 @@ export const useCaptureStore = create<CaptureState>((set) => ({
   removeDraft: (id) =>
     set((state) => ({ drafts: state.drafts.filter((draft) => draft.id !== id) })),
 }));
+
+// Clears the session when the capture flow closes. Camera and voice can be
+// opened directly (skipping the text screen that calls `start`), so leftover
+// drafts or a pending "Weitere hinzufügen" must not leak into the next one.
+export function useResetCaptureOnClose() {
+  useEffect(() => () => useCaptureStore.getState().start(), []);
+}

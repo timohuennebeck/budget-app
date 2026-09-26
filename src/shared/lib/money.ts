@@ -64,6 +64,15 @@ export function currencySymbol(currency: string) {
   return parts.find((part) => part.type === 'currency')?.value ?? currency;
 }
 
+/** Editable amount without currency or grouping: "12,50" (de) or "12.50" (en). */
+export function formatAmountInput(amount: number) {
+  return new Intl.NumberFormat(i18n.language || 'de', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    useGrouping: false,
+  }).format(amount);
+}
+
 // Accepts "12", "12,50", "12.50" and "1.234,56" and returns a number.
 export function parseAmount(input: string): number | null {
   const cleaned = input.replace(/[^\d.,-]/g, '');

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { useCategories } from '@/features/categories/hooks/use-categories';
 import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store';
 import { Screen } from '@/shared/components/screen';
 import { haptics } from '@/shared/lib/haptics';
@@ -27,12 +28,15 @@ export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
   const { t } = useTranslation();
   const { source } = useLocalSearchParams<{ source?: DraftEntry['source'] }>();
   const categories = useCaptureCategories(mode);
+  // Wait for the user's categories to load, but not for them to be non-empty:
+  // an account without categories would otherwise spin here forever.
+  const categoriesPending = useCategories(mode === 'app').isPending && mode === 'app';
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<DraftEntry[] | null>(null);
   const started = useRef(false);
 
   useEffect(() => {
-    if (started.current || categories.length === 0) return;
+    if (started.current || categoriesPending) return;
     started.current = true;
     const { text, photoUri } = useCaptureStore.getState();
 
@@ -46,7 +50,7 @@ export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
       const code = error instanceof ReceiptUnreadableError ? String(error.code) : '500';
       router.replace(captureHref(mode, 'receipt-error', { code }));
     });
-  }, [categories, mode, source]);
+  }, [categories, categoriesPending, mode, source]);
 
   useEffect(() => {
     const timer = setInterval(

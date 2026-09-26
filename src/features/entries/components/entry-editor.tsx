@@ -7,7 +7,13 @@ import { CategoryPill } from '@/features/categories/components/category-pill';
 import type { CategoryDisplay } from '@/features/categories/hooks/use-category-display';
 import { useSheet } from '@/shared/components/sheet';
 import { formatDayLabel, formatTime } from '@/shared/lib/dates';
-import { currencySymbol, formatMoney, parseAmount, roundMoney } from '@/shared/lib/money';
+import {
+  currencySymbol,
+  formatAmountInput,
+  formatMoney,
+  parseAmount,
+  roundMoney,
+} from '@/shared/lib/money';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { Pressable } from '@/shared/ui/pressable';
@@ -32,10 +38,6 @@ interface EntryEditorProps {
   currency: string;
   onChange: (patch: Partial<EditableEntry>) => void;
   onCategoryPress: () => void;
-}
-
-function amountText(amount: number) {
-  return amount.toFixed(2).replace('.', ',');
 }
 
 interface DetailRowProps {
@@ -80,7 +82,8 @@ export function EntryEditor({
   const commitAmount = () => {
     const parsed = amountDraft === null ? null : parseAmount(amountDraft);
     setAmountDraft(null);
-    if (!parsed) return;
+    // entries.amount must be > 0; a "-" typed on Android would fail the save.
+    if (!parsed || parsed <= 0) return;
     // Keep the split ratio when the user's share changes.
     const ratio = value.totalAmount ? value.totalAmount / value.amount : null;
     onChange({ amount: parsed, totalAmount: ratio ? roundMoney(parsed * ratio) : null });
@@ -102,9 +105,9 @@ export function EntryEditor({
             {value.kind === 'income' ? '+' : '−'}
           </Text>
           <TextInput
-            value={amountDraft ?? amountText(value.amount)}
+            value={amountDraft ?? formatAmountInput(value.amount)}
             onChangeText={setAmountDraft}
-            onFocus={() => setAmountDraft(amountText(value.amount))}
+            onFocus={() => setAmountDraft(formatAmountInput(value.amount))}
             onBlur={commitAmount}
             onSubmitEditing={commitAmount}
             keyboardType="decimal-pad"

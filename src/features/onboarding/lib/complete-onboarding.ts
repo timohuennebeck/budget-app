@@ -1,9 +1,13 @@
 import i18n from 'i18next';
 
-import { type CategoryInsert, insertCategories } from '@/features/categories/data/categories-api';
+import {
+  type CategoryInsert,
+  fetchCategories,
+  insertCategories,
+} from '@/features/categories/data/categories-api';
 import { findCatalogCategory } from '@/features/categories/data/category-catalog';
 import { categoryName } from '@/features/categories/lib/category-name';
-import { insertEntries } from '@/features/entries/data/entries-api';
+import { hasEntries, insertEntries } from '@/features/entries/data/entries-api';
 import { acceptLegalDocuments } from '@/features/legal/data/legal-api';
 import { updateProfile } from '@/features/profile/data/profile-api';
 
@@ -11,7 +15,8 @@ import type { OnboardingDraft } from '../data/onboarding-store';
 
 // Writes everything collected during onboarding to the new account: profile
 // answers, chosen categories with limits, the first captured entries and
-// the accepted legal documents. Runs right after sign-up.
+// the accepted legal documents. Runs right after sign-up and is safe to
+// re-run when a previous attempt failed halfway (nothing is inserted twice).
 export async function completeOnboarding(userId: string, draft: OnboardingDraft) {
   const locale = i18n.language;
 
@@ -30,8 +35,18 @@ export async function completeOnboarding(userId: string, draft: OnboardingDraft)
   // Categories the first entries landed in are kept even if deselected later.
   const usedIds = draft.entries.map((entry) => entry.categoryId).filter((id): id is string => !!id);
   const categoryIds = [...new Set([...draft.categoryIds, ...usedIds])];
+  const existing = await fetchCategories();
+
+  // Matches a draft id (catalog key or custom draft id) to a saved row.
+  const findSaved = (id: string, rows: typeof existing) => {
+    const catalog = findCatalogCategory(id);
+    if (catalog) return rows.find((row) => row.key === catalog.key);
+    const custom = draft.customCategories.find((category) => category.id === id);
+    return custom ? rows.find((row) => row.key === null && row.name === custom.name) : undefined;
+  };
 
   const rows = categoryIds.flatMap((id, index): CategoryInsert[] => {
+    if (findSaved(id, existing)) return [];
     const limit = draft.budgetMode === 'per_category' ? (draft.categoryLimits[id] ?? null) : null;
     const catalog = findCatalogCategory(id);
     if (catalog) {
@@ -64,10 +79,9 @@ export async function completeOnboarding(userId: string, draft: OnboardingDraft)
   });
 
   const created = rows.length ? await insertCategories(rows) : [];
-  // sort_order is the index into categoryIds, so it maps drafts to rows.
-  const idFor = new Map(created.map((category) => [categoryIds[category.sort_order], category.id]));
+  const saved = [...existing, ...created];
 
-  if (draft.entries.length) {
+  if (draft.entries.length && !(await hasEntries())) {
     await insertEntries(
       draft.entries.map((entry) => ({
         profile_id: userId,
@@ -77,7 +91,7 @@ export async function completeOnboarding(userId: string, draft: OnboardingDraft)
         kind: entry.kind,
         source: entry.source,
         occurred_at: entry.occurredAt,
-        category_id: entry.categoryId ? (idFor.get(entry.categoryId) ?? null) : null,
+        category_id: entry.categoryId ? (findSaved(entry.categoryId, saved)?.id ?? null) : null,
       })),
     );
   }

@@ -1,11 +1,15 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { StepIntro } from '@/features/onboarding/components/step-intro';
+import { fetchProfile } from '@/features/profile/data/profile-api';
+import { profileKey } from '@/features/profile/hooks/use-profile';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { haptics } from '@/shared/lib/haptics';
+import { queryClient } from '@/shared/lib/query-client';
 import { Button } from '@/shared/ui/button';
 import { Pip } from '@/shared/ui/pip';
 import { TextField } from '@/shared/ui/text-field';
@@ -13,19 +17,31 @@ import { TextField } from '@/shared/ui/text-field';
 import { useSignIn } from '../hooks/use-auth-actions';
 import { isValidEmail } from '../lib/password-strength';
 
-// Sign-in for returning users. Once the session exists the protected routes
-// switch to the app automatically, so no navigation is needed here.
+// Sign-in for returning users. Once the profile is onboarded the protected
+// routes switch to the app automatically. An account whose onboarding was
+// never finished stays in this group, so it continues at the last step.
 export function LoginScreen() {
   const { t } = useTranslation();
   const signIn = useSignIn();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const resume = async (userId: string) => {
+    const profile = await queryClient.fetchQuery({
+      queryKey: profileKey(userId),
+      queryFn: () => fetchProfile(userId),
+    });
+    if (!profile.onboarded_at) router.replace('/done');
+  };
+
   const submit = () =>
     signIn.mutate(
       { email: email.trim(), password },
       {
-        onSuccess: () => haptics.success(),
+        onSuccess: (session) => {
+          haptics.success();
+          resume(session.user.id).catch(() => undefined);
+        },
         onError: (error) => {
           haptics.error();
           Alert.alert(t('auth.signInFailed'), error.message);

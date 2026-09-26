@@ -20,6 +20,7 @@ import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 
 import { useSignUp } from '../hooks/use-auth-actions';
+import { useAuth } from '../lib/auth-provider';
 import { isValidEmail, MIN_PASSWORD_LENGTH, passwordStrength } from '../lib/password-strength';
 
 const STRENGTH_LABELS = [
@@ -33,6 +34,7 @@ const STRENGTH_LABELS = [
 export function SignUpScreen() {
   const { t, i18n } = useTranslation();
   const signUp = useSignUp();
+  const { session } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [saving, setSaving] = useState(false);
@@ -43,17 +45,27 @@ export function SignUpScreen() {
     const draft = useOnboardingStore.getState();
     setSaving(true);
     try {
-      const result = await signUp.mutateAsync({
-        email: email.trim(),
-        password,
-        metadata: { first_name: draft.firstName, currency: draft.currency, locale: i18n.language },
-      });
-      if (!result.session || !result.user) {
-        Alert.alert(t('auth.confirmTitle'), t('auth.confirmMessage', { email: email.trim() }));
-        return;
+      // A retry after saving the answers failed: the account already exists
+      // and is signed in, so signing up again would only be rejected.
+      let userId = session?.user.id;
+      if (!userId) {
+        const result = await signUp.mutateAsync({
+          email: email.trim(),
+          password,
+          metadata: {
+            first_name: draft.firstName,
+            currency: draft.currency,
+            locale: i18n.language,
+          },
+        });
+        if (!result.session || !result.user) {
+          Alert.alert(t('auth.confirmTitle'), t('auth.confirmMessage', { email: email.trim() }));
+          return;
+        }
+        userId = result.user.id;
       }
-      await completeOnboarding(result.user.id, draft);
-      await queryClient.invalidateQueries({ queryKey: profileKey(result.user.id) });
+      await completeOnboarding(userId, draft);
+      await queryClient.invalidateQueries({ queryKey: profileKey(userId) });
       haptics.success();
       router.replace('/plus');
     } catch (error) {

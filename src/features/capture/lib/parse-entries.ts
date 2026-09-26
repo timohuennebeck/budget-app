@@ -10,8 +10,10 @@ import type { CategoryOption, DraftEntry } from './types';
 const SEPARATORS = /\s*(?:,|;|\n|\s+und\s+|\s+and\s+|\s+y\s+|\s+et\s+|\s+e\s+)\s*/i;
 const AMOUNT =
   /(?:(€|\$|£|chf|fr\.)\s*)?(\d+(?:[.,]\d{1,2})?)\s*(€|eur(?:o|os)?|\$|usd|£|gbp|chf|fr\.?)?/i;
+// `\b` only knows ASCII letters, so "à moitié" / "a metà" never matched;
+// explicit boundaries that count accented letters as part of a word.
 const SPLIT =
-  /\b(halbe[-\s]?halbe|geteilt|split|50\/50|a medias|à moitié|a metà|meio a meio|dividido)\b/i;
+  /(?:^|[^\wÀ-ÿ])(halbe[-\s]?halbe|geteilt|split|50\/50|a medias|à moitié|a metà|meio a meio|dividido)(?![\wÀ-ÿ])/i;
 const INCOME =
   /\b(gehalt|lohn|einnahme|erstattung|freelance|salary|income|refund|ingreso|sueldo|salaire|revenu|stipendio|entrata|salário|receita)\b/i;
 const FILLER = /\b(für|fuer|bei|im|in|am|beim|for|at|on|para|en|pour|chez|per|da|no|na|em)\b/gi;

@@ -79,7 +79,9 @@ export function ReviewScreen() {
             label={t('capture.addMore')}
             onPress={() => {
               appendMore();
-              router.replace(captureHref('app', 'index'));
+              // Back to the text screen below instead of stacking a second one
+              // (whose × would then only reveal the first).
+              router.dismissTo(captureHref('app', 'index'));
             }}
           />
         </View>

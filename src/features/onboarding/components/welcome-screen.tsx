@@ -1,9 +1,10 @@
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useProfile } from '@/features/profile/hooks/use-profile';
 import { Screen } from '@/shared/components/screen';
 import { findLanguage } from '@/shared/data/languages';
 import { changeLanguage } from '@/shared/i18n';
@@ -20,8 +21,14 @@ import { LanguageMenu } from './language-menu';
 export function WelcomeScreen() {
   const { t, i18n } = useTranslation();
   const insets = useSafeAreaInsets();
+  const { data: profile } = useProfile();
   const [menuOpen, setMenuOpen] = useState(false);
   const language = findLanguage(i18n.language);
+
+  // Signed in but not onboarded: the app was closed after sign-up (Plus or
+  // done step). Starting over would end at sign-up with a taken address, so
+  // resume at the last step. Redirect only fires while this screen has focus.
+  if (profile && !profile.onboarded_at) return <Redirect href="/done" />;
 
   return (
     <Screen
