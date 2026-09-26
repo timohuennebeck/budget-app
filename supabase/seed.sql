@@ -58,20 +58,20 @@ begin
     (c_transport, demo_id, 'transport', 'Mobilität', 'car-simple', 255, null, 4),
     (c_drugstore, demo_id, 'drugstore', 'Drogerie', 'drop', 320, null, 5);
 
-  insert into public.entries (profile_id, category_id, kind, title, amount, total_amount, source, is_favorite, occurred_at) values
-    (demo_id, c_drugstore, 'expense', 'dm', 23, null, 'voice', false, today + interval '16 hours 10 minutes'),
-    (demo_id, c_dining, 'expense', 'Mittagessen', 9, 18, 'voice', false, today + interval '13 hours 5 minutes'),
-    (demo_id, c_transport, 'expense', 'Uber', 12, null, 'text', false, today + interval '9 hours 12 minutes'),
-    (demo_id, c_groceries, 'expense', 'REWE', 40, null, 'text', false, today + interval '8 hours 40 minutes'),
-    (demo_id, c_cafe, 'expense', 'Mein Kaffee', 1.2, null, 'manual', true, today - interval '1 day' + interval '8 hours'),
-    (demo_id, c_transport, 'expense', 'Deutschlandticket', 58, null, 'manual', true, today - interval '1 day' + interval '7 hours'),
-    (demo_id, c_groceries, 'expense', 'Edeka', 54.4, null, 'camera', false, today - interval '2 days' + interval '18 hours 22 minutes'),
-    (demo_id, c_dining, 'expense', 'Freitagsmittag', 12, null, 'manual', true, today - interval '2 days' + interval '12 hours'),
-    (demo_id, c_dining, 'expense', 'Sushi mit Lena', 36, 72, 'text', false, today - interval '4 days' + interval '20 hours'),
-    (demo_id, c_shopping, 'expense', 'Zara', 54, null, 'camera', false, today - interval '5 days' + interval '15 hours'),
-    (demo_id, c_dining, 'expense', 'Pizza', 175, null, 'text', false, today - interval '6 days' + interval '19 hours'),
-    (demo_id, c_cafe, 'expense', 'Flat White', 3.5, null, 'voice', false, today - interval '7 days' + interval '9 hours'),
-    (demo_id, c_groceries, 'expense', 'Lidl', 25.6, null, 'text', false, today - interval '8 days' + interval '17 hours'),
-    (demo_id, null, 'income', 'Freelance-Projekt', 650, null, 'text', false, today - interval '9 days' + interval '10 hours');
+  insert into public.entries (profile_id, category_id, kind, title, amount, source, is_favorite, occurred_at) values
+    (demo_id, c_drugstore, 'expense', 'dm', 23, 'voice', false, today + interval '16 hours 10 minutes'),
+    (demo_id, c_dining, 'expense', 'Mittagessen', 18, 'voice', false, today + interval '13 hours 5 minutes'),
+    (demo_id, c_transport, 'expense', 'Uber', 12, 'text', false, today + interval '9 hours 12 minutes'),
+    (demo_id, c_groceries, 'expense', 'REWE', 40, 'text', false, today + interval '8 hours 40 minutes'),
+    (demo_id, c_cafe, 'expense', 'Mein Kaffee', 1.2, 'manual', true, today - interval '1 day' + interval '8 hours'),
+    (demo_id, c_transport, 'expense', 'Deutschlandticket', 58, 'manual', true, today - interval '1 day' + interval '7 hours'),
+    (demo_id, c_groceries, 'expense', 'Edeka', 54.4, 'camera', false, today - interval '2 days' + interval '18 hours 22 minutes'),
+    (demo_id, c_dining, 'expense', 'Freitagsmittag', 12, 'manual', true, today - interval '2 days' + interval '12 hours'),
+    (demo_id, c_dining, 'expense', 'Sushi mit Lena', 36, 'text', false, today - interval '4 days' + interval '20 hours'),
+    (demo_id, c_shopping, 'expense', 'Zara', 54, 'camera', false, today - interval '5 days' + interval '15 hours'),
+    (demo_id, c_dining, 'expense', 'Pizza', 175, 'text', false, today - interval '6 days' + interval '19 hours'),
+    (demo_id, c_cafe, 'expense', 'Flat White', 3.5, 'voice', false, today - interval '7 days' + interval '9 hours'),
+    (demo_id, c_groceries, 'expense', 'Lidl', 25.6, 'text', false, today - interval '8 days' + interval '17 hours'),
+    (demo_id, null, 'income', 'Freelance-Projekt', 650, 'text', false, today - interval '9 days' + interval '10 hours');
 end;
 $$;

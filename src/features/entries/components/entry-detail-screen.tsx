@@ -34,7 +34,6 @@ function EntryDetailForm({ entry }: { entry: Entry }) {
   const [draft, setDraft] = useState<EditableEntry>(() => ({
     title: entry.title,
     amount: Number(entry.amount),
-    totalAmount: entry.total_amount === null ? null : Number(entry.total_amount),
     kind: entry.kind,
     categoryId: entry.category_id,
     occurredAt: entry.occurred_at,
@@ -46,7 +45,6 @@ function EntryDetailForm({ entry }: { entry: Entry }) {
       patch: {
         title: draft.title.trim() || entry.title,
         amount: draft.amount,
-        total_amount: draft.totalAmount,
         occurred_at: draft.occurredAt,
       },
     });

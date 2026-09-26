@@ -252,7 +252,7 @@
     "total": "Total",
     "typeInstead": "Enter manually",
     "voice": "Speak",
-    "voiceSample": "€40 groceries, €12 Uber, lunch €18 split, and twenty-three at dm",
+    "voiceSample": "€40 groceries, €12 Uber, lunch €18, and twenty-three at dm",
     "whichCategory": "Which category?"
   },
   "entries": {
@@ -273,9 +273,7 @@
     "noCategory": "No category",
     "noResults": "No entries for “{{query}}”. Try another term.",
     "noResultsTitle": "No entry\nfound",
-    "split": "split",
-    "title": "Entries",
-    "yourHalf": "Your half of {{amount}}"
+    "title": "Entries"
   },
   "calendar": {
     "expense": "Expense",

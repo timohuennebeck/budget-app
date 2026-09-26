@@ -126,8 +126,8 @@ export function WelcomeScreen() {
           icon="fork-knife"
           hue={55}
           title={t('onboarding.welcome.lunch')}
-          subtitle={`${t('categories.dining')} · ${t('entries.split')}`}
-          amount="−9 €"
+          subtitle={t('categories.dining')}
+          amount="−18 €"
           tilt={-1.5}
           duration={4800}
           delay={900}

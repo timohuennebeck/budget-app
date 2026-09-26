@@ -7,13 +7,7 @@ import { CategoryPill } from '@/features/categories/components/category-pill';
 import type { CategoryDisplay } from '@/features/categories/hooks/use-category-display';
 import { useSheet } from '@/shared/components/sheet';
 import { formatDayLabel, formatTime } from '@/shared/lib/dates';
-import {
-  currencySymbol,
-  formatAmountInput,
-  formatMoney,
-  parseAmount,
-  roundMoney,
-} from '@/shared/lib/money';
+import { currencySymbol, formatAmountInput, parseAmount } from '@/shared/lib/money';
 import { colors } from '@/shared/lib/theme';
 import { FittedInput } from '@/shared/ui/fitted-input';
 import { Icon } from '@/shared/ui/icon';
@@ -27,7 +21,6 @@ import { DateTimeSheet } from './date-time-sheet';
 export interface EditableEntry {
   title: string;
   amount: number;
-  totalAmount: number | null;
   kind: Entry['kind'];
   categoryId: string | null;
   occurredAt: string;
@@ -85,9 +78,7 @@ export function EntryEditor({
     setAmountDraft(null);
     // entries.amount must be > 0; a "-" typed on Android would fail the save.
     if (!parsed || parsed <= 0) return;
-    // Keep the split ratio when the user's share changes.
-    const ratio = value.totalAmount ? value.totalAmount / value.amount : null;
-    onChange({ amount: parsed, totalAmount: ratio ? roundMoney(parsed * ratio) : null });
+    onChange({ amount: parsed });
   };
 
   return (
@@ -134,11 +125,6 @@ export function EntryEditor({
             {` ${currencySymbol(currency)}`}
           </Text>
         </View>
-        {value.totalAmount ? (
-          <Text size={14} className="mt-2 text-muted-soft">
-            {t('entries.yourHalf', { amount: formatMoney(value.totalAmount, { currency }) })}
-          </Text>
-        ) : null}
       </View>
 
       <View className="mt-6">

@@ -6,8 +6,6 @@ export interface DraftEntry {
   title: string;
   /** The user's share */
   amount: number;
-  /** Full bill when it was split, otherwise null */
-  totalAmount: number | null;
   kind: Enums<'entry_kind'>;
   /** Category id in the app, catalog key during onboarding */
   categoryId: string | null;

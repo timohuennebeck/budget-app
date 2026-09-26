@@ -258,7 +258,7 @@
     "total": "Total",
     "typeInstead": "Digitar manualmente",
     "voice": "Falar",
-    "voiceSample": "40€ mercado, 12€ Uber, almoço 18€ dividido, e vinte e três na dm",
+    "voiceSample": "40€ mercado, 12€ Uber, almoço 18€, e vinte e três na dm",
     "whichCategory": "Qual categoria?"
   },
   "entries": {
@@ -280,9 +280,7 @@
     "noCategory": "Sem categoria",
     "noResults": "Nenhum registro para “{{query}}”. Tente outro termo.",
     "noResultsTitle": "Nenhum registro\nencontrado",
-    "split": "dividido",
-    "title": "Registros",
-    "yourHalf": "Sua metade de {{amount}}"
+    "title": "Registros"
   },
   "calendar": {
     "expense": "Gasto",

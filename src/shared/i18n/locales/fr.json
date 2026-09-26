@@ -258,7 +258,7 @@
     "total": "Total",
     "typeInstead": "Saisir à la main",
     "voice": "Parler",
-    "voiceSample": "40€ courses, 12€ Uber, déjeuner 18€ à moitié, et vingt-trois chez dm",
+    "voiceSample": "40€ courses, 12€ Uber, déjeuner 18€, et vingt-trois chez dm",
     "whichCategory": "Quelle catégorie ?"
   },
   "entries": {
@@ -280,9 +280,7 @@
     "noCategory": "Sans catégorie",
     "noResults": "Aucune entrée pour « {{query}} ». Essaie un autre mot.",
     "noResultsTitle": "Aucune entrée\ntrouvée",
-    "split": "à moitié",
-    "title": "Entrées",
-    "yourHalf": "Ta moitié de {{amount}}"
+    "title": "Entrées"
   },
   "calendar": {
     "expense": "Dépense",

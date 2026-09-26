@@ -80,7 +80,6 @@ export type Database = {
           profile_id: string;
           source: Database['public']['Enums']['entry_source'];
           title: string;
-          total_amount: number | null;
           updated_at: string;
         };
         Insert: {
@@ -94,7 +93,6 @@ export type Database = {
           profile_id: string;
           source?: Database['public']['Enums']['entry_source'];
           title: string;
-          total_amount?: number | null;
           updated_at?: string;
         };
         Update: {
@@ -108,7 +106,6 @@ export type Database = {
           profile_id?: string;
           source?: Database['public']['Enums']['entry_source'];
           title?: string;
-          total_amount?: number | null;
           updated_at?: string;
         };
         Relationships: [];

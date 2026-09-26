@@ -78,7 +78,6 @@ export async function completeOnboarding(
         profile_id: userId,
         title: entry.title,
         amount: entry.amount,
-        total_amount: entry.totalAmount,
         kind: entry.kind,
         source: entry.source,
         occurred_at: entry.occurredAt,

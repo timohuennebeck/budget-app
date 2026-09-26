@@ -33,9 +33,6 @@ function EntryRows({ entries, categories, currency }: EntryRowsProps) {
         title={entry.title}
         subtitle={entrySubtitle(entry, category?.name)}
         amount={entryAmount(entry, currency)}
-        originalAmount={
-          entry.total_amount ? formatMoney(Number(entry.total_amount), { currency }) : undefined
-        }
         onPress={() => router.push({ pathname: '/entry/[id]', params: { id: entry.id } })}
       />
     );

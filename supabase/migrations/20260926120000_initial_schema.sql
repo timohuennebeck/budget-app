@@ -127,16 +127,13 @@ create table public.entries (
   category_id uuid null,
   kind public.entry_kind not null default 'expense',
   title text not null check (char_length(title) between 1 and 120),
-  -- The user's share. For split bills `total_amount` keeps the full bill.
   amount numeric(12, 2) not null check (amount > 0),
-  total_amount numeric(12, 2) null check (total_amount is null or total_amount >= amount),
   source public.entry_source not null default 'manual',
   is_favorite boolean not null default false,
   occurred_at timestamp with time zone not null default now(),
   created_at timestamp with time zone not null default now(),
   updated_at timestamp with time zone not null default now(),
   constraint entries_pkey primary key (id),
-  constraint entries_split_expense_only check (kind = 'expense' or total_amount is null),
   -- Same owner as the entry; clearing the category keeps the entry.
   constraint entries_category_fkey foreign key (category_id, profile_id)
     references public.categories (id, profile_id) on delete set null (category_id)
@@ -269,10 +266,10 @@ grant update (
 
 revoke insert, update on public.entries from anon, authenticated;
 grant insert (
-  id, profile_id, category_id, kind, title, amount, total_amount, source, is_favorite, occurred_at
+  id, profile_id, category_id, kind, title, amount, source, is_favorite, occurred_at
 ) on public.entries to authenticated;
 grant update (
-  category_id, kind, title, amount, total_amount, is_favorite, occurred_at
+  category_id, kind, title, amount, is_favorite, occurred_at
 ) on public.entries to authenticated;
 
 revoke insert, update on public.legal_acceptances from anon, authenticated;

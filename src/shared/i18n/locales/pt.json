@@ -258,7 +258,7 @@
     "total": "Total",
     "typeInstead": "Escrever à mão",
     "voice": "Falar",
-    "voiceSample": "40€ supermercado, 12€ Uber, almoço 18€ meio a meio, e vinte e três no dm",
+    "voiceSample": "40€ supermercado, 12€ Uber, almoço 18€, e vinte e três no dm",
     "whichCategory": "Que categoria?"
   },
   "entries": {
@@ -280,9 +280,7 @@
     "noCategory": "Sem categoria",
     "noResults": "Nenhum registo para «{{query}}». Experimenta outro termo.",
     "noResultsTitle": "Nenhum registo\nencontrado",
-    "split": "meio a meio",
-    "title": "Registos",
-    "yourHalf": "A tua metade de {{amount}}"
+    "title": "Registos"
   },
   "calendar": {
     "expense": "Despesa",

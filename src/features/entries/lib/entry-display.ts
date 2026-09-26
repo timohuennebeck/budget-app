@@ -12,7 +12,6 @@ const UNKNOWN_VISUAL = { icon: 'sparkle', hue: 255 };
 interface EntryLike {
   kind: Entry['kind'];
   amount: number;
-  total_amount?: number | null;
   is_favorite?: boolean;
   occurred_at?: string;
 }
@@ -27,12 +26,11 @@ export function entryVisual(
 }
 
 function subtitleDetail(entry: EntryLike) {
-  if (entry.total_amount) return t('entries.split');
   if (entry.is_favorite) return t('entries.favorite');
   return entry.occurred_at ? formatTime(new Date(entry.occurred_at)) : null;
 }
 
-/** "Essen gehen · halbe-halbe", "Café · Favorit" or "Mobilität · 09:12". */
+/** "Café · Favorit" or "Mobilität · 09:12". */
 export function entrySubtitle(entry: EntryLike, categoryLabel: string | undefined) {
   const label =
     entry.kind === 'income' ? t('entries.income') : (categoryLabel ?? t('entries.noCategory'));

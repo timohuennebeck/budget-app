@@ -252,7 +252,7 @@
     "total": "Gesamt",
     "typeInstead": "Von Hand eingeben",
     "voice": "Sprechen",
-    "voiceSample": "40€ Lebensmittel, 12€ Uber, Mittagessen 18€ halbe-halbe, und dreiundzwanzig bei dm",
+    "voiceSample": "40€ Lebensmittel, 12€ Uber, Mittagessen 18€, und dreiundzwanzig bei dm",
     "whichCategory": "Welche Kategorie?"
   },
   "entries": {
@@ -273,9 +273,7 @@
     "noCategory": "Ohne Kategorie",
     "noResults": "Keine Einträge zu „{{query}}“. Probier einen anderen Begriff.",
     "noResultsTitle": "Keinen Eintrag\ngefunden",
-    "split": "halbe-halbe",
-    "title": "Einträge",
-    "yourHalf": "Deine Hälfte von {{amount}}"
+    "title": "Einträge"
   },
   "calendar": {
     "expense": "Ausgabe",

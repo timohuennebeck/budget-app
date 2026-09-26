@@ -14,8 +14,6 @@ export interface EntryRowProps {
   title: string;
   subtitle: ReactNode;
   amount: string;
-  /** Struck-through full amount for split bills */
-  originalAmount?: string;
   /** Replaces the plain amount, e.g. a coloured pill */
   trailing?: ReactNode;
   onPress?: () => void;
@@ -32,7 +30,6 @@ export function EntryRow({
   title,
   subtitle,
   amount,
-  originalAmount,
   trailing,
   onPress,
   chevron,
@@ -60,16 +57,9 @@ export function EntryRow({
         )}
       </View>
       {trailing ?? (
-        <View className="items-end gap-0.5">
-          <Text size={compact ? 15 : 16} weight="semibold" tracking={-0.01}>
-            {amount}
-          </Text>
-          {originalAmount ? (
-            <Text size={12.5} className="text-faint line-through">
-              {originalAmount}
-            </Text>
-          ) : null}
-        </View>
+        <Text size={compact ? 15 : 16} weight="semibold" tracking={-0.01}>
+          {amount}
+        </Text>
       )}
       {chevron ? <Icon name="caret-right" size={13} color={colors.chevron} /> : null}
     </View>

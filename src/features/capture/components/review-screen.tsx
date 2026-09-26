@@ -54,7 +54,6 @@ export function ReviewScreen() {
         id: randomUUID(),
         title: draft.title,
         amount: draft.amount,
-        total_amount: draft.totalAmount,
         kind: draft.kind,
         category_id: draft.categoryId,
         source: draft.source,
@@ -101,9 +100,6 @@ export function ReviewScreen() {
           const category = categoryFor(draft);
           const visual = entryVisual(draft.kind, category);
           const amount = entryAmount(draft, currency);
-          const original = draft.totalAmount
-            ? formatMoney(draft.totalAmount, { currency })
-            : undefined;
 
           if (!draft.uncertain) {
             return (
@@ -111,13 +107,8 @@ export function ReviewScreen() {
                 key={draft.id}
                 {...visual}
                 title={draft.title}
-                subtitle={
-                  draft.totalAmount
-                    ? entrySubtitle({ ...draft, total_amount: draft.totalAmount }, category?.name)
-                    : `${entrySubtitle(draft, category?.name)} · ${formatDayLabel(new Date(draft.occurredAt))}`
-                }
+                subtitle={`${entrySubtitle(draft, category?.name)} · ${formatDayLabel(new Date(draft.occurredAt))}`}
                 amount={amount}
-                originalAmount={original}
                 chevron
                 onPress={() => edit(draft)}
               />

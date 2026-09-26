@@ -258,7 +258,7 @@
     "total": "Total",
     "typeInstead": "Introducir a mano",
     "voice": "Hablar",
-    "voiceSample": "40€ supermercado, 12€ Uber, almuerzo 18€ a medias, y veintitrés en dm",
+    "voiceSample": "40€ supermercado, 12€ Uber, almuerzo 18€, y veintitrés en dm",
     "whichCategory": "¿Qué categoría?"
   },
   "entries": {
@@ -280,9 +280,7 @@
     "noCategory": "Sin categoría",
     "noResults": "No hay registros para «{{query}}». Prueba con otro término.",
     "noResultsTitle": "No se ha encontrado\nningún registro",
-    "split": "a medias",
-    "title": "Registros",
-    "yourHalf": "Tu mitad de {{amount}}"
+    "title": "Registros"
   },
   "calendar": {
     "expense": "Gasto",

@@ -24,21 +24,21 @@ Target Supabase schema for Looop. It is based on:
 
 ### Gaps
 
-| #   | Issue                                                                                                                                                                 |
-| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| R1  | **The free-entry limit exists only in the app.** RLS allows unlimited inserts, and the app counts by `created_at`, which the client can write.                        |
-| R2  | **Nothing writes Plus status.** `profiles.plan` is a static enum with no expiry.                                                                                      |
-| R3  | **The server doesn't know the user's time zone,** so it can't work out month or week boundaries.                                                                      |
-| R4  | **`fetchEntryDates()` selects every entry.** `max_rows = 1000` cuts it off silently, which breaks streaks and counts past 1000 entries.                               |
-| R5  | **`app_config` rows exist only in `seed.sql`,** which doesn't run in production.                                                                                      |
-| R6  | **`handle_new_user` trusts sign-up metadata as-is,** including free-text currency and locale.                                                                         |
-| R7  | **Missing checks:** currency and locale format, text lengths, a plausible `birth_date`, Monday-only `week_start`, `skipped ⇔ guess is null`, splits only on expenses. |
-| R8  | **Missing indexes:** `legal_acceptances(document_id)`, `entries(profile_id, created_at)`, and favorites. `categories_profile_id_idx` is redundant.                    |
-| R9  | **The client can write `legal_acceptances.accepted_at` and `entries.created_at`.**                                                                                    |
-| R10 | **Deleting a category removes it from past entries.**                                                                                                                 |
-| R11 | **Account deletion can't reach Storage (receipt photos) or RevenueCat.**                                                                                              |
-| R12 | **The rating prompt state lives only on the device.**                                                                                                                 |
-| R13 | **A check-in guess can be changed after the reveal.**                                                                                                                 |
+| #   | Issue                                                                                                                                              |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R1  | **The free-entry limit exists only in the app.** RLS allows unlimited inserts, and the app counts by `created_at`, which the client can write.     |
+| R2  | **Nothing writes Plus status.** `profiles.plan` is a static enum with no expiry.                                                                   |
+| R3  | **The server doesn't know the user's time zone,** so it can't work out month or week boundaries.                                                   |
+| R4  | **`fetchEntryDates()` selects every entry.** `max_rows = 1000` cuts it off silently, which breaks streaks and counts past 1000 entries.            |
+| R5  | **`app_config` rows exist only in `seed.sql`,** which doesn't run in production.                                                                   |
+| R6  | **`handle_new_user` trusts sign-up metadata as-is,** including free-text currency and locale.                                                      |
+| R7  | **Missing checks:** currency and locale format, text lengths, a plausible `birth_date`, Monday-only `week_start`, `skipped ⇔ guess is null`.       |
+| R8  | **Missing indexes:** `legal_acceptances(document_id)`, `entries(profile_id, created_at)`, and favorites. `categories_profile_id_idx` is redundant. |
+| R9  | **The client can write `legal_acceptances.accepted_at` and `entries.created_at`.**                                                                 |
+| R10 | **Deleting a category removes it from past entries.**                                                                                              |
+| R11 | **Account deletion can't reach Storage (receipt photos) or RevenueCat.**                                                                           |
+| R12 | **The rating prompt state lives only on the device.**                                                                                              |
+| R13 | **A check-in guess can be changed after the reveal.**                                                                                              |
 
 ---
 
@@ -77,11 +77,9 @@ unique (id, profile_id)                   -- target for the entries composite FK
 
 ```sql
 title text not null check (char_length(title) between 1 and 120)
-total_amount numeric(12,2) check (total_amount >= amount)
 capture_id uuid references public.captures(id) on delete set null
 foreign key (category_id, profile_id)
   references public.categories (id, profile_id) on delete set null (category_id)
-check (kind = 'expense' or total_amount is null)
 index (profile_id, occurred_at desc)
 index (profile_id, created_at)
 index (profile_id) where is_favorite
@@ -89,8 +87,8 @@ index (category_id)
 ```
 
 - **Composite FK:** it enforces same-owner categories, so the RLS policy doesn't need an `exists` subquery.
-- **Insert grant:** `id, profile_id, category_id, kind, title, amount, total_amount, source, is_favorite, occurred_at, capture_id`.
-- **Update grant:** `category_id, kind, title, amount, total_amount, is_favorite, occurred_at`.
+- **Insert grant:** `id, profile_id, category_id, kind, title, amount, source, is_favorite, occurred_at, capture_id`.
+- **Update grant:** `category_id, kind, title, amount, is_favorite, occurred_at`.
 
 ### `check_ins` (renamed from `weekly_check_ins`)
 
