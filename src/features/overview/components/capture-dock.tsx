@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { useEntryAllowance } from '@/features/paywall/hooks/use-entry-allowance';
+import { useEntriesAllowance } from '@/features/paywall/hooks/use-entries-allowance';
 import { colors, shadows } from '@/shared/lib/theme';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PipAvatar } from '@/shared/ui/pip';
@@ -14,7 +14,7 @@ import { Text } from '@/shared/ui/text';
 // opens the capture flow, plus camera and microphone shortcuts.
 export function CaptureDock({ firstName }: { firstName: string }) {
   const { t } = useTranslation();
-  const allowance = useEntryAllowance();
+  const allowance = useEntriesAllowance();
   const open = (path: '/capture' | '/capture/camera' | '/capture/voice') =>
     router.push(allowance.canAdd() ? path : '/limit');
 

@@ -110,26 +110,26 @@ unique (profile_id, week_start)
 ```
 
 - **`closeness`:** 0–1, how near the guess landed ("93 % genau" in the UI). It mirrors `guessAccuracy()`.
-- **Guess lock:** the trigger `private.lock_check_in_guess` rejects changes to `guess` or `skipped` once they are set.
+- **No guess lock.** A user could edit a guess after the reveal, but it's a personal game, so it isn't worth a trigger.
 
 ### Legal and config tables
 
 - **`legal_acceptances`:**
   - add an index on `document_id`
-  - a trigger forces `accepted_at = now()`
+  - `accepted_at` defaults to `now()` and isn't in the insert grant, so the app can't set it
 - **`app_config` keys:** inserted by a migration with `on conflict (key) do nothing`, not only by the seed.
 
-| Key                      | Default             |
-| ------------------------ | ------------------- |
-| `free_entries`           | 15 per budget month |
-| `ai_captures_free`       | 20 per day          |
-| `ai_captures_plus`       | 200 per day         |
-| `receipt_retention_days` | 30                  |
-| `honor_sandbox`          | false               |
-| `check_in_min_entries`   | unchanged           |
-| `check_in_close_ratio`   | unchanged           |
+| Key                    | Default             |
+| ---------------------- | ------------------- |
+| `free_entries`         | 15 per budget month |
+| `ai_captures_free`     | 20 per day          |
+| `ai_captures_plus`     | 200 per day         |
+| `receipt_retention`    | 30 days             |
+| `honor_sandbox`        | false               |
+| `check_in_min_entries` | unchanged           |
+| `check_in_close_ratio` | unchanged           |
 
-### `private.entries_allowance`
+### `entries_allowance`
 
 ```sql
 profile_id uuid references profiles on delete cascade,
@@ -139,6 +139,8 @@ primary key (profile_id, cycle_start)
 ```
 
 This is the free-entry counter for the current budget month, one row per user per month. It exists because deleted entries still count (decision 2): counting rows in `entries` would free a slot on every delete.
+
+The app can read its own rows and can't write any; only the entry trigger writes them.
 
 ### `captures` (AI parsing)
 
@@ -166,26 +168,29 @@ This table also counts the AI parses per day for `ai_captures_free` and `ai_capt
 | profiles          | select and update own (column grants) | app, `handle_new_user`, Plus sync     |
 | categories        | all own                               | app                                   |
 | entries           | all own (column grants)               | app, limited by the allowance trigger |
-| check_ins         | all own; guess lock                   | app                                   |
+| check_ins         | all own                               | app                                   |
 | legal_documents   | select                                | migrations                            |
 | legal_acceptances | select and insert own                 | app                                   |
 | app_config        | select (never store secrets here)     | service role                          |
+| entries_allowance | select own                            | the entry trigger                     |
 | captures          | select own                            | `parse-capture` edge function         |
-| `private.*`       | none                                  | security definer functions            |
 
-**`private` functions**
+**Database functions.** All of them are trigger functions in the `private` schema, and the app never calls them directly. There are no RPCs.
 
-- `handle_new_user()`: cleans up the sign-up metadata.
-- `budget_cycle(month_start_day, tz, at)`: the SQL twin of `budgetCycle()`.
-- `has_plus(uid)`: `plus_expires_at > now()`.
-- `enforce_entry_allowance()`: see section 4.
-- `lock_check_in_guess()`, `force_accepted_at()`, `set_updated_at()`.
-- `config_int(key, default)` and `config_bool(key, default)`.
+| Function                      | Status   | Runs when                                                     |
+| ----------------------------- | -------- | ------------------------------------------------------------- |
+| `handle_new_user()`           | existing | a user signs up; creates the profile from cleaned-up metadata |
+| `set_updated_at()`            | existing | a row with `updated_at` changes                               |
+| `reject_legal_mutation()`     | existing | anyone tries to change a published legal document             |
+| `enforce_entries_allowance()` | **new**  | an entry is inserted; see section 4                           |
 
-**RPCs**
+Left out on purpose:
 
-- `get_entry_allowance()`: returns `unlimited, limit, used, remaining, cycle_start, cycle_end`.
-- `entry_stats()`: returns the total count and active days for the last 400 days. It replaces `fetchEntryDates`.
+- **Small helpers** (`budget_cycle`, `has_plus`, `config_int`, time-zone checks) are inlined in `enforce_entries_allowance()`, their only caller.
+- **Guess lock and `accepted_at` trigger:** handled by leaving the guess unlocked and by the column grant.
+- **`get_entries_allowance()`:** the app reads its `entries_allowance` row, `plus_expires_at` and `free_entries` directly and does the subtraction. It already computes the budget month in `budgetCycle()`.
+- **`entry_stats()`:** the app asks PostgREST for an exact count (`count: 'exact', head: true`) and fetches `occurred_at` for the last 60 days for the streak. Both stay far below the 1000-row limit.
+- **`delete_own_account()`:** replaced by the `delete-account` edge function (section 5).
 
 **Stays in the app:** overview and budget sums, check-in windows, formatting, local reminders.
 
@@ -209,17 +214,19 @@ This table also counts the AI parses per day for `ai_captures_free` and `ai_capt
 
 ```text
 new.created_at := now()
-if has_plus(new.profile_id) then return new
-cycle := budget_cycle(month_start_day, time_zone, now())
-insert into private.entries_allowance values (profile_id, cycle.start_date, 1)
-  on conflict do update set used = used + 1 where used < config_int('free_entries', 15)
+select month_start_day, time_zone, plus_expires_at from profiles
+if plus_expires_at > now() then return new
+cycle_start := start of the budget month in time_zone (UTC if the name is invalid)
+limit := (select value from app_config where key = 'free_entries'), default 15
+insert into entries_allowance values (profile_id, cycle_start, 1)
+  on conflict do update set used = used + 1 where used < limit
   returning used
 if no row: raise 'entry_limit_reached'
 ```
 
 - **Atomic:** parallel inserts can't overshoot the limit.
 - **Deletes still count:** deleted entries keep their slot; edits don't use one.
-- **App side:** `use-entry-allowance.ts` reads `get_entry_allowance()`, and the save path maps `entry_limit_reached` to `/limit`.
+- **App side:** `use-entries-allowance.ts` reads the `entries_allowance` row, and the save path maps `entry_limit_reached` to `/limit`.
 
 ---
 
@@ -229,7 +236,7 @@ if no row: raise 'entry_limit_reached'
 
 - **Settings:** private, 5 MiB, JPEG/PNG/WebP/HEIC.
 - **Paths and policies:** files live under `{uid}/…`. Users can insert, read and delete only their own folder.
-- **Retention:** a scheduled edge function deletes photos older than `receipt_retention_days` and clears `captures.receipt_path`. The parsed entries stay.
+- **Retention:** a scheduled edge function deletes photos older than `receipt_retention` and clears `captures.receipt_path`. The parsed entries stay.
 
 **Edge function `parse-capture`**
 
@@ -253,14 +260,14 @@ The cascade removes everything else.
 
 Nothing is live, so this edits and adds migrations directly. Regenerate `database.types.ts` after each step.
 
-| #   | Change                                                                                                                                                                                                                                                                             | App files                                                                                                                                                                                                     |
-| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **Edit `initial_schema.sql`:** constraints, `time_zone`, `plus_expires_at` instead of `plan`, `rating_prompted_at`, `check_ins` with `closeness`, archived categories, composite FK, column grants, indexes, triggers. Fold in `restrict_profile_updates` and `default_locale_en`. | `check-ins-api.ts`, `use-check-ins.ts`, `check-in-window.ts`, `use-entry-allowance.ts`, `delete-account-screen.tsx`, `use-rating-prompt.ts`, category pickers (hide archived), sign-up metadata (`time_zone`) |
-| 2   | **Edit `app_config`:** key names above, inserted by the migration.                                                                                                                                                                                                                 | `use-app-config.ts`, `seed.sql`                                                                                                                                                                               |
-| 3   | **New migration:** `entries_allowance`, `budget_cycle`, the allowance trigger, `get_entry_allowance()`, `entry_stats()`.                                                                                                                                                           | `entries-api.ts`, `use-entries.ts`, `use-entry-allowance.ts`, `limit-screen.tsx`, `review-screen.tsx`, `complete-onboarding.ts`                                                                               |
-| 4   | **New:** `revenuecat-webhook` and `sync-entitlements` edge functions.                                                                                                                                                                                                              | `purchases.ts`, `auth-provider.tsx`                                                                                                                                                                           |
-| 5   | **New migration:** `captures`, `entries.capture_id`, the `receipts` bucket. **New:** `parse-capture` edge function.                                                                                                                                                                | `receipt-recognizer.ts`, `processing-screen.tsx`, `capture-store.ts`, `types.ts`                                                                                                                              |
-| 6   | **New:** `delete-account` edge function, which replaces the `delete_own_account` RPC.                                                                                                                                                                                              | `use-auth-actions.ts`                                                                                                                                                                                         |
+| #   | Change                                                                                                                                                                                                                                                                             | App files                                                                                                                                                                                                       |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **Edit `initial_schema.sql`:** constraints, `time_zone`, `plus_expires_at` instead of `plan`, `rating_prompted_at`, `check_ins` with `closeness`, archived categories, composite FK, column grants, indexes, triggers. Fold in `restrict_profile_updates` and `default_locale_en`. | `check-ins-api.ts`, `use-check-ins.ts`, `check-in-window.ts`, `use-entries-allowance.ts`, `delete-account-screen.tsx`, `use-rating-prompt.ts`, category pickers (hide archived), sign-up metadata (`time_zone`) |
+| 2   | **Edit `app_config`:** key names above, inserted by the migration.                                                                                                                                                                                                                 | `use-app-config.ts`, `seed.sql`                                                                                                                                                                                 |
+| 3   | **New migration:** `entries_allowance` and `enforce_entries_allowance()`.                                                                                                                                                                                                          | `entries-api.ts`, `use-entries.ts`, `use-entries-allowance.ts`, `limit-screen.tsx`, `review-screen.tsx`, `complete-onboarding.ts`                                                                               |
+| 4   | **New:** `revenuecat-webhook` and `sync-entitlements` edge functions.                                                                                                                                                                                                              | `purchases.ts`, `auth-provider.tsx`                                                                                                                                                                             |
+| 5   | **New migration:** `captures`, `entries.capture_id`, the `receipts` bucket. **New:** `parse-capture` edge function.                                                                                                                                                                | `receipt-recognizer.ts`, `processing-screen.tsx`, `capture-store.ts`, `types.ts`                                                                                                                                |
+| 6   | **New:** `delete-account` edge function, which replaces the `delete_own_account` RPC.                                                                                                                                                                                              | `use-auth-actions.ts`                                                                                                                                                                                           |
 
 ---
 

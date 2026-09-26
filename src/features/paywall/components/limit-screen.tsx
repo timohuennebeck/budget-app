@@ -14,7 +14,7 @@ import { InfoBadge } from '@/shared/ui/info-badge';
 import { Pip } from '@/shared/ui/pip';
 import { Text } from '@/shared/ui/text';
 
-import { useEntryAllowance } from '../hooks/use-entry-allowance';
+import { useEntriesAllowance } from '../hooks/use-entries-allowance';
 import { useStartTrial } from '../hooks/use-purchase';
 import type { PlanId } from '../lib/purchases';
 import { PlanOptions } from './plan-options';
@@ -24,7 +24,7 @@ export function LimitScreen() {
   const { t } = useTranslation();
   const { data: profile } = useProfile();
   const { plusPricing } = useAppConfig();
-  const allowance = useEntryAllowance();
+  const allowance = useEntriesAllowance();
   const trial = useStartTrial();
   const [plan, setPlan] = useState<PlanId>('yearly');
 

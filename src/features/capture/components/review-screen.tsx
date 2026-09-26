@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { EntryRow } from '@/features/entries/components/entry-row';
 import { useCreateEntries } from '@/features/entries/hooks/use-entries';
 import { entryAmount, entrySubtitle, entryVisual } from '@/features/entries/lib/entry-display';
-import { useEntryAllowance } from '@/features/paywall/hooks/use-entry-allowance';
+import { useEntriesAllowance } from '@/features/paywall/hooks/use-entries-allowance';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { formatDayLabel } from '@/shared/lib/dates';
@@ -34,7 +34,7 @@ export function ReviewScreen() {
   const appendMore = useCaptureStore((state) => state.appendMore);
   const categories = useCaptureCategories('app');
   const createEntries = useCreateEntries();
-  const allowance = useEntryAllowance();
+  const allowance = useEntriesAllowance();
 
   const categoryFor = (draft: DraftEntry) =>
     categories.find((category) => category.id === draft.categoryId);

@@ -3,7 +3,7 @@ import { useProfile } from '@/features/profile/hooks/use-profile';
 import { useAppConfig } from '@/shared/hooks/use-app-config';
 
 /** How many entries a free user has left this budget month. */
-export function useEntryAllowance() {
+export function useEntriesAllowance() {
   const { data: profile } = useProfile();
   const { freeMonthlyEntries } = useAppConfig();
   const { data: used = 0 } = useMonthlyEntryCount(profile?.month_start_day ?? 1);

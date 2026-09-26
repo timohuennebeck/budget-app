@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useAuth } from '@/features/auth/lib/auth-provider';
 import { useCategories } from '@/features/categories/hooks/use-categories';
-import { useEntryAllowance } from '@/features/paywall/hooks/use-entry-allowance';
+import { useEntriesAllowance } from '@/features/paywall/hooks/use-entries-allowance';
 import { ListGroup, ListRow } from '@/shared/components/list-group';
 import { Screen } from '@/shared/components/screen';
 import { useSheet } from '@/shared/components/sheet';
@@ -26,7 +26,7 @@ export function ProfileScreen() {
   const { data: profile } = useProfile();
   const { data: categories = [] } = useCategories();
   const updateProfile = useUpdateProfile();
-  const allowance = useEntryAllowance();
+  const allowance = useEntriesAllowance();
   const { supportEmail } = useAppConfig();
   const monthStart = useSheet();
 
