@@ -11,23 +11,19 @@ import { entryAmount, entrySubtitle, entryVisual } from '../lib/entry-display';
 import type { DayGroup } from '../lib/entry-stats';
 import { EntryRow } from './entry-row';
 
-interface EntryListProps {
-  groups: DayGroup[];
+interface EntryRowsProps {
+  entries: Entry[];
   categories: Map<string, CategoryDisplay>;
   currency: string;
+}
+
+interface EntryListProps extends Omit<EntryRowsProps, 'entries'> {
+  groups: DayGroup[];
   /** `inline`: day label inside the card (Start), `outside`: above with total (Einträge) */
   headers?: 'inline' | 'outside';
 }
 
-function EntryRows({
-  entries,
-  categories,
-  currency,
-}: {
-  entries: Entry[];
-  categories: Map<string, CategoryDisplay>;
-  currency: string;
-}) {
+function EntryRows({ entries, categories, currency }: EntryRowsProps) {
   return entries.map((entry) => {
     const category = entry.category_id ? categories.get(entry.category_id) : undefined;
     return (

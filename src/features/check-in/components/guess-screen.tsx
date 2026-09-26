@@ -8,17 +8,17 @@ import { AmountStepper, QuickAmounts } from '@/shared/components/amount-stepper'
 import { Screen } from '@/shared/components/screen';
 import { toISODate } from '@/shared/lib/dates';
 import { haptics } from '@/shared/lib/haptics';
-import { formatMoney } from '@/shared/lib/money';
+import { formatMoney, roundToStep } from '@/shared/lib/money';
 import { Button } from '@/shared/ui/button';
 import { Card } from '@/shared/ui/card';
 import { Text } from '@/shared/ui/text';
 
 import { useCheckInState } from '../hooks/use-check-in-state';
 import { useSaveCheckIn } from '../hooks/use-check-ins';
-import { guessAccuracy } from '../lib/check-in-window';
+import { accuracyPercent } from '../lib/check-in-window';
 import { CheckInHeader } from './check-in-header';
 
-const roundTen = (value: number) => Math.max(10, Math.round(value / 10) * 10);
+const roundTen = (value: number) => roundToStep(value, 10);
 
 // "Was schätzt du?" (5f): same stepper as Monatsbudget, with last week's
 // accuracy as a nudge. Saving reveals the real number.
@@ -33,10 +33,7 @@ export function GuessScreen() {
   const [guess, setGuess] = useState(anchor);
   const options = [roundTen(anchor * 0.7), roundTen(anchor * 0.85), anchor, roundTen(anchor * 1.2)];
   const weekStart = toISODate(window.week.start);
-  const lastAccuracy =
-    previous?.guess !== null && previous?.guess !== undefined
-      ? Math.round(guessAccuracy(Number(previous.guess), Number(previous.actual ?? 0)) * 100)
-      : null;
+  const lastAccuracy = previous ? accuracyPercent(previous) : null;
 
   const reveal = () =>
     save.mutate(

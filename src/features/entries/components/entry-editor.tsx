@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -38,15 +38,13 @@ function amountText(amount: number) {
   return amount.toFixed(2).replace('.', ',');
 }
 
-function DetailRow({
-  label,
-  children,
-  onPress,
-}: {
+interface DetailRowProps {
   label: string;
-  children: React.ReactNode;
+  children: ReactNode;
   onPress: () => void;
-}) {
+}
+
+function DetailRow({ label, children, onPress }: DetailRowProps) {
   return (
     <Pressable
       onPress={onPress}

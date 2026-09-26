@@ -1,5 +1,7 @@
 import { addDays, type DateRange, weekRange } from '@/shared/lib/dates';
 
+import type { CheckIn } from '../data/check-ins-api';
+
 export interface CheckInWindow {
   /** Monday–Sunday week the check-in is about */
   week: DateRange;
@@ -41,4 +43,10 @@ export function lastClosedWindow(now = new Date()) {
 export function guessAccuracy(guess: number, actual: number) {
   if (actual <= 0) return guess <= 0 ? 1 : 0;
   return Math.max(0, 1 - Math.abs(actual - guess) / actual);
+}
+
+/** Accuracy of a saved check-in in percent, or null when it was skipped. */
+export function accuracyPercent({ guess, actual }: Pick<CheckIn, 'guess' | 'actual'>) {
+  if (guess === null) return null;
+  return Math.round(guessAccuracy(Number(guess), Number(actual ?? 0)) * 100);
 }

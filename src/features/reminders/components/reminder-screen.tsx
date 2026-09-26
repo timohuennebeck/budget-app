@@ -1,13 +1,12 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { type ReactNode, useState } from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { StepIntro } from '@/features/onboarding/components/step-intro';
+import { GradientPanel } from '@/shared/components/gradient-panel';
 import { Screen } from '@/shared/components/screen';
 import { formatTimeValue, parseTime, TimePicker } from '@/shared/components/time-picker';
 import type { Enums } from '@/shared/lib/database.types';
-import { gradients } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
 import { Pip } from '@/shared/ui/pip';
@@ -58,17 +57,10 @@ export function ReminderScreen({
       {header}
       <StepIntro title={title} subtitle={t('reminders.subtitle')} />
       {illustrated ? (
-        <LinearGradient
-          colors={gradients.panel}
-          style={{
-            marginTop: 18,
-            height: 170,
-            borderRadius: 28,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
+        <GradientPanel
+          style={{ marginTop: 18, height: 170, alignItems: 'center', justifyContent: 'center' }}>
           <Pip pose="clock" size={146} />
-        </LinearGradient>
+        </GradientPanel>
       ) : null}
       <TimePicker value={time} onChange={setTime} />
       <Text variant="overline" className="mt-1 px-1">

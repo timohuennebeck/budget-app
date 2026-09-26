@@ -4,7 +4,7 @@ import { ScrollView, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
-import { useProfile } from '@/features/profile/hooks/use-profile';
+import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { Sheet, useSheet } from '@/shared/components/sheet';
@@ -28,7 +28,7 @@ import { Text } from '@/shared/ui/text';
 import { useEntries } from '../hooks/use-entries';
 import { entryAmount, entrySubtitle, entryVisual } from '../lib/entry-display';
 import { groupByDay } from '../lib/entry-stats';
-import { CalendarDay, CalendarWeekRow, type DayTone } from './calendar-day';
+import { CalendarDay, type DayTone } from './calendar-day';
 import { EntryRow } from './entry-row';
 
 const compactNumber = (value: number) =>
@@ -44,11 +44,10 @@ export function CalendarScreen() {
     [params.month],
   );
   const { data: entries = [] } = useEntries(month);
-  const { data: profile } = useProfile();
   const lookup = useCategoryLookup();
   const sheet = useSheet();
   const [selected, setSelected] = useState(() => startOfDay(new Date()));
-  const currency = profile?.currency ?? 'EUR';
+  const currency = useCurrency();
   const today = startOfDay(new Date());
 
   const byDay = useMemo(
@@ -107,7 +106,7 @@ export function CalendarScreen() {
         </View>
         <View className="mt-2.5 gap-2">
           {weeks.map((week) => (
-            <CalendarWeekRow key={week[0].getTime()}>
+            <View key={week[0].getTime()} className="flex-row gap-1.5">
               {week.map((date) => {
                 const tone = toneFor(date);
                 const group = byDay.get(date.getTime());
@@ -129,7 +128,7 @@ export function CalendarScreen() {
                   />
                 );
               })}
-            </CalendarWeekRow>
+            </View>
           ))}
         </View>
         <View className="mt-3 flex-row gap-3.5 px-1">

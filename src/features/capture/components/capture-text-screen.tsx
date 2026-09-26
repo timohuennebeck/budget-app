@@ -50,8 +50,8 @@ export function CaptureTextScreen({ mode, initialText, onClose }: CaptureTextScr
   // keep the drafts collected so far.
   useEffect(() => {
     const store = useCaptureStore.getState();
-    if (!store.appending) store.start(mode, initialText);
-  }, [mode, initialText]);
+    if (!store.appending) store.start(initialText);
+  }, [initialText]);
 
   const showTips = mode === 'onboarding' && !tipsSeen;
   const [focused, setFocused] = useState(false);

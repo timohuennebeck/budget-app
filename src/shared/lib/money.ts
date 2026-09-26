@@ -84,9 +84,14 @@ export function parseAmount(input: string): number | null {
   }
 
   const value = Number.parseFloat(normalized);
-  return Number.isFinite(value) ? Math.round(value * 100) / 100 : null;
+  return Number.isFinite(value) ? roundMoney(value) : null;
 }
 
 export function roundMoney(value: number) {
   return Math.round(value * 100) / 100;
+}
+
+/** Rounds to the nearest multiple of `step`, but never below one step. */
+export function roundToStep(value: number, step: number) {
+  return Math.max(step, Math.round(value / step) * step);
 }

@@ -1,9 +1,10 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { useEffect, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { type NativeScrollEvent, type NativeSyntheticEvent, ScrollView, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
+import { colors } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
 export interface WheelItem<T> {
@@ -124,14 +125,19 @@ export function WheelColumn<T>({
 
 interface WheelFrameProps {
   tone: Tone;
-  children: React.ReactNode;
+  children: ReactNode;
   /** Colour the top/bottom fades blend into */
   fadeColor?: string;
   className?: string;
 }
 
 /** Highlight band plus top/bottom fades shared by all wheel pickers. */
-export function WheelFrame({ tone, children, fadeColor = '#F7F9FC', className }: WheelFrameProps) {
+export function WheelFrame({
+  tone,
+  children,
+  fadeColor = colors.canvas,
+  className,
+}: WheelFrameProps) {
   const { itemHeight } = metrics[tone];
   const height = itemHeight * VISIBLE;
   return (

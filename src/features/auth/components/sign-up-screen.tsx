@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, View } from 'react-native';
@@ -10,11 +9,11 @@ import { StepIntro } from '@/features/onboarding/components/step-intro';
 import { completeOnboarding } from '@/features/onboarding/lib/complete-onboarding';
 import { ONBOARDING_STEPS } from '@/features/onboarding/lib/steps';
 import { profileKey } from '@/features/profile/hooks/use-profile';
+import { GradientPanel } from '@/shared/components/gradient-panel';
 import { Screen } from '@/shared/components/screen';
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { queryClient } from '@/shared/lib/query-client';
-import { gradients } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Pip } from '@/shared/ui/pip';
 import { Text } from '@/shared/ui/text';
@@ -101,18 +100,10 @@ export function SignUpScreen() {
         </View>
       }>
       <OnboardingHeader step={ONBOARDING_STEPS.signUp} />
-      <LinearGradient
-        colors={gradients.panel}
-        style={{
-          flex: 1,
-          minHeight: 120,
-          marginTop: 22,
-          borderRadius: 28,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <GradientPanel
+        style={{ flex: 1, minHeight: 120, alignItems: 'center', justifyContent: 'center' }}>
         <Pip pose="account" size={150} />
-      </LinearGradient>
+      </GradientPanel>
       <StepIntro title={t('auth.signUpTitle')} subtitle={t('auth.signUpSubtitle')} />
       <TextField
         containerClassName="mt-[18px]"

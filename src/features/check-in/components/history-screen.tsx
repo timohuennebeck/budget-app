@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { CategoryPill } from '@/features/categories/components/category-pill';
-import { useProfile } from '@/features/profile/hooks/use-profile';
+import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { ListGroup } from '@/shared/components/list-group';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
@@ -12,14 +12,13 @@ import { formatMoney } from '@/shared/lib/money';
 import { Text } from '@/shared/ui/text';
 
 import { useCheckIns } from '../hooks/use-check-ins';
-import { guessAccuracy } from '../lib/check-in-window';
+import { accuracyPercent } from '../lib/check-in-window';
 
 /** Past weekly check-ins with guess, actual and accuracy. */
 export function HistoryScreen() {
   const { t } = useTranslation();
   const { data: checkIns = [] } = useCheckIns();
-  const { data: profile } = useProfile();
-  const currency = profile?.currency ?? 'EUR';
+  const currency = useCurrency();
 
   return (
     <Screen scroll>
@@ -35,12 +34,7 @@ export function HistoryScreen() {
         <ListGroup className="mt-6">
           {checkIns.map((checkIn) => {
             const start = fromISODate(checkIn.week_start);
-            const accuracy =
-              checkIn.guess === null
-                ? null
-                : Math.round(
-                    guessAccuracy(Number(checkIn.guess), Number(checkIn.actual ?? 0)) * 100,
-                  );
+            const accuracy = accuracyPercent(checkIn);
             return (
               <View key={checkIn.id} className="flex-row items-center gap-3 px-[18px] py-[15px]">
                 <View className="flex-1">

@@ -1,12 +1,11 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { requestNotificationPermission } from '@/features/reminders/lib/reminders';
+import { GradientPanel } from '@/shared/components/gradient-panel';
 import { Screen } from '@/shared/components/screen';
-import { gradients } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Pip } from '@/shared/ui/pip';
 
@@ -47,14 +46,12 @@ export function NotificationsScreen() {
         title={t('onboarding.notifications.title')}
         subtitle={t('onboarding.notifications.subtitle')}
       />
-      <LinearGradient
-        colors={gradients.panel}
-        style={{ marginTop: 22, borderRadius: 28, padding: 16, paddingBottom: 20, gap: 10 }}>
+      <GradientPanel style={{ padding: 16, paddingBottom: 20, gap: 10 }}>
         <NotificationPreview />
         <View className="mt-1.5 items-center">
           <Pip pose="cheers-arms" size={150} />
         </View>
-      </LinearGradient>
+      </GradientPanel>
     </Screen>
   );
 }

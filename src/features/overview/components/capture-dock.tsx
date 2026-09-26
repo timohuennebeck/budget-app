@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useEntryAllowance } from '@/features/paywall/hooks/use-entry-allowance';
-import { shadows } from '@/shared/lib/theme';
+import { colors, shadows } from '@/shared/lib/theme';
 import { IconButton } from '@/shared/ui/icon-button';
 import { PipAvatar } from '@/shared/ui/pip';
 import { Pressable } from '@/shared/ui/pressable';
@@ -22,7 +22,7 @@ export function CaptureDock({ firstName }: { firstName: string }) {
     <View className="absolute inset-x-0 bottom-0" pointerEvents="box-none">
       <LinearGradient
         pointerEvents="none"
-        colors={['rgba(247,249,252,0)', '#F7F9FC']}
+        colors={['rgba(247,249,252,0)', colors.canvas]}
         locations={[0, 0.55]}
         style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 130 }}
       />

@@ -3,13 +3,13 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useCaptureStore } from '@/features/capture/data/capture-store';
 import { CategoryPickerScreen } from '@/features/categories/components/category-picker-screen';
 import { useEntry, useUpdateEntry } from '@/features/entries/hooks/use-entries';
-import { useProfile } from '@/features/profile/hooks/use-profile';
+import { useCurrency } from '@/features/profile/hooks/use-profile';
 
 // Category picker for either a saved entry (entryId) or a capture draft
 // (draftId); writes the choice to the matching place and returns.
 export default function SelectCategoryRoute() {
   const { entryId, draftId } = useLocalSearchParams<{ entryId?: string; draftId?: string }>();
-  const { data: profile } = useProfile();
+  const currency = useCurrency();
   const { data: entry } = useEntry(entryId ?? '');
   const draft = useCaptureStore((state) =>
     state.drafts.find((candidate) => candidate.id === draftId),
@@ -25,7 +25,7 @@ export default function SelectCategoryRoute() {
     <CategoryPickerScreen
       initialId={initialId}
       amount={amount}
-      currency={profile?.currency ?? 'EUR'}
+      currency={currency}
       onConfirm={(categoryId) => {
         if (entryId) updateEntry.mutate({ id: entryId, patch: { category_id: categoryId } });
         if (draftId) updateDraft(draftId, { categoryId, uncertain: false });

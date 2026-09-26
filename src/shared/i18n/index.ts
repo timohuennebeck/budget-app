@@ -14,7 +14,7 @@ import it from './locales/it.json';
 import pt from './locales/pt.json';
 import ptBR from './locales/pt-BR.json';
 
-export const resources = {
+const resources = {
   de: { translation: de },
   en: { translation: en },
   es: { translation: es },

@@ -16,6 +16,12 @@ export function useProfile() {
   });
 }
 
+/** The profile's currency, EUR until the profile has loaded. */
+export function useCurrency() {
+  const { data: profile } = useProfile();
+  return profile?.currency ?? 'EUR';
+}
+
 /** Optimistically patches the cached profile so settings feel instant. */
 export function useUpdateProfile() {
   const { session } = useAuth();

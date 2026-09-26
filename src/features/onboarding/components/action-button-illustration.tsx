@@ -1,10 +1,10 @@
 import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { CategoryPill } from '@/features/categories/components/category-pill';
-import { colors, gradients } from '@/shared/lib/theme';
+import { GradientPanel } from '@/shared/components/gradient-panel';
+import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
 
@@ -12,9 +12,7 @@ import { Text } from '@/shared/ui/text';
 export function ActionButtonIllustration() {
   const { t } = useTranslation();
   return (
-    <LinearGradient
-      colors={gradients.panel}
-      style={{ marginTop: 22, height: 250, borderRadius: 28, overflow: 'hidden' }}>
+    <GradientPanel style={{ height: 250, overflow: 'hidden' }}>
       <View
         className="absolute rounded-[44px] bg-surface"
         style={{
@@ -74,6 +72,6 @@ export function ActionButtonIllustration() {
       <View className="absolute" style={{ left: 124, top: 166 }}>
         <CategoryPill label={`12 € · ${t('categories.transport')}`} hue={255} />
       </View>
-    </LinearGradient>
+    </GradientPanel>
   );
 }

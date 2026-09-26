@@ -1,5 +1,3 @@
-import { View } from 'react-native';
-
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Pressable } from '@/shared/ui/pressable';
@@ -72,8 +70,4 @@ export function CalendarDay({ day, tone, label, selected, onPress }: CalendarDay
       ) : null}
     </Pressable>
   );
-}
-
-export function CalendarWeekRow({ children }: { children: React.ReactNode }) {
-  return <View className="flex-row gap-1.5">{children}</View>;
 }

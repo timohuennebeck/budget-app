@@ -16,9 +16,5 @@ export function useVoiceTranscript(sample: string, wordsPerSecond = 3) {
     return () => clearInterval(timer);
   }, [listening, wordsPerSecond, words.length]);
 
-  return {
-    transcript: words.slice(0, count).join(' '),
-    listening,
-    stop: () => setListening(false),
-  };
+  return { transcript: words.slice(0, count).join(' '), stop: () => setListening(false) };
 }

@@ -2,11 +2,10 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { useCategoryMap } from '@/features/categories/hooks/use-categories';
-import { categoryName } from '@/features/categories/lib/category-name';
+import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
 import { EntryRow } from '@/features/entries/components/entry-row';
 import { entryAmount, entryVisual } from '@/features/entries/lib/entry-display';
-import { useProfile } from '@/features/profile/hooks/use-profile';
+import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { Screen } from '@/shared/components/screen';
 import { StatusHero } from '@/shared/components/status-hero';
 import { formatWeekday } from '@/shared/lib/dates';
@@ -22,9 +21,8 @@ import { CheckInHeader } from './check-in-header';
 export function FewEntriesScreen() {
   const { t } = useTranslation();
   const { window, entries } = useCheckInState();
-  const categories = useCategoryMap();
-  const { data: profile } = useProfile();
-  const currency = profile?.currency ?? 'EUR';
+  const categories = useCategoryLookup();
+  const currency = useCurrency();
 
   return (
     <Screen
@@ -57,7 +55,7 @@ export function FewEntriesScreen() {
                 key={entry.id}
                 {...entryVisual(entry.kind, category)}
                 title={entry.title}
-                subtitle={`${category ? categoryName(category) : t('entries.income')} · ${formatWeekday(new Date(entry.occurred_at), 'short')}`}
+                subtitle={`${category ? category.name : t('entries.income')} · ${formatWeekday(new Date(entry.occurred_at), 'short')}`}
                 amount={entryAmount(entry, currency)}
                 onPress={() => router.push({ pathname: '/entry/[id]', params: { id: entry.id } })}
               />

@@ -2,6 +2,8 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
+import { colors } from '@/shared/lib/theme';
+
 interface ProgressRingProps {
   size: number;
   /** 0…1 */
@@ -17,8 +19,8 @@ export function ProgressRing({
   size,
   progress,
   strokeWidth = 10,
-  color = '#2F7CF6',
-  trackColor = '#DCE8FC',
+  color = colors.primary,
+  trackColor = colors.primarySoft,
   children,
 }: ProgressRingProps) {
   const radius = (size - strokeWidth) / 2 - 3;

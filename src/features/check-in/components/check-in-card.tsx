@@ -12,25 +12,22 @@ import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 
 import { useCheckInState } from '../hooks/use-check-in-state';
-import { guessAccuracy } from '../lib/check-in-window';
+import { accuracyPercent } from '../lib/check-in-window';
 
-function QuietRow({
-  icon,
-  title,
-  detail,
-  onPress,
-}: {
+interface QuietRowProps {
   icon: 'lock' | 'check' | 'calendar-blank';
   title: string;
   detail: string;
   onPress?: () => void;
-}) {
+}
+
+function QuietRow({ icon, title, detail, onPress }: QuietRowProps) {
   return (
     <Pressable
       onPress={onPress}
       disabled={!onPress}
       accessibilityLabel={title}
-      className="mx-0 flex-row items-center gap-3 rounded-3xl border border-line bg-surface px-4 py-3 opacity-100">
+      className="flex-row items-center gap-3 rounded-3xl border border-line bg-surface px-4 py-3 opacity-100">
       <View className="size-9 items-center justify-center rounded-full bg-field">
         <Icon name={icon} size={16} color={colors.mutedSoft} />
       </View>
@@ -54,11 +51,12 @@ export function CheckInCard() {
   const { status, window, current } = useCheckInState();
   const nextOpen = `${formatShortDate(window.opensAt)}, ${formatTime(window.opensAt)}`;
   const openHistory = () => router.push('/check-in/history');
+  const percent = current ? accuracyPercent(current) : null;
 
   if (status === 'open') {
     return (
       <LinearGradient
-        colors={['#2F7CF6', '#1F63D6']}
+        colors={[colors.primary, colors.primaryDark]}
         style={{ borderRadius: 28, padding: 18, marginTop: 24 }}>
         <View className="flex-row items-center gap-3">
           <View className="flex-1 gap-1">
@@ -89,13 +87,9 @@ export function CheckInCard() {
           icon="check"
           title={t('checkIn.doneTitle')}
           detail={
-            current.skipped || current.guess === null
+            current.skipped || percent === null
               ? t('checkIn.skipped')
-              : t('checkIn.doneDetail', {
-                  percent: Math.round(
-                    guessAccuracy(Number(current.guess), Number(current.actual ?? 0)) * 100,
-                  ),
-                })
+              : t('checkIn.doneDetail', { percent })
           }
           onPress={openHistory}
         />

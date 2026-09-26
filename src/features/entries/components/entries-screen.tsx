@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useAppCategoryDisplays } from '@/features/categories/hooks/use-category-display';
 import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
-import { useProfile } from '@/features/profile/hooks/use-profile';
+import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
 import { useSheet } from '@/shared/components/sheet';
 import { formatMonth, monthRange } from '@/shared/lib/dates';
@@ -31,7 +31,6 @@ export function EntriesScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { search } = useLocalSearchParams<{ search?: string }>();
-  const { data: profile } = useProfile();
   const categories = useAppCategoryDisplays();
   const lookup = useCategoryLookup();
   const monthSheet = useSheet();
@@ -41,7 +40,7 @@ export function EntriesScreen() {
   const [query, setQuery] = useState('');
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const { data: entries = [] } = useEntries(monthRange(month));
-  const currency = profile?.currency ?? 'EUR';
+  const currency = useCurrency();
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();

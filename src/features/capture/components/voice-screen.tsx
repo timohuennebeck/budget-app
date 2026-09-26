@@ -37,7 +37,7 @@ export function VoiceScreen({ mode }: { mode: CaptureMode }) {
   return (
     <Screen>
       <LinearGradient
-        colors={['#F7F9FC', '#E6F0FE']}
+        colors={[colors.canvas, '#E6F0FE']}
         locations={[0.3, 1]}
         style={StyleSheet.absoluteFill}
       />

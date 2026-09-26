@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 
 import { huePalette } from '@/shared/lib/color';
+import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 
 interface CategoryAvatarProps {
@@ -18,7 +19,7 @@ export function CategoryAvatar({ icon, hue, size = 42, selected }: CategoryAvata
       className="items-center justify-center rounded-full"
       style={[
         { width: size, height: size, backgroundColor: palette.background },
-        selected && { borderWidth: 2, borderColor: '#2F7CF6' },
+        selected && { borderWidth: 2, borderColor: colors.primary },
       ]}>
       <Icon name={icon} weight="fill" size={Math.round(size * 0.47)} color={palette.foreground} />
     </View>

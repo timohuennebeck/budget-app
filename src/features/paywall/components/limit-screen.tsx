@@ -10,6 +10,7 @@ import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { useAppConfig } from '@/shared/hooks/use-app-config';
 import { budgetCycle, daysBetween, formatMonth } from '@/shared/lib/dates';
+import { gradients } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Pip } from '@/shared/ui/pip';
 import { Text } from '@/shared/ui/text';
@@ -49,7 +50,7 @@ export function LimitScreen() {
         </View>
       }>
       <LinearGradient
-        colors={['#DDEAFE', '#EAF2FE', '#F7F9FC']}
+        colors={gradients.sky}
         locations={[0, 0.64, 1]}
         style={{
           marginHorizontal: -20,

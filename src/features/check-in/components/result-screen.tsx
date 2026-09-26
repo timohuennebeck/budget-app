@@ -3,11 +3,10 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { CategoryPill } from '@/features/categories/components/category-pill';
-import { useCategoryMap } from '@/features/categories/hooks/use-categories';
-import { categoryName } from '@/features/categories/lib/category-name';
+import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
 import { EntryRow } from '@/features/entries/components/entry-row';
 import { countByCategory, spendByCategory } from '@/features/entries/lib/entry-stats';
-import { useProfile } from '@/features/profile/hooks/use-profile';
+import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { Screen } from '@/shared/components/screen';
 import { useAppConfig } from '@/shared/hooks/use-app-config';
 import { formatMoney, roundMoney } from '@/shared/lib/money';
@@ -28,9 +27,8 @@ export function ResultScreen() {
   const { t } = useTranslation();
   const { window, current, entries, actual } = useCheckInState();
   const { checkInCloseRatio } = useAppConfig();
-  const categories = useCategoryMap();
-  const { data: profile } = useProfile();
-  const currency = profile?.currency ?? 'EUR';
+  const categories = useCategoryLookup();
+  const currency = useCurrency();
 
   const guess = Number(current?.guess ?? 0);
   const accuracy = guessAccuracy(guess, actual);
@@ -124,7 +122,7 @@ export function ResultScreen() {
                   key={id}
                   icon={category.icon}
                   hue={category.hue}
-                  title={categoryName(category)}
+                  title={category.name}
                   subtitle={t('entries.count', { count: counts.get(id) ?? 0 })}
                   amount={money(total)}
                 />

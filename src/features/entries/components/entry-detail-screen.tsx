@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
-import { useProfile } from '@/features/profile/hooks/use-profile';
+import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { ConfirmSheet } from '@/shared/components/confirm-sheet';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
@@ -25,13 +25,12 @@ export function EntryDetailScreen({ id }: { id: string }) {
 
 function EntryDetailForm({ entry }: { entry: Entry }) {
   const { t } = useTranslation();
-  const { data: profile } = useProfile();
   const lookup = useCategoryLookup();
   const update = useUpdateEntry();
   const remove = useDeleteEntry();
   const confirm = useSheet();
   const id = entry.id;
-  const currency = profile?.currency ?? 'EUR';
+  const currency = useCurrency();
   const [draft, setDraft] = useState<EditableEntry>(() => ({
     title: entry.title,
     amount: Number(entry.amount),

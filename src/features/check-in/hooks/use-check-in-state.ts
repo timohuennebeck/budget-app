@@ -35,7 +35,6 @@ export function useCheckInState(now = new Date()) {
     status,
     current,
     previous,
-    history: checkIns,
     entries,
     expenseCount: entries.filter((entry) => entry.kind === 'expense').length,
     actual: sumExpenses(entries),

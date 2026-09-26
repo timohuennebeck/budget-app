@@ -1,6 +1,8 @@
 import { Image, type ImageStyle } from 'expo-image';
 import type { StyleProp } from 'react-native';
 
+import { colors } from '@/shared/lib/theme';
+
 const sources = {
   account: require('@/assets/images/pip/pip-account.png'),
   basic: require('@/assets/images/pip/pip-basic.png'),
@@ -46,7 +48,7 @@ export function PipAvatar({ size }: { size: number }) {
     <Pip
       pose="basic"
       size={size}
-      style={{ padding, borderRadius: size / 2, backgroundColor: '#DCE8FC' }}
+      style={{ padding, borderRadius: size / 2, backgroundColor: colors.primarySoft }}
     />
   );
 }

@@ -11,9 +11,17 @@ import { Text } from '@/shared/ui/text';
 
 import { StepIntro } from './step-intro';
 
-const Placeholder = ({ size, radius, color }: { size: number; radius: number; color: string }) => (
-  <View style={{ width: size, height: size, borderRadius: radius, backgroundColor: color }} />
-);
+interface PlaceholderProps {
+  size: number;
+  radius: number;
+  color: string;
+}
+
+function Placeholder({ size, radius, color }: PlaceholderProps) {
+  return (
+    <View style={{ width: size, height: size, borderRadius: radius, backgroundColor: color }} />
+  );
+}
 
 /** Home screen mock with the "Heute" widget (2p3, optional step). */
 export function WidgetScreen() {

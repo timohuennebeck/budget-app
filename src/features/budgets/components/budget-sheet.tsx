@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { AmountStepper, QuickAmounts } from '@/shared/components/amount-stepper';
 import { Sheet, type SheetControls } from '@/shared/components/sheet';
-import { formatMoney } from '@/shared/lib/money';
+import { formatMoney, roundToStep } from '@/shared/lib/money';
 import { Button } from '@/shared/ui/button';
 
 interface BudgetSheetBodyProps {
@@ -22,17 +22,13 @@ interface BudgetSheetProps extends BudgetSheetBodyProps, SheetControls {
 
 const NO_LIMIT = -1;
 
-function roundTo(value: number, step: number) {
-  return Math.max(step, Math.round(value / step) * step);
-}
-
 function BudgetSheetBody({ currency, initial, reference, hint, onSave }: BudgetSheetBodyProps) {
   const { t } = useTranslation();
-  const fallback = roundTo(reference || 100, 10);
+  const fallback = roundToStep(reference || 100, 10);
   const [amount, setAmount] = useState(initial ?? fallback);
   const [choice, setChoice] = useState<number>(initial ?? fallback);
 
-  const quick = [roundTo(fallback * 0.7, 10), fallback, roundTo(fallback * 1.4, 50)];
+  const quick = [roundToStep(fallback * 0.7, 10), fallback, roundToStep(fallback * 1.4, 50)];
   const options = [
     ...quick.map((value) => ({ label: formatMoney(value, { currency, compact: true }), value })),
     { label: t('budgets.noLimit'), value: NO_LIMIT },

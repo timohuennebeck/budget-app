@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useMemo } from 'react';
 
 import { useUserId } from '@/features/auth/lib/auth-provider';
 
@@ -15,12 +14,6 @@ export const categoriesKey = ['categories'] as const;
 
 export function useCategories(enabled = true) {
   return useQuery({ queryKey: categoriesKey, queryFn: fetchCategories, enabled });
-}
-
-/** Lookup map by id for rendering entry rows. */
-export function useCategoryMap() {
-  const { data } = useCategories();
-  return useMemo(() => new Map((data ?? []).map((category) => [category.id, category])), [data]);
 }
 
 export function useCreateCategory() {

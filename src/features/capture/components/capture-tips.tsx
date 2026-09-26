@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { type LayoutRectangle, useWindowDimensions, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { PageDots } from '@/shared/ui/page-dots';
@@ -45,15 +46,13 @@ interface CaptureTipsProps {
   onFinish: () => void;
 }
 
-function Spotlight({
-  tip,
-  rect,
-  placeholder,
-}: {
+interface SpotlightProps {
   tip: Tip;
   rect: LayoutRectangle;
   placeholder: string;
-}) {
+}
+
+function Spotlight({ tip, rect, placeholder }: SpotlightProps) {
   const style = {
     position: 'absolute' as const,
     left: rect.x,
@@ -72,7 +71,11 @@ function Spotlight({
   }
   return (
     <View style={style} className="items-center justify-center rounded-full bg-primary-soft">
-      <Icon name={tip.target === 'camera' ? 'camera' : 'microphone'} size={24} color="#2F7CF6" />
+      <Icon
+        name={tip.target === 'camera' ? 'camera' : 'microphone'}
+        size={24}
+        color={colors.primary}
+      />
     </View>
   );
 }
@@ -94,7 +97,7 @@ export function CaptureTips({ targets, placeholder, onFinish }: CaptureTipsProps
 
   return (
     <View className="absolute inset-0">
-      <View className="absolute inset-0 bg-[#15181F]/65" />
+      <View className="absolute inset-0 bg-ink/65" />
       <Spotlight tip={tip} rect={rect} placeholder={placeholder} />
       <View
         className="absolute right-5 left-5"
@@ -104,13 +107,13 @@ export function CaptureTips({ targets, placeholder, onFinish }: CaptureTipsProps
           style={{
             left: arrowLeft,
             transform: [{ rotate: '45deg' }],
-            backgroundColor: below ? '#DCE8FC' : '#fff',
+            backgroundColor: below ? colors.primarySoft : colors.white,
             ...(below ? { top: -7 } : { bottom: -7 }),
           }}
         />
         <View className="overflow-hidden rounded-[22px] bg-surface">
           <LinearGradient
-            colors={['#DCE8FC', '#EAF2FE', '#FFFFFF']}
+            colors={[colors.primarySoft, colors.primaryTint, colors.white]}
             locations={[0, 0.55, 1]}
             style={{
               height: 144,

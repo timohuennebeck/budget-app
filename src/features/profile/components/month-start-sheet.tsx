@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Sheet, type SheetControls } from '@/shared/components/sheet';
 import { WheelColumn, WheelFrame } from '@/shared/components/wheel-picker';
+import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Text } from '@/shared/ui/text';
 
@@ -24,7 +25,7 @@ function MonthStartBody({ value, onSave }: MonthStartBodyProps) {
       <Text variant="body" className="mt-3 text-center">
         {t('profile.monthStartHint')}
       </Text>
-      <WheelFrame tone="time" fadeColor="#FFFFFF" className="mt-2">
+      <WheelFrame tone="time" fadeColor={colors.white} className="mt-2">
         <WheelColumn tone="time" items={days} value={day} onChange={setDay} />
       </WheelFrame>
       <Button className="mt-4" label={t('common.save')} onPress={() => onSave(day)} />

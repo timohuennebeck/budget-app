@@ -2,7 +2,7 @@ import { Image } from 'expo-image';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { shadows } from '@/shared/lib/theme';
+import { colors, shadows } from '@/shared/lib/theme';
 import { Text } from '@/shared/ui/text';
 
 interface NotificationCardProps {
@@ -16,7 +16,10 @@ function NotificationCard({ time, title, body, faded }: NotificationCardProps) {
   return (
     <View
       className="flex-row items-start gap-3 rounded-[22px] px-3.5 py-3"
-      style={[{ backgroundColor: faded ? 'rgba(255,255,255,0.8)' : '#fff' }, shadows.floating]}>
+      style={[
+        { backgroundColor: faded ? 'rgba(255,255,255,0.8)' : colors.white },
+        shadows.floating,
+      ]}>
       <Image
         source={require('@/assets/images/app-icon-small.png')}
         style={{ width: 38, height: 38, borderRadius: 10 }}

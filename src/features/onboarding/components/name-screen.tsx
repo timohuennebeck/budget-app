@@ -1,11 +1,11 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { TextInput } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { GradientPanel } from '@/shared/components/gradient-panel';
 import { Screen } from '@/shared/components/screen';
-import { colors, gradients, shadows } from '@/shared/lib/theme';
+import { colors, shadows } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Pip } from '@/shared/ui/pip';
 
@@ -31,16 +31,7 @@ export function NameScreen() {
     <Screen footer={<Button label={t('common.continue')} disabled={!trimmed} onPress={submit} />}>
       <OnboardingHeader step={ONBOARDING_STEPS.name} />
       <StepIntro title={t('onboarding.name.title')} subtitle={t('onboarding.name.subtitle')} />
-      <LinearGradient
-        colors={gradients.panel}
-        style={{
-          marginTop: 22,
-          borderRadius: 28,
-          padding: 18,
-          paddingTop: 22,
-          alignItems: 'center',
-          gap: 16,
-        }}>
+      <GradientPanel style={{ padding: 18, paddingTop: 22, alignItems: 'center', gap: 16 }}>
         <Pip pose="write" size={168} />
         <TextInput
           value={name}
@@ -57,7 +48,7 @@ export function NameScreen() {
           className="h-[58px] self-stretch rounded-[18px] bg-surface px-[18px] font-inter-medium text-[19px] text-ink"
           style={shadows.card}
         />
-      </LinearGradient>
+      </GradientPanel>
     </Screen>
   );
 }
