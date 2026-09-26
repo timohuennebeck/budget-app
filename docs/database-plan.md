@@ -129,7 +129,7 @@ unique (profile_id, week_start)
 | `check_in_min_entries`   | unchanged           |
 | `check_in_close_ratio`   | unchanged           |
 
-### `private.entry_usage`
+### `private.entries_allowance`
 
 ```sql
 profile_id uuid references profiles on delete cascade,
@@ -211,7 +211,7 @@ This table also counts the AI parses per day for `ai_captures_free` and `ai_capt
 new.created_at := now()
 if has_plus(new.profile_id) then return new
 cycle := budget_cycle(month_start_day, time_zone, now())
-insert into private.entry_usage values (profile_id, cycle.start_date, 1)
+insert into private.entries_allowance values (profile_id, cycle.start_date, 1)
   on conflict do update set used = used + 1 where used < config_int('free_entries', 15)
   returning used
 if no row: raise 'entry_limit_reached'
@@ -257,7 +257,7 @@ Nothing is live, so this edits and adds migrations directly. Regenerate `databas
 | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1   | **Edit `initial_schema.sql`:** constraints, `time_zone`, `plus_expires_at` instead of `plan`, `rating_prompted_at`, `check_ins` with `closeness`, archived categories, composite FK, column grants, indexes, triggers. Fold in `restrict_profile_updates` and `default_locale_en`. | `check-ins-api.ts`, `use-check-ins.ts`, `check-in-window.ts`, `use-entry-allowance.ts`, `delete-account-screen.tsx`, `use-rating-prompt.ts`, category pickers (hide archived), sign-up metadata (`time_zone`) |
 | 2   | **Edit `app_config`:** key names above, inserted by the migration.                                                                                                                                                                                                                 | `use-app-config.ts`, `seed.sql`                                                                                                                                                                               |
-| 3   | **New migration:** `entry_usage`, `budget_cycle`, the allowance trigger, `get_entry_allowance()`, `entry_stats()`.                                                                                                                                                                 | `entries-api.ts`, `use-entries.ts`, `use-entry-allowance.ts`, `limit-screen.tsx`, `review-screen.tsx`, `complete-onboarding.ts`                                                                               |
+| 3   | **New migration:** `entries_allowance`, `budget_cycle`, the allowance trigger, `get_entry_allowance()`, `entry_stats()`.                                                                                                                                                           | `entries-api.ts`, `use-entries.ts`, `use-entry-allowance.ts`, `limit-screen.tsx`, `review-screen.tsx`, `complete-onboarding.ts`                                                                               |
 | 4   | **New:** `revenuecat-webhook` and `sync-entitlements` edge functions.                                                                                                                                                                                                              | `purchases.ts`, `auth-provider.tsx`                                                                                                                                                                           |
 | 5   | **New migration:** `captures`, `entries.capture_id`, the `receipts` bucket. **New:** `parse-capture` edge function.                                                                                                                                                                | `receipt-recognizer.ts`, `processing-screen.tsx`, `capture-store.ts`, `types.ts`                                                                                                                              |
 | 6   | **New:** `delete-account` edge function, which replaces the `delete_own_account` RPC.                                                                                                                                                                                              | `use-auth-actions.ts`                                                                                                                                                                                         |
