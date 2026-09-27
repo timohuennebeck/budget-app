@@ -54,10 +54,9 @@
       "expo-notifications",
       "expo-localization",
       [
-        "@config-plugins/react-native-webrtc",
+        "expo-audio",
         {
-          "microphonePermission": "Looop listens when you say what you spent.",
-          "cameraPermission": "Looop uses the camera to read receipts."
+          "microphonePermission": "Looop listens when you say what you spent."
         }
       ],
       "./plugins/with-capture-intent"

@@ -24,7 +24,7 @@ const DURATION_MS = 2400;
 const TICK_MS = 60;
 const WAITING_CEILING = 0.92;
 
-// "Pip sortiert deine Einträge" (2j). Parses the text or receipt while the
+// "Pip sortiert deine Einträge" (2j). Parses the text, recording or receipt while the
 // ring fills (at least), then continues to review (app) or saved (onboarding).
 export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
   const { t } = useTranslation();
@@ -42,20 +42,29 @@ export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
   useEffect(() => {
     if (started.current || categoriesPending) return;
     started.current = true;
-    const { text, photoUri, captureId } = useCaptureStore.getState();
+    const { text, photoUri, recording, setText } = useCaptureStore.getState();
 
     captureDrafts({
       source: source ?? 'text',
       text,
       photoUri,
-      captureId,
+      recording,
       categories,
+      onTranscript: setText,
     })
       .then(setResult)
       .catch((error) => {
         haptics.error();
         const code = error instanceof CaptureError && error.status ? error.status : 500;
-        router.replace(captureHref(mode, 'receipt-error', { code: String(code) }));
+        // Voice explains the problem on its own screen, with "type instead".
+        const step = source === 'voice' ? 'voice' : 'receipt-error';
+        router.replace(
+          captureHref(
+            mode,
+            step,
+            step === 'voice' ? { error: String(code) } : { code: String(code) },
+          ),
+        );
       });
   }, [categories, categoriesPending, mode, source]);
 

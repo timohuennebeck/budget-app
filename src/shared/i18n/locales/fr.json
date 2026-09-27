@@ -183,7 +183,6 @@
     "addMore": "En ajouter d'autres",
     "allowCamera": "Autoriser l'appareil photo",
     "camera": "Photographier un reçu",
-    "connecting": "Connexion …",
     "cameraHint": "Photographie un reçu ou un ticket de caisse",
     "cameraPermission": "Pip a besoin de l'appareil photo pour lire ton ticket de caisse.",
     "confirm": "C'est bon",
@@ -276,7 +275,9 @@
         "title": "Pip ne peut pas écouter pour l'instant.",
         "subtitle": "Vérifie ta connexion, ou tape-le."
       }
-    }
+    },
+    "voiceTitle": "Dis ce que tu as dépensé",
+    "voiceExample": "Par exemple : « Café 3,50 et ciné 12 »"
   },
   "entries": {
     "all": "Tout",

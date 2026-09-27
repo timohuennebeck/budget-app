@@ -183,7 +183,6 @@
     "addMore": "Adicionar mais",
     "allowCamera": "Permitir câmera",
     "camera": "Fotografar recibo",
-    "connecting": "Conectando …",
     "cameraHint": "Fotografe o recibo ou cupom fiscal",
     "cameraPermission": "O Pip precisa de acesso à câmera para ler seu recibo.",
     "confirm": "Tudo certo",
@@ -276,7 +275,9 @@
         "title": "O Pip não pode ouvir agora.",
         "subtitle": "Verifique sua conexão ou digite."
       }
-    }
+    },
+    "voiceTitle": "Diga o que você gastou",
+    "voiceExample": "Por exemplo: “Café 8 reais e cinema 30”"
   },
   "entries": {
     "all": "Todos",

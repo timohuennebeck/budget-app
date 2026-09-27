@@ -11,6 +11,8 @@ export interface AppConfig {
   /** Average monthly spend of people the same age */
   peerMonthlyAverage: number;
   supportEmail: string;
+  /** Longest voice recording, in seconds */
+  voiceMaxSeconds: number;
 }
 
 // Used until the app_config table has loaded (and when offline).
@@ -21,6 +23,7 @@ const defaultAppConfig: AppConfig = {
   plusPricing: { monthly: 6.99, yearly: 59.88, trialDays: 7 },
   peerMonthlyAverage: 1150,
   supportEmail: 'hilfe@looop.app',
+  voiceMaxSeconds: 60,
 };
 
 async function fetchAppConfig(): Promise<AppConfig> {
@@ -40,6 +43,7 @@ async function fetchAppConfig(): Promise<AppConfig> {
     },
     peerMonthlyAverage: Number(values.peer_monthly_average ?? defaultAppConfig.peerMonthlyAverage),
     supportEmail: String(values.support_email ?? defaultAppConfig.supportEmail),
+    voiceMaxSeconds: Number(values.voice_max_seconds ?? defaultAppConfig.voiceMaxSeconds),
   };
 }
 

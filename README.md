@@ -39,7 +39,7 @@ src/
 plugins/               Expo config plugins (Action Button App Intent)
 supabase/
   migrations/          Schema, RLS policies, triggers, cron jobs
-  functions/           Edge functions: parse-capture, transcribe-session, send-notifications
+  functions/           Edge functions: parse-capture, send-notifications
   presets/             Generator for the categories_presets migration
   seed.sql             Demo account (local only, never run against the hosted project)
 ```
@@ -53,7 +53,7 @@ Routing: `src/app/_layout.tsx` uses `Stack.Protected`. The onboarding group stay
 ## AI capture and voice
 
 - **Text, voice, receipts** – `parse-capture` sends the note or photo to OpenAI (`app_config.ai_model`, Responses API with a strict JSON schema). Typed and spoken text fall back to the on-device parser (`features/capture/lib/parse-entries.ts`) when the function fails; before sign-up only the on-device parser runs.
-- **Live transcription** – `transcribe-session` mints a short-lived OpenAI Realtime secret; the app streams the microphone over WebRTC (`react-native-webrtc`, browser WebRTC on web).
+- **Voice** – the app records on the device (`expo-audio`) and sends the file to `parse-capture`, which transcribes it with OpenAI (`app_config.stt_model`) and parses the text like a typed note.
 - **Limits** – `ai_captures_free` / `ai_captures_plus` per rolling 24 hours, counted in `captures`.
 
 ## Notifications

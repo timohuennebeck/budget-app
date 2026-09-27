@@ -2,6 +2,12 @@ import { create } from 'zustand';
 
 import type { DraftEntry } from '../lib/types';
 
+export interface VoiceRecording {
+  uri: string;
+  /** MIME type, e.g. audio/m4a */
+  type: string;
+}
+
 export type CaptureMode = 'onboarding' | 'app';
 
 interface CaptureState {
@@ -9,15 +15,16 @@ interface CaptureState {
   drafts: DraftEntry[];
   /** Local URI of the last receipt photo */
   photoUri: string | null;
-  /** Capture row a voice session created (transcribe-session) */
-  captureId: string | null;
+  /** The voice recording to transcribe */
+  recording: VoiceRecording | null;
   /** "Weitere hinzufügen": new drafts are added to the current ones */
   appending: boolean;
   start: (text?: string) => void;
   appendMore: () => void;
   addDrafts: (drafts: DraftEntry[]) => void;
-  setText: (text: string, captureId?: string | null) => void;
+  setText: (text: string) => void;
   setPhoto: (uri: string | null) => void;
+  setRecording: (recording: VoiceRecording | null) => void;
   updateDraft: (id: string, patch: Partial<DraftEntry>) => void;
   removeDraft: (id: string) => void;
 }
@@ -28,18 +35,19 @@ export const useCaptureStore = create<CaptureState>((set) => ({
   text: '',
   drafts: [],
   photoUri: null,
-  captureId: null,
+  recording: null,
   appending: false,
   start: (text = '') =>
-    set({ text, drafts: [], photoUri: null, captureId: null, appending: false }),
-  appendMore: () => set({ text: '', photoUri: null, captureId: null, appending: true }),
+    set({ text, drafts: [], photoUri: null, recording: null, appending: false }),
+  appendMore: () => set({ text: '', photoUri: null, recording: null, appending: true }),
   addDrafts: (drafts) =>
     set((state) => ({
       drafts: state.appending ? [...state.drafts, ...drafts] : drafts,
       appending: false,
     })),
-  setText: (text, captureId = null) => set({ text, captureId }),
+  setText: (text) => set({ text }),
   setPhoto: (photoUri) => set({ photoUri }),
+  setRecording: (recording) => set({ recording }),
   updateDraft: (id, patch) =>
     set((state) => ({
       drafts: state.drafts.map((draft) => (draft.id === id ? { ...draft, ...patch } : draft)),

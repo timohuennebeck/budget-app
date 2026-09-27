@@ -181,7 +181,6 @@
     "addMore": "Add more",
     "allowCamera": "Allow camera",
     "camera": "Snap a receipt",
-    "connecting": "Connecting …",
     "cameraHint": "Take a photo of a receipt or bill",
     "cameraPermission": "Pip needs camera access to read your receipt.",
     "confirm": "Looks good",
@@ -270,7 +269,9 @@
         "title": "Pip can't listen right now.",
         "subtitle": "Check your connection, or type it in instead."
       }
-    }
+    },
+    "voiceTitle": "Say what you spent",
+    "voiceExample": "For example: “Coffee 3.50 and cinema 12”"
   },
   "entries": {
     "all": "All",

@@ -181,7 +181,6 @@
     "addMore": "Weitere hinzufügen",
     "allowCamera": "Kamera erlauben",
     "camera": "Beleg fotografieren",
-    "connecting": "Verbinde …",
     "cameraHint": "Fotografiere Beleg oder Kassenbon",
     "cameraPermission": "Pip braucht Zugriff auf die Kamera, um deinen Kassenbon zu lesen.",
     "confirm": "Passt",
@@ -270,7 +269,9 @@
         "title": "Pip kann gerade nicht zuhören.",
         "subtitle": "Prüf deine Verbindung oder tipp es ein."
       }
-    }
+    },
+    "voiceTitle": "Sag, was du ausgegeben hast",
+    "voiceExample": "Zum Beispiel: „Döner 8 Euro und Kino 12“"
   },
   "entries": {
     "all": "Alle",

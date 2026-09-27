@@ -183,7 +183,6 @@
     "addMore": "Aggiungine altri",
     "allowCamera": "Consenti fotocamera",
     "camera": "Fotografa lo scontrino",
-    "connecting": "Connessione …",
     "cameraHint": "Fotografa una ricevuta o uno scontrino",
     "cameraPermission": "Pip ha bisogno della fotocamera per leggere il tuo scontrino.",
     "confirm": "Va bene",
@@ -276,7 +275,9 @@
         "title": "Pip non può ascoltare ora.",
         "subtitle": "Controlla la connessione o scrivilo."
       }
-    }
+    },
+    "voiceTitle": "Di' cosa hai speso",
+    "voiceExample": "Per esempio: «Caffè 1,50 e cinema 12»"
   },
   "entries": {
     "all": "Tutti",

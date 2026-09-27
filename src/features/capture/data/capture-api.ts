@@ -17,6 +17,10 @@ export interface ParsedEntry {
 interface ParseRequest {
   source: 'text' | 'voice' | 'camera';
   text?: string;
+  /** Voice: the recording as base64 */
+  audio?: string;
+  /** Voice: its MIME type */
+  audio_type?: string;
   capture_id?: string;
   receipt_path?: string;
 }
@@ -44,6 +48,8 @@ async function toCaptureError(error: unknown) {
 export async function parseCapture(request: ParseRequest) {
   const { data, error } = await supabase.functions.invoke<{
     capture_id: string;
+    /** Voice: what was understood */
+    transcript?: string;
     entries: ParsedEntry[];
   }>('parse-capture', { body: request });
   if (error || !data) throw await toCaptureError(error);
@@ -71,32 +77,13 @@ export async function uploadReceipt(userId: string, captureId: string, uri: stri
   return path;
 }
 
-export interface VoiceSession {
-  capture_id: string;
-  /** Short-lived OpenAI Realtime client secret */
-  client_secret: string;
-  expires_at: number;
-  max_seconds: number;
-}
-
-/** Checks the AI limit, logs the capture and returns an OpenAI client secret. */
-export async function startVoiceSession() {
-  const { data, error } = await supabase.functions.invoke<VoiceSession>('transcribe-session', {
-    body: {},
-  });
-  if (error || !data) throw await toCaptureError(error);
-  return data;
-}
-
-const REALTIME_CALLS_URL = 'https://api.openai.com/v1/realtime/calls';
-
-/** WebRTC offer/answer exchange with OpenAI Realtime; returns the answer SDP. */
-export async function exchangeRealtimeSdp(offerSdp: string, clientSecret: string) {
-  const response = await fetch(REALTIME_CALLS_URL, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${clientSecret}`, 'Content-Type': 'application/sdp' },
-    body: offerSdp,
-  });
-  if (!response.ok) throw new CaptureError(`realtime_${response.status}`, response.status);
-  return response.text();
+/** Reads a local recording (file:// in the app, blob: on web) as base64. */
+export async function readRecording(uri: string) {
+  const bytes = new Uint8Array(await (await fetch(uri)).arrayBuffer());
+  let binary = '';
+  const CHUNK = 0x8000;
+  for (let index = 0; index < bytes.length; index += CHUNK) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + CHUNK));
+  }
+  return btoa(binary);
 }

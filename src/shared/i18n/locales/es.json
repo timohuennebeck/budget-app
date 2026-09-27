@@ -183,7 +183,6 @@
     "addMore": "Añadir más",
     "allowCamera": "Permitir cámara",
     "camera": "Fotografiar recibo",
-    "connecting": "Conectando …",
     "cameraHint": "Fotografía un recibo o ticket de compra",
     "cameraPermission": "Pip necesita acceso a la cámara para leer tu ticket.",
     "confirm": "Correcto",
@@ -276,7 +275,9 @@
         "title": "Pip no puede escuchar ahora.",
         "subtitle": "Revisa tu conexión o escríbelo."
       }
-    }
+    },
+    "voiceTitle": "Di lo que has gastado",
+    "voiceExample": "Por ejemplo: «Café 3,50 y cine 12»"
   },
   "entries": {
     "all": "Todos",

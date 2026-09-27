@@ -2,7 +2,14 @@ import { randomUUID } from 'expo-crypto';
 
 import { ensureUser } from '@/features/auth/lib/anonymous-user';
 
-import { CaptureError, type ParsedEntry, parseCapture, uploadReceipt } from '../data/capture-api';
+import {
+  CaptureError,
+  type ParsedEntry,
+  parseCapture,
+  readRecording,
+  uploadReceipt,
+} from '../data/capture-api';
+import type { VoiceRecording } from '../data/capture-store';
 import { newDraftId, parseEntries } from './parse-entries';
 import type { CategoryOption, DraftEntry } from './types';
 
@@ -10,9 +17,10 @@ interface CaptureInput {
   source: DraftEntry['source'];
   text: string;
   photoUri: string | null;
-  /** Set by a voice session, which already counted against the AI limit */
-  captureId: string | null;
+  recording: VoiceRecording | null;
   categories: CategoryOption[];
+  /** Voice: receives what was understood, e.g. for the text screen */
+  onTranscript?: (text: string) => void;
 }
 
 function toDrafts(captureId: string, entries: ParsedEntry[], source: DraftEntry['source']) {
@@ -32,13 +40,22 @@ function toDrafts(captureId: string, entries: ParsedEntry[], source: DraftEntry[
 
 /**
  * Drafts for one capture. The parse-capture edge function reads text, voice
- * and receipts (during onboarding as an anonymous user); typed and spoken
- * text fall back to the on-device parser when it fails. Receipts have no
- * fallback and throw a CaptureError.
+ * recordings and receipts (during onboarding as an anonymous user); typed
+ * text falls back to the on-device parser when it fails. Recordings and
+ * receipts have no fallback and throw a CaptureError.
  */
 export async function captureDrafts(input: CaptureInput): Promise<DraftEntry[]> {
-  const { source, text, photoUri, captureId, categories } = input;
+  const { source, text, photoUri, recording, categories, onTranscript } = input;
   const userId = await ensureUser();
+
+  if (source === 'voice') {
+    if (!userId) throw new CaptureError('signed_out', 401);
+    if (!recording) throw new CaptureError('no_recording', 400);
+    const audio = await readRecording(recording.uri);
+    const result = await parseCapture({ source, audio, audio_type: recording.type });
+    onTranscript?.(result.transcript ?? '');
+    return toDrafts(result.capture_id, result.entries, source);
+  }
 
   if (source === 'camera') {
     if (!userId) throw new CaptureError('signed_out', 401);
@@ -52,11 +69,7 @@ export async function captureDrafts(input: CaptureInput): Promise<DraftEntry[]> 
   const local = () => parseEntries(text, categories, { source }).entries;
   if (!userId) return local();
   try {
-    const result = await parseCapture({
-      source: source === 'voice' ? 'voice' : 'text',
-      text,
-      capture_id: captureId ?? undefined,
-    });
+    const result = await parseCapture({ source: 'text', text });
     return toDrafts(result.capture_id, result.entries, source);
   } catch (error) {
     console.warn('parse-capture failed, parsing on device', error);

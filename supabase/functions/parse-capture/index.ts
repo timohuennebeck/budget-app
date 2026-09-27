@@ -4,17 +4,33 @@ import { HttpError, json, serve } from '../_shared/http.ts';
 import { admin, claimCapture, readConfig, readProfile, requireUser } from '../_shared/supabase.ts';
 import { getProvider } from './providers/index.ts';
 import type { CategoryChoice, MerchantHint, ParsedEntry } from './providers/types.ts';
+import { decodeAudio, isSupportedAudio, transcribe } from './transcribe.ts';
 
-// Turns typed text, a voice transcript or a receipt photo into entries.
+// Turns typed text, a voice recording or a receipt photo into entries.
 // Every call is logged in `captures`, which also counts the daily AI limit.
-// Body: { source: 'text' | 'voice' | 'camera', text?, capture_id?, receipt_path? }
+// Body: { source: 'text' | 'voice' | 'camera', text?, audio?, audio_type?,
+//         capture_id?, receipt_path? }
+// Voice sends the recording (base64); it's transcribed first and the text is
+// parsed like a typed note. The transcript comes back as `transcript`.
 
 interface Body {
   source?: string;
   text?: string;
+  /** Voice: the recording as base64 */
+  audio?: string;
+  /** Voice: its MIME type, e.g. audio/m4a */
+  audio_type?: string;
   capture_id?: string;
   receipt_path?: string;
 }
+
+// Transcription hints in the user's language: how amounts are usually said.
+const VOICE_PROMPTS: Record<string, string> = {
+  de: 'Döner 8 Euro, REWE 42,50, Kino 12, Gehalt 3.200 Euro.',
+  en: 'Coffee 3.50, groceries 42, cinema 12, salary 3,200.',
+};
+// If the configured model is rejected, the long-standing one still works.
+const FALLBACK_STT_MODEL = 'whisper-1';
 
 const SOURCES = ['text', 'voice', 'camera'];
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -128,34 +144,71 @@ function clean(entries: ParsedEntry[], categoryKinds: Map<string, CategoryChoice
     });
 }
 
+async function transcribeVoice(
+  audio: Uint8Array<ArrayBuffer>,
+  type: string,
+  model: string,
+  locale: string,
+) {
+  const apiKey = Deno.env.get('OPENAI_API_KEY');
+  if (!apiKey) throw new HttpError(503, 'transcription_unavailable');
+  // The API wants ISO 639-1, so pt-BR becomes pt.
+  const language = locale.slice(0, 2);
+  const options = {
+    apiKey,
+    audio,
+    type,
+    language,
+    prompt: VOICE_PROMPTS[language] ?? '',
+  };
+  try {
+    return await transcribe({ ...options, model });
+  } catch (error) {
+    if (model === FALLBACK_STT_MODEL) throw error;
+    console.warn(`transcription with ${model} failed, trying ${FALLBACK_STT_MODEL}`, error);
+    return await transcribe({ ...options, model: FALLBACK_STT_MODEL });
+  }
+}
+
 serve(async (request) => {
   if (request.method !== 'POST') throw new HttpError(405, 'method_not_allowed');
   const user = await requireUser(request);
   const body = (await request.json().catch(() => ({}))) as Body;
 
   const source = body.source ?? '';
-  const text = body.text?.trim() ?? '';
+  let text = body.text?.trim() ?? '';
   if (!SOURCES.includes(source)) throw new HttpError(400, 'invalid_source');
-  if (source !== 'camera' && (!text || text.length > 2000))
+  const audio = source === 'voice' ? decodeAudio(body.audio ?? '') : null;
+  const audioType = body.audio_type ?? '';
+  if (source === 'voice' && (!audio || !isSupportedAudio(audioType))) {
+    throw new HttpError(400, 'invalid_audio');
+  }
+  if (source === 'text' && (!text || text.length > 2000)) {
     throw new HttpError(400, 'invalid_text');
-  if (body.capture_id && !UUID.test(body.capture_id))
+  }
+  if (body.capture_id && !UUID.test(body.capture_id)) {
     throw new HttpError(400, 'invalid_capture_id');
+  }
   const receiptPath = new RegExp(`^${user.id}/[0-9a-f-]{36}\\.(jpg|jpeg|png|webp|heic)$`);
   if (source === 'camera' && !receiptPath.test(body.receipt_path ?? '')) {
     throw new HttpError(400, 'invalid_receipt_path');
   }
 
   const [config, profile] = await Promise.all([
-    readConfig({ ai_provider: 'openai', ai_model: 'gpt-6-luna' }),
+    readConfig({
+      ai_provider: 'openai',
+      ai_model: 'gpt-6-luna',
+      stt_model: 'gpt-4o-mini-transcribe',
+    }),
     readProfile(user.id),
   ]);
-  // A voice capture was counted by transcribe-session; this claims it once.
   const captureId = await claimCapture({
     profileId: user.id,
     source: source as 'text' | 'voice' | 'camera',
     status: 'processing',
-    captureId: body.capture_id,
-    inputText: source === 'camera' ? null : text,
+    // Receipts bring the id of their uploaded photo; text and voice get a new one.
+    captureId: source === 'camera' ? body.capture_id : undefined,
+    inputText: source === 'text' ? text : null,
     receiptPath: source === 'camera' ? body.receipt_path : null,
     provider: String(config.ai_provider),
     model: String(config.ai_model),
@@ -163,6 +216,26 @@ serve(async (request) => {
 
   const started = Date.now();
   try {
+    if (audio) {
+      text = await transcribeVoice(audio, audioType, String(config.stt_model), profile.locale);
+      await admin
+        .from('captures')
+        .update({ input_text: text.slice(0, 2000) })
+        .eq('id', captureId);
+      // Silence or noise: nothing to parse.
+      if (!text) {
+        await admin
+          .from('captures')
+          .update({
+            status: 'parsed',
+            result: [],
+            completed_at: new Date().toISOString(),
+          })
+          .eq('id', captureId);
+        return json({ capture_id: captureId, transcript: '', entries: [] });
+      }
+    }
+
     const [categories, hints, image] = await Promise.all([
       readCategories(user.id, profile.locale),
       readHints(user.id),
@@ -197,8 +270,14 @@ serve(async (request) => {
       })
       .eq('id', captureId);
 
-    if (source === 'camera' && entries.length === 0) throw new HttpError(422, 'receipt_unreadable');
-    return json({ capture_id: captureId, entries });
+    if (source === 'camera' && entries.length === 0) {
+      throw new HttpError(422, 'receipt_unreadable');
+    }
+    return json({
+      capture_id: captureId,
+      ...(source === 'voice' ? { transcript: text } : {}),
+      entries,
+    });
   } catch (error) {
     const code = error instanceof HttpError ? error.code : 'provider_failed';
     await admin
