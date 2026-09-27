@@ -7,7 +7,6 @@ import { useWalletInbox } from '@/features/wallet/hooks/use-wallet-inbox';
 
 export const unstable_settings = { anchor: '(tabs)' };
 
-const fromBottom = { animation: 'slide_from_bottom' } as const;
 // Full-screen modals look like the slide from the bottom, but also appear
 // above the capture modal: screens pushed below a native modal stay hidden.
 const overModal = { presentation: 'fullScreenModal', animation: 'slide_from_bottom' } as const;
