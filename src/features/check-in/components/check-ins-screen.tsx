@@ -139,7 +139,9 @@ export function CheckInsScreen() {
 
       {checkIns.length === 0 ? (
         <ScrollView
-          className="flex-1"
+          // The gap sits outside the scroll view, so the card scrolls out of
+          // view below this week's card instead of right against it.
+          className="mt-[18px] flex-1"
           contentInsetAdjustmentBehavior={layout.contentInsetAdjustmentBehavior}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
           showsVerticalScrollIndicator={false}>
@@ -147,7 +149,6 @@ export function CheckInsScreen() {
             pose="clock"
             title={t('checkIn.historyEmpty')}
             subtitle={t('checkIn.historyEmptySubtitle')}
-            className="mt-[18px]"
           />
         </ScrollView>
       ) : groups.length === 0 ? (

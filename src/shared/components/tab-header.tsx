@@ -13,29 +13,20 @@ import { Text } from '@/shared/ui/text';
 // Header pieces shared by the tabs: the top bar, the month pill, the big
 // title with its stat, and the row of filter chips.
 
-interface TabTopBarProps {
-  /** The tab's own control, e.g. the month pill or search */
-  children?: ReactNode;
-  /** The gear to Profil; off on Profil itself */
-  settings?: boolean;
-}
-
-/** Top row of every tab: its own control on the left, settings on the right. */
-export function TabTopBar({ children, settings = true }: TabTopBarProps) {
+/** Top row of every tab: its own control on the left, the gear to Profil on the right. */
+export function TabTopBar({ children, className }: { children?: ReactNode; className?: string }) {
   const { t } = useTranslation();
   return (
-    <View className="h-10 flex-row items-center justify-between px-1">
+    <View className={cn('h-10 flex-row items-center justify-between px-1', className)}>
       <View className="flex-row items-center">{children}</View>
-      {settings ? (
-        <IconButton
-          icon="gear-six"
-          variant="surface"
-          size={40}
-          iconSize={18}
-          accessibilityLabel={t('tabs.profile')}
-          onPress={() => router.navigate('/profile')}
-        />
-      ) : null}
+      <IconButton
+        icon="gear-six"
+        variant="surface"
+        size={40}
+        iconSize={18}
+        accessibilityLabel={t('tabs.profile')}
+        onPress={() => router.navigate('/profile')}
+      />
     </View>
   );
 }

@@ -41,8 +41,8 @@ export function ProfileScreen() {
 
   return (
     <Screen scroll tabBar>
-      {/* Profil is where the gear leads, so it has none itself. */}
-      <TabTopBar settings={false}>
+      {/* Profil's page is inset 20, the other tabs 16: line the bar up with theirs. */}
+      <TabTopBar className="-mx-1">
         <Text size={15} weight="semibold">
           {t('tabs.profile')}
         </Text>
