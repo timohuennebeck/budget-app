@@ -17,13 +17,14 @@ interface AvailableHeroProps {
 /** "Frei verfügbar" headline number with the daily hint below. */
 export function AvailableHero({ label, amount, currency, highlight, detail }: AvailableHeroProps) {
   return (
-    <View className="mt-[34px] items-center">
+    // Generous space around the number so it owns the top of Start.
+    <View className="items-center pt-[72px] pb-12">
       <Text size={14.5} weight="medium" className="text-muted">
         {label}
       </Text>
-      <MoneyText amount={amount} currency={currency} className="mt-1.5" />
+      <MoneyText amount={amount} currency={currency} className="mt-3.5" />
       <View
-        className="mt-3 flex-row items-center gap-1.5 rounded-full bg-surface px-3.5 py-[7px]"
+        className="mt-5 flex-row items-center gap-1.5 rounded-full bg-surface px-3.5 py-[7px]"
         style={shadows.card}>
         <Text size={14} weight="semibold">
           {highlight}
