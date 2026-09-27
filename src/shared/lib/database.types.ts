@@ -402,7 +402,7 @@ export type Database = {
         Row: {
           content: string
           created_at: string
-          dedupe_key: string
+          occurrence: string
           error: string | null
           id: string
           kind: Database["public"]["Enums"]["notification_kind"]
@@ -417,7 +417,7 @@ export type Database = {
         Insert: {
           content: string
           created_at?: string
-          dedupe_key: string
+          occurrence: string
           error?: string | null
           id?: string
           kind: Database["public"]["Enums"]["notification_kind"]
@@ -432,7 +432,7 @@ export type Database = {
         Update: {
           content?: string
           created_at?: string
-          dedupe_key?: string
+          occurrence?: string
           error?: string | null
           id?: string
           kind?: Database["public"]["Enums"]["notification_kind"]
