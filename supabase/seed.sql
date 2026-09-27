@@ -46,11 +46,13 @@ begin
     monthly_budget = 3200,
     birth_date = '1994-09-14',
     time_zone = 'Europe/Berlin',
-    reminder_enabled = true,
     onboarded_at = now()
   where id = demo_id;
 
-  insert into public.categories (id, profile_id, key, name, icon, hue, monthly_limit, sort_order) values
+  update public.notifications_settings set enabled = true
+  where profile_id = demo_id and kind = 'daily_reminder';
+
+  insert into public.categories (id, profile_id, preset_key, name, icon, hue, monthly_limit, sort_order) values
     (c_groceries, demo_id, 'groceries', 'Lebensmittel', 'basket', 150, 400, 0),
     (c_dining, demo_id, 'dining', 'Essen gehen', 'fork-knife', 55, 200, 1),
     (c_shopping, demo_id, 'shopping', 'Shopping', 'shopping-bag', 330, 150, 2),

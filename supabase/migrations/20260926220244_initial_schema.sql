@@ -1,6 +1,7 @@
--- Looop schema: profiles, categories, entries, check-ins, legal documents and
--- acceptances, and app config. All user data is scoped to auth.uid() through
--- row level security; the app may only write the columns it owns.
+-- Looop schema: profiles, category presets, categories, entries, check-ins,
+-- legal documents and acceptances, and app config. All user data is scoped
+-- to auth.uid() through row level security; the app may only write the
+-- columns it owns.
 
 create schema if not exists private;
 
@@ -53,9 +54,6 @@ create table public.profiles (
   budget_mode public.budget_mode not null default 'none',
   monthly_budget numeric(12, 2) null check (monthly_budget is null or monthly_budget >= 0),
   month_start_day smallint not null default 1 check (month_start_day between 1 and 28),
-  reminder_enabled boolean not null default false,
-  reminder_time time not null default '20:30',
-  reminder_repeat public.reminder_repeat not null default 'daily',
   -- Copied from RevenueCat by the server; Plus is active while in the future.
   plus_expires_at timestamp with time zone null,
   rating_prompted_at timestamp with time zone null,
@@ -98,13 +96,33 @@ create trigger on_auth_user_created after insert on auth.users
 for each row execute function private.handle_new_user();
 
 -- ---------------------------------------------------------------------------
--- Categories
+-- Category presets: every built-in category, readable before sign-up
+-- ---------------------------------------------------------------------------
+create table public.categories_presets (
+  key text not null,
+  group_key text not null,
+  -- {"en": "Groceries", "de": "Lebensmittel", …} for all app languages
+  names jsonb not null,
+  -- {"de": ["rewe", "edeka"], …}: words and merchants the parsers match
+  keywords jsonb not null default '{}'::jsonb,
+  icon text not null,
+  hue smallint not null check (hue between 0 and 360),
+  -- Average monthly spend of people the same age, shown as a budget hint
+  peer_average numeric(12, 2) null,
+  suggested boolean not null default false,
+  sort_order integer not null default 0,
+  constraint categories_presets_pkey primary key (key),
+  constraint categories_presets_names_en check (names ? 'en')
+);
+
+-- ---------------------------------------------------------------------------
+-- Categories: the user's own, from a preset or custom
 -- ---------------------------------------------------------------------------
 create table public.categories (
   id uuid not null default gen_random_uuid(),
   profile_id uuid not null references public.profiles (id) on delete cascade,
-  -- Built-in categories carry a stable key so the app can translate the name.
-  key text null,
+  -- The preset this category came from; its name follows the app language.
+  preset_key text null references public.categories_presets (key) on update cascade,
   name text not null check (char_length(name) between 1 and 40),
   icon text not null check (char_length(icon) <= 40),
   hue smallint not null check (hue between 0 and 360),
@@ -114,7 +132,7 @@ create table public.categories (
   archived_at timestamp with time zone null,
   created_at timestamp with time zone not null default now(),
   constraint categories_pkey primary key (id),
-  constraint categories_profile_id_key_key unique (profile_id, key),
+  constraint categories_profile_id_preset_key_key unique (profile_id, preset_key),
   constraint categories_id_profile_id_key unique (id, profile_id)
 );
 
@@ -229,7 +247,7 @@ insert into public.app_config (key, value, description) values
   ('check_in_min_entries', '3', 'Entries needed in a week before the check-in compares numbers'),
   ('check_in_close_ratio', '0.85', 'Closeness from which a weekly guess counts as close'),
   ('plus_pricing', '{"monthly": 6.99, "yearly": 59.88, "trial_days": 7}', 'Looop Plus prices shown on the paywall (EUR)'),
-  ('peer_averages', '{"monthly": 1150, "categories": {"groceries": 290, "dining": 110, "cafe": 35, "shopping": 140, "transport": 60, "drugstore": 45, "health": 40, "leisure": 80}}', 'Average monthly spend of people the same age, used as budget hints'),
+  ('peer_monthly_average', '1150', 'Average monthly spend of people the same age, shown on the monthly budget step'),
   ('support_email', '"hilfe@looop.app"', 'Address opened by Profil › Hilfe')
 on conflict (key) do nothing;
 
@@ -260,8 +278,7 @@ grant execute on function public.delete_own_account() to authenticated;
 revoke insert, update on public.profiles from anon, authenticated;
 grant update (
   first_name, currency, locale, time_zone, birth_date, budget_mode, monthly_budget,
-  month_start_day, reminder_enabled, reminder_time, reminder_repeat,
-  rating_prompted_at, onboarded_at
+  month_start_day, rating_prompted_at, onboarded_at
 ) on public.profiles to authenticated;
 
 revoke insert, update on public.entries from anon, authenticated;
@@ -276,12 +293,14 @@ revoke insert, update on public.legal_acceptances from anon, authenticated;
 grant insert (id, profile_id, document_id, app_version, platform)
   on public.legal_acceptances to authenticated;
 
-revoke insert, update, delete on public.legal_documents, public.app_config from anon, authenticated;
+revoke insert, update, delete on public.legal_documents, public.app_config, public.categories_presets
+  from anon, authenticated;
 
 -- ---------------------------------------------------------------------------
 -- Row level security
 -- ---------------------------------------------------------------------------
 alter table public.profiles enable row level security;
+alter table public.categories_presets enable row level security;
 alter table public.categories enable row level security;
 alter table public.entries enable row level security;
 alter table public.check_ins enable row level security;
@@ -293,6 +312,9 @@ create policy "Profiles are readable by their owner" on public.profiles
 for select to authenticated using ((select auth.uid()) = id);
 create policy "Profiles are editable by their owner" on public.profiles
 for update to authenticated using ((select auth.uid()) = id) with check ((select auth.uid()) = id);
+
+create policy "Category presets are public" on public.categories_presets
+for select to anon, authenticated using (true);
 
 create policy "Categories belong to their owner" on public.categories
 for all to authenticated

@@ -36,24 +36,46 @@ src/
     legal/[kind].tsx   Terms / privacy from the legal_documents table
   features/<feature>/  components · hooks · lib · data per feature
   shared/              ui (primitives) · components (composed) · lib · hooks · data · i18n
+plugins/               Expo config plugins (Action Button App Intent)
 supabase/
-  migrations/          Schema, RLS policies, triggers
-  seed.sql             App config, placeholder legal documents, demo account
+  migrations/          Schema, RLS policies, triggers, cron jobs
+  functions/           Edge functions: parse-capture, transcribe-session, send-notifications
+  presets/             Generator for the categories_presets migration
+  seed.sql             Demo account (local only, never run against the hosted project)
 ```
 
 Routing: `src/app/_layout.tsx` uses `Stack.Protected`. The onboarding group stays available until the profile has `onboarded_at`, so the post-sign-up steps (Plus, done) still work; after that only the app group is reachable.
 
 ## Data model
 
-`profiles` (1:1 with `auth.users`, created by trigger) · `categories` (built-ins carry a `key` and are translated in the app) · `entries` (`amount` is the user's share; `total_amount` keeps split bills) · `weekly_check_ins` · `legal_documents` (immutable, versioned per locale) · `legal_acceptances` · `app_config` (free entry limit, prices, peer averages, …). Every user table is protected by row level security on `auth.uid()`.
+`profiles` (1:1 with `auth.users`, created by trigger) · `categories_presets` (39 built-in categories with names and parser keywords in all 7 languages, readable before sign-up) · `categories` (the user's own; `preset_key` for presets, which are named in the app language) · `entries` · `entries_allowance` (free entries per budget month, enforced by trigger) · `captures` (every AI request; the daily AI limit) · `check_ins` · `notifications`, `notifications_templates`, `notifications_settings`, `push_tokens` · `legal_documents` / `legal_acceptances` · `app_config` (limits, prices, AI model, …). Every user table is protected by row level security on `auth.uid()`.
 
-## Stubs to replace later
+## AI capture and voice
 
-- **AI parsing** – `features/capture/lib/parse-entries.ts` is an on-device parser with the signature a backend (Edge Function / LLM) parser would have.
-- **Receipt OCR** – `features/capture/lib/receipt-recognizer.ts` returns a sample receipt.
-- **Speech recognition** – `features/capture/hooks/use-voice-transcript.ts` simulates dictation.
+- **Text, voice, receipts** – `parse-capture` sends the note or photo to OpenAI (`app_config.ai_model`, Responses API with a strict JSON schema). Typed and spoken text fall back to the on-device parser (`features/capture/lib/parse-entries.ts`) when the function fails; before sign-up only the on-device parser runs.
+- **Live transcription** – `transcribe-session` mints a short-lived OpenAI Realtime secret; the app streams the microphone over WebRTC (`react-native-webrtc`, browser WebRTC on web).
+- **Limits** – `ai_captures_free` / `ai_captures_plus` per rolling 24 hours, counted in `captures`.
+
+## Notifications
+
+pg_cron runs `private.dispatch_notifications()` every 5 minutes: it queues due reminders and check-ins, and calls `send-notifications`, which delivers queued rows through Expo push. Budget and limit warnings are queued by a trigger on `entries`. Texts live in `notifications_templates`.
+
+## Hosted project setup (once)
+
+1. Edge function secrets: `OPENAI_API_KEY` (and optionally `EXPO_ACCESS_TOKEN`).
+2. Vault secrets used by the cron job (SQL editor):
+   ```sql
+   select vault.create_secret('https://<ref>.supabase.co', 'project_url');
+   select vault.create_secret('<random string>', 'notifications_cron_secret');
+   ```
+3. Push tokens need an EAS project id: run `npx eas-cli init` once.
+4. Enable leaked password protection under Authentication › Settings.
+
+## Still to come
+
 - **Purchases** – `features/paywall/lib/purchases.ts` is where RevenueCat plugs in.
-- **Widget / Action Button** – onboarding explains them; the native widget and App Intent are not built yet.
+- **Widget** – onboarding explains it; the native widget extension is not built yet.
+- **Receipt clean-up** – photos stay in the `receipts` bucket until a retention job exists.
 
 ## Conventions
 
