@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { Keyboard, ScrollView, TouchableWithoutFeedback, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { cn } from '@/shared/lib/cn';
@@ -25,6 +25,8 @@ export interface ScreenProps {
 
 // Base layout for every screen: canvas background, optional gradient, safe
 // area padding from useSafeAreaInsets and a footer slot for primary actions.
+// The keyboard covers the footer instead of pushing it up; tapping anywhere
+// outside a field closes it.
 export function Screen({
   children,
   footer,
@@ -46,26 +48,27 @@ export function Screen({
       contentContainerClassName="grow"
       contentContainerStyle={[padding, { paddingBottom: footer ? 16 : bottom }]}
       keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="interactive"
+      automaticallyAdjustKeyboardInsets
       showsVerticalScrollIndicator={false}>
       {children}
     </ScrollView>
   ) : (
-    <View className="flex-1" style={[padding, footer ? null : { paddingBottom: bottom }]}>
-      {children}
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View className="flex-1" style={[padding, footer ? null : { paddingBottom: bottom }]}>
+        {children}
+      </View>
+    </TouchableWithoutFeedback>
   );
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      className={cn('flex-1 bg-canvas', className)}
-      style={{ paddingTop: insets.top + 4 }}>
+    <View className={cn('flex-1 bg-canvas', className)} style={{ paddingTop: insets.top + 4 }}>
       {gradient ? <GradientBackground name={gradient} height={gradientHeight} /> : null}
       {body}
       {footer ? (
         <View style={[padding, { paddingBottom: bottom, paddingTop: 12 }]}>{footer}</View>
       ) : null}
       {overlay ? <View className="absolute inset-0 z-20">{overlay}</View> : null}
-    </KeyboardAvoidingView>
+    </View>
   );
 }

@@ -20,7 +20,8 @@
         "backgroundColor": "#2F7CF6",
         "foregroundImage": "./assets/images/icon.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
       "bundler": "metro",

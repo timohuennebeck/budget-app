@@ -62,6 +62,7 @@ export function LoginScreen() {
       <TextField
         containerClassName="mt-[18px]"
         label={t('auth.email')}
+        placeholder={t('auth.emailPlaceholder')}
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
@@ -72,6 +73,7 @@ export function LoginScreen() {
       <TextField
         containerClassName="mt-[18px]"
         label={t('auth.password')}
+        placeholder={t('auth.passwordPlaceholder')}
         value={password}
         onChangeText={setPassword}
         secureTextEntry

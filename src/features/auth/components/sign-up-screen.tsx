@@ -120,6 +120,7 @@ export function SignUpScreen() {
       <TextField
         containerClassName="mt-[18px]"
         label={t('auth.email')}
+        placeholder={t('auth.emailPlaceholder')}
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
@@ -130,6 +131,7 @@ export function SignUpScreen() {
       <TextField
         containerClassName="mt-[18px]"
         label={t('auth.password')}
+        placeholder={t('auth.newPasswordPlaceholder', { count: MIN_PASSWORD_LENGTH })}
         value={password}
         onChangeText={setPassword}
         secureTextEntry

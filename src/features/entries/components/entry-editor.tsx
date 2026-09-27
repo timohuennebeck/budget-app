@@ -88,6 +88,8 @@ export function EntryEditor({
         <TextInput
           value={value.title}
           onChangeText={(title) => onChange({ title })}
+          placeholder={t('entries.titlePlaceholder')}
+          placeholderTextColor={colors.faint}
           selectionColor={colors.primary}
           className="mt-3 min-w-[120px] text-center font-inter-semibold text-[20px] text-ink"
           style={{ letterSpacing: -0.4, padding: 0 }}

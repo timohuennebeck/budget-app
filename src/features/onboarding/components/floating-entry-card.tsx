@@ -61,7 +61,7 @@ export function FloatingEntryCard({
   return (
     <Animated.View
       style={[{ position: 'absolute', ...position }, shadows.floating, animated]}
-      className="flex-row items-center gap-3 rounded-[20px] bg-surface py-2.5 pr-4 pl-2.5">
+      className="flex-row items-center gap-3 rounded-[20px] border border-line-strong bg-surface py-2.5 pr-4 pl-2.5">
       <CategoryAvatar icon={icon} hue={hue} size={40} />
       <View className="gap-px">
         <Text size={15.5} weight="semibold">
