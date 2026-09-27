@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
-import { currencySymbol, formatAmountInput, parseAmount } from '@/shared/lib/money';
+import { currencySymbol } from '@/shared/lib/money';
 import { Chip } from '@/shared/ui/chip';
 import { FittedInput } from '@/shared/ui/fitted-input';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -19,8 +19,6 @@ export interface AmountStepperProps {
   /** `lg` is used inside sheets, `md` inside cards */
   size?: 'md' | 'lg';
   hint?: string;
-  /** Allow cents when typing (income); budgets stay whole amounts */
-  decimals?: boolean;
 }
 
 const MIN = 0;
@@ -40,7 +38,6 @@ export function AmountStepper({
   step = 10,
   size = 'md',
   hint,
-  decimals = false,
 }: AmountStepperProps) {
   const { t } = useTranslation();
   const input = useRef<TextInput>(null);
@@ -48,13 +45,6 @@ export function AmountStepper({
   const metrics = sizes[size];
 
   const clamp = (next: number) => Math.min(MAX, Math.max(MIN, next));
-  // Whole amounts show without ",00" even when cents are allowed.
-  const display = (amount: number) =>
-    decimals && !Number.isInteger(amount) ? formatAmountInput(amount) : String(amount);
-  const commit = (text: string) => {
-    const parsed = decimals ? parseAmount(text) : Number(text);
-    if (parsed !== null && Number.isFinite(parsed)) onChange(clamp(Math.round(parsed * 100) / 100));
-  };
   const stepBy = (direction: 1 | -1) => {
     const next = clamp(Math.round(value / step) * step + direction * step);
     if (next !== value) haptics.select();
@@ -80,20 +70,14 @@ export function AmountStepper({
           <FittedInput
             ref={input}
             size={metrics.number}
-            value={draft ?? display(value)}
-            onChangeText={(text) =>
-              setDraft(
-                decimals
-                  ? text.replace(/[^\d.,]/g, '').slice(0, 10)
-                  : text.replace(/\D/g, '').slice(0, 7),
-              )
-            }
-            onFocus={() => setDraft(display(value))}
+            value={draft ?? String(value)}
+            onChangeText={(text) => setDraft(text.replace(/\D/g, '').slice(0, 7))}
+            onFocus={() => setDraft(String(value))}
             onBlur={() => {
-              if (draft !== null && draft !== '') commit(draft);
+              if (draft !== null && draft !== '') onChange(clamp(Number(draft)));
               setDraft(null);
             }}
-            keyboardType={decimals ? 'decimal-pad' : 'number-pad'}
+            keyboardType="number-pad"
             returnKeyType="done"
             caretHidden
             selectTextOnFocus
