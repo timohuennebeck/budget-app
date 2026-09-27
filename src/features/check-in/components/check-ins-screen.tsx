@@ -1,20 +1,25 @@
+import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { MonthSheet } from '@/features/entries/components/month-sheet';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
-import { StatusHero } from '@/shared/components/status-hero';
+import { useSheet } from '@/shared/components/sheet';
 import { useAppConfig } from '@/shared/hooks/use-app-config';
 import { formatMonth, formatWeekRange } from '@/shared/lib/dates';
 import { huePalette } from '@/shared/lib/color';
 import { formatMoney } from '@/shared/lib/money';
 import { tabScrollProps } from '@/shared/lib/tab-insets';
-import { colors } from '@/shared/lib/theme';
+import { colors, shadows } from '@/shared/lib/theme';
 import { Card } from '@/shared/ui/card';
 import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
+import { IconButton } from '@/shared/ui/icon-button';
+import { Pip } from '@/shared/ui/pip';
+import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 
@@ -73,6 +78,7 @@ export function CheckInsScreen() {
   const { data: checkIns = [] } = useCheckIns();
   const [query, setQuery] = useState('');
   const [period, setPeriod] = useState<CheckInPeriod>('all');
+  const monthSheet = useSheet();
 
   const money = (value: number) => formatMoney(value, { currency, compact: true });
   const detail = (checkIn: CheckIn) =>
@@ -95,7 +101,7 @@ export function CheckInsScreen() {
     ),
   );
 
-  const periods: { value: CheckInPeriod; label: string }[] = [
+  const periods: { value: Exclude<CheckInPeriod, Date>; label: string }[] = [
     { value: 'all', label: t('entries.all') },
     { value: 'recent', label: t('checkIn.lastMonths') },
     ...years.map((year) => ({ value: year, label: String(year) })),
@@ -113,7 +119,31 @@ export function CheckInsScreen() {
           paddingBottom: 32,
         }}
         showsVerticalScrollIndicator={false}>
-        <View className="h-10 flex-row items-center justify-between px-1">
+        <View className="flex-row items-center justify-between px-1">
+          <Pressable
+            onPress={monthSheet.present}
+            haptic="none"
+            accessibilityLabel={t('entries.chooseMonth')}
+            className="flex-row items-center gap-2 rounded-full bg-surface px-3.5 py-[9px]"
+            style={shadows.card}>
+            <Text size={15} weight="semibold" tracking={-0.01} className="capitalize">
+              {period instanceof Date
+                ? formatMonth(period, period.getFullYear() !== thisYear)
+                : t('checkIn.allMonths')}
+            </Text>
+            <Icon name="caret-down" size={11} color={colors.primary} />
+          </Pressable>
+          <IconButton
+            icon="calendar-blank"
+            variant="surface"
+            size={40}
+            iconSize={18}
+            accessibilityLabel={t('calendar.title')}
+            onPress={() => router.push('/calendar')}
+          />
+        </View>
+
+        <View className="mt-[22px] flex-row items-baseline justify-between px-1">
           <Text size={34} weight="bold" tracking={-0.04} leading={1.05}>
             {t('checkIn.title')}
           </Text>
@@ -130,12 +160,18 @@ export function CheckInsScreen() {
         <CheckInHero currency={currency} />
 
         {checkIns.length === 0 ? (
-          <StatusHero
-            className="mt-10"
-            pose="clock"
-            title={t('checkIn.historyEmpty')}
-            subtitle={t('checkIn.historyEmptySubtitle')}
-          />
+          <Card className="mt-[18px] items-center rounded-[28px] px-5 pt-[22px] pb-6">
+            <Pip pose="clock" size={120} />
+            <Text variant="heading" className="mt-3">
+              {t('checkIn.historyEmpty')}
+            </Text>
+            <Text
+              size={15}
+              leading={1.45}
+              className="mt-2 max-w-[280px] text-center text-muted-soft">
+              {t('checkIn.historyEmptySubtitle')}
+            </Text>
+          </Card>
         ) : (
           <>
             <TextField
@@ -188,6 +224,14 @@ export function CheckInsScreen() {
           </>
         )}
       </ScrollView>
+      <MonthSheet
+        {...monthSheet.controls}
+        selected={period instanceof Date ? period : new Date()}
+        onSelect={(month) => {
+          setPeriod(month);
+          monthSheet.dismiss();
+        }}
+      />
     </View>
   );
 }

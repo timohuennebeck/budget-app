@@ -362,7 +362,6 @@
     "missedTitle": "Bilan manqué",
     "more": "de plus que prévu",
     "offBy": "Tu étais à {{amount}} près.",
-    "opens": "Ouvre le {{date}}",
     "reveal": "Révéler",
     "skipWeek": "Passer cette semaine",
     "skipped": "Passé",
@@ -376,7 +375,12 @@
     "start": "Commencer",
     "rowDetail": "{{guess}} estimé · {{actual}} réel",
     "lastMonths": "3 derniers mois",
-    "noResults": "Aucun check-in trouvé"
+    "noResults": "Aucun check-in trouvé",
+    "nextOn": "Prochain le {{date}}",
+    "from": "À partir du {{date}}",
+    "heroMissedTitle": "Tu n’as pas estimé cette semaine",
+    "allMonths": "Tous les mois",
+    "notOpenYet": "Pas encore ouvert"
   },
   "profile": {
     "account": "Compte",

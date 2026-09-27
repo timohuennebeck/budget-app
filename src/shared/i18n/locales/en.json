@@ -353,7 +353,6 @@
     "missedTitle": "Check-in missed",
     "more": "more than expected",
     "offBy": "You were off by {{amount}}.",
-    "opens": "Opens {{date}}",
     "reveal": "Reveal",
     "skipWeek": "Skip this week",
     "skipped": "Skipped",
@@ -367,7 +366,12 @@
     "start": "Start",
     "rowDetail": "{{guess}} guessed · {{actual}} actual",
     "lastMonths": "Last 3 months",
-    "noResults": "No check-in found"
+    "noResults": "No check-in found",
+    "nextOn": "Next on {{date}}",
+    "from": "From {{date}}",
+    "heroMissedTitle": "You didn’t guess this week",
+    "allMonths": "All months",
+    "notOpenYet": "Not open yet"
   },
   "profile": {
     "account": "Account",

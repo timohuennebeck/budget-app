@@ -14,15 +14,15 @@ export default function TabsLayout() {
       <NativeTabs.Trigger name="overview">
         <NativeTabs.Trigger.Label>{t('tabs.overview')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          sf={{ default: 'book.pages', selected: 'book.pages.fill' }}
-          md={{ default: 'pie_chart', selected: 'pie_chart' }}
+          sf={{ default: 'square.grid.2x2', selected: 'square.grid.2x2.fill' }}
+          md={{ default: 'grid_view', selected: 'grid_view' }}
         />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="entries">
         <NativeTabs.Trigger.Label>{t('tabs.entries')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          sf={{ default: 'list.bullet.rectangle', selected: 'list.bullet.rectangle.fill' }}
-          md={{ default: 'receipt_long', selected: 'receipt_long' }}
+          sf={{ default: 'book.pages', selected: 'book.pages.fill' }}
+          md={{ default: 'menu_book', selected: 'menu_book' }}
         />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="check-ins">

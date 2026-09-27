@@ -1,21 +1,19 @@
 import { router } from 'expo-router';
-import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { GradientPanel } from '@/shared/components/gradient-panel';
+import { addDays, formatShortDate, formatTime, formatWeekRange } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
-import { formatShortDate, formatTime, formatWeekRange } from '@/shared/lib/dates';
 import { colors, shadows } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
-import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
 
 import { useCheckInState } from '../hooks/use-check-in-state';
 import { accuracyPercent } from '../lib/check-in-window';
 
-/** A small card on two tilted ones: "???" while open, the result once done. */
-function Paper({ children, range }: { children: ReactNode; range: string }) {
+/** A small card on two tilted ones: "???" until done, then the result. */
+function Paper({ value, range }: { value: string; range: string }) {
   return (
     <View className="h-[108px] w-full items-center justify-center">
       <View
@@ -29,7 +27,9 @@ function Paper({ children, range }: { children: ReactNode; range: string }) {
       <View
         className="h-[96px] w-[144px] items-center justify-center gap-1 rounded-[18px] bg-surface"
         style={shadows.floating}>
-        {children}
+        <Text size={26} weight="bold" tracking={-0.03}>
+          {value}
+        </Text>
         <Text size={12.5} className="text-subtle">
           {range}
         </Text>
@@ -38,55 +38,55 @@ function Paper({ children, range }: { children: ReactNode; range: string }) {
   );
 }
 
-// This week's check-in as the big card on the Check-ins tab (5t-m): open with
-// "Starten", or its result, or when the next one opens.
+// This week's check-in as the big card on the Check-ins tab (5t-m). Same card
+// in every state; only the texts change, and the button works while open.
 export function CheckInHero({ currency }: { currency: string }) {
   const { t } = useTranslation();
   const { status, window, current, daysLeft } = useCheckInState();
-  const range = formatWeekRange(window.week);
+  const at = (date: Date) => `${formatShortDate(date)}, ${formatTime(date)}`;
+  // After this week's check-in the next one opens a week later.
+  const nextOpen = window.isOpen ? addDays(window.opensAt, 7) : window.opensAt;
   const percent = current ? accuracyPercent(current) : null;
+  const money = (value: number) => formatMoney(value, { currency, compact: true });
 
   const content =
     status === 'open'
       ? {
-          big: '???',
+          value: '???',
           eyebrow: t('checkIn.heroOpen', { count: daysLeft }),
           title: t('checkIn.heroOpenTitle'),
+          button: t('checkIn.start'),
         }
       : status === 'done' && current
         ? {
-            big: percent === null ? '–' : `${percent} %`,
+            value: percent === null ? '–' : `${percent} %`,
             eyebrow: t('checkIn.doneTitle'),
             title:
               current.guess === null
                 ? t('checkIn.skipped')
                 : t('checkIn.rowDetail', {
-                    guess: formatMoney(Number(current.guess), { currency, compact: true }),
-                    actual: formatMoney(Number(current.actual ?? 0), { currency, compact: true }),
+                    guess: money(Number(current.guess)),
+                    actual: money(Number(current.actual ?? 0)),
                   }),
+            button: t('checkIn.nextOn', { date: at(nextOpen) }),
           }
-        : {
-            big: null,
-            eyebrow:
-              status === 'missed'
-                ? t('checkIn.missedTitle')
-                : t('checkIn.opens', {
-                    date: `${formatShortDate(window.opensAt)}, ${formatTime(window.opensAt)}`,
-                  }),
-            title: t('checkIn.heroLockedTitle'),
-          };
+        : status === 'missed'
+          ? {
+              value: '???',
+              eyebrow: t('checkIn.missedTitle'),
+              title: t('checkIn.heroMissedTitle'),
+              button: t('checkIn.nextOn', { date: at(nextOpen) }),
+            }
+          : {
+              value: '???',
+              eyebrow: t('checkIn.notOpenYet'),
+              title: t('checkIn.heroLockedTitle'),
+              button: t('checkIn.from', { date: at(window.opensAt) }),
+            };
 
   return (
     <GradientPanel style={{ marginTop: 18, padding: 20, borderWidth: 1, borderColor: colors.line }}>
-      <Paper range={range}>
-        {content.big ? (
-          <Text size={26} weight="bold" tracking={-0.03}>
-            {content.big}
-          </Text>
-        ) : (
-          <Icon name="lock" size={22} color={colors.mutedSoft} />
-        )}
-      </Paper>
+      <Paper value={content.value} range={formatWeekRange(window.week)} />
       <Text
         size={12.5}
         weight="semibold"
@@ -97,13 +97,12 @@ export function CheckInHero({ currency }: { currency: string }) {
       <Text size={20} weight="semibold" tracking={-0.02} className="mt-1.5 text-center">
         {content.title}
       </Text>
-      {status === 'open' ? (
-        <Button
-          className="mt-[18px]"
-          label={t('checkIn.start')}
-          onPress={() => router.push('/check-in')}
-        />
-      ) : null}
+      <Button
+        className="mt-[18px]"
+        label={content.button}
+        disabled={status !== 'open'}
+        onPress={() => router.push('/check-in')}
+      />
     </GradientPanel>
   );
 }

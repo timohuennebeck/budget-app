@@ -362,7 +362,6 @@
     "missedTitle": "Check-in perdido",
     "more": "mais do que pensavas",
     "offBy": "Falhaste por {{amount}}.",
-    "opens": "Abre a {{date}}",
     "reveal": "Revelar",
     "skipWeek": "Saltar esta semana",
     "skipped": "Saltado",
@@ -376,7 +375,12 @@
     "start": "Começar",
     "rowDetail": "{{guess}} estimado · {{actual}} real",
     "lastMonths": "Últimos 3 meses",
-    "noResults": "Nenhum check-in encontrado"
+    "noResults": "Nenhum check-in encontrado",
+    "nextOn": "O próximo: {{date}}",
+    "from": "A partir de {{date}}",
+    "heroMissedTitle": "Esta semana não estimaste",
+    "allMonths": "Todos os meses",
+    "notOpenYet": "Ainda não abriu"
   },
   "profile": {
     "account": "Conta",

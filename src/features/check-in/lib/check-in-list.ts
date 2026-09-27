@@ -3,8 +3,9 @@ import { addDays, fromISODate } from '@/shared/lib/dates';
 import type { CheckIn } from '../data/check-ins-api';
 import { checkInAccuracy } from './check-in-window';
 
-/** Filter chips on Check-ins: everything, the last 3 months or one year. */
-export type CheckInPeriod = 'all' | 'recent' | number;
+/** Filter on Check-ins: everything, the last 3 months, one year (chips) or
+ * one month (month pill; the 1st of that month). */
+export type CheckInPeriod = 'all' | 'recent' | number | Date;
 
 export interface CheckInMonth {
   key: string;
@@ -47,6 +48,11 @@ export function filterCheckIns(
     const sunday = sundayOf(checkIn);
     if (period === 'recent' && sunday < since) return false;
     if (typeof period === 'number' && sunday.getFullYear() !== period) return false;
+    if (
+      period instanceof Date &&
+      (sunday.getFullYear() !== period.getFullYear() || sunday.getMonth() !== period.getMonth())
+    )
+      return false;
     return !needle || describe(checkIn).toLowerCase().includes(needle);
   });
 }
