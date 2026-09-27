@@ -336,7 +336,7 @@
     "trendAhead": "You're slightly over plan. At this pace you'll end at <b>{{amount}}</b>.",
     "trendOver": "You're already <b>{{amount}}</b> over your limit.",
     "trendNoLimit": "At this pace you'll end this month at <b>{{amount}}</b>.",
-    "emptyTitle": "No spending yet",
+    "emptyTitle": "Pip hasn’t noted anything yet",
     "emptySubtitle": "As soon as you log something for {{category}}, you'll see how it adds up here.",
     "emptyTitlePast": "No spending in {{month}}",
     "emptySubtitlePast": "You didn't log anything for {{category}} that month.",

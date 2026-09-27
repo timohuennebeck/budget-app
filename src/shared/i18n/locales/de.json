@@ -336,7 +336,7 @@
     "trendAhead": "Du liegst leicht über Plan. Bei dem Tempo landest du bei <b>{{amount}}</b>.",
     "trendOver": "Du bist schon <b>{{amount}}</b> über deinem Limit.",
     "trendNoLimit": "Bei dem Tempo landest du diesen Monat bei <b>{{amount}}</b>.",
-    "emptyTitle": "Noch keine Ausgaben",
+    "emptyTitle": "Pip hat noch nichts notiert",
     "emptySubtitle": "Sobald du etwas für {{category}} einträgst, siehst du hier den Verlauf.",
     "emptyTitlePast": "Keine Ausgaben im {{month}}",
     "emptySubtitlePast": "Für {{category}} hast du in diesem Monat nichts eingetragen.",
