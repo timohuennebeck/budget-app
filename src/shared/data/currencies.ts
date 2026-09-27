@@ -5,7 +5,7 @@ export interface Currency {
   flag: FlagCode;
 }
 
-// Names come from Intl.DisplayNames so they follow the app language.
+// Names come from the locale files (currencies.<code>) so they follow the app language.
 export const currencies: Currency[] = [
   { code: 'EUR', flag: 'eu' },
   { code: 'CHF', flag: 'ch' },

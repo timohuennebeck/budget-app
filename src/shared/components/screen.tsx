@@ -1,10 +1,19 @@
 import type { ReactNode } from 'react';
-import { Keyboard, ScrollView, TouchableWithoutFeedback, View } from 'react-native';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { cn } from '@/shared/lib/cn';
 
 import { GradientBackground, type GradientName } from './gradient-background';
+
+const KEYBOARD_GAP = 24;
 
 export interface ScreenProps {
   children: ReactNode;
@@ -25,8 +34,9 @@ export interface ScreenProps {
 
 // Base layout for every screen: canvas background, optional gradient, safe
 // area padding from useSafeAreaInsets and a footer slot for primary actions.
-// The keyboard covers the footer instead of pushing it up; tapping anywhere
-// outside a field closes it.
+// The keyboard covers the footer instead of pushing it up, while the content
+// above moves up to keep the focused field KEYBOARD_GAP clear of it. Tapping
+// anywhere outside a field closes the keyboard.
 export function Screen({
   children,
   footer,
@@ -49,7 +59,6 @@ export function Screen({
       contentContainerStyle={[padding, { paddingBottom: footer ? 16 : bottom }]}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="interactive"
-      automaticallyAdjustKeyboardInsets
       showsVerticalScrollIndicator={false}>
       {children}
     </ScrollView>
@@ -64,7 +73,13 @@ export function Screen({
   return (
     <View className={cn('flex-1 bg-canvas', className)} style={{ paddingTop: insets.top + 4 }}>
       {gradient ? <GradientBackground name={gradient} height={gradientHeight} /> : null}
-      {body}
+      {/* Android pans the window itself (softwareKeyboardLayoutMode). */}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={KEYBOARD_GAP}
+        className="flex-1">
+        {body}
+      </KeyboardAvoidingView>
       {footer ? (
         <View style={[padding, { paddingBottom: bottom, paddingTop: 12 }]}>{footer}</View>
       ) : null}

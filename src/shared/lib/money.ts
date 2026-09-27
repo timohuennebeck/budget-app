@@ -44,32 +44,24 @@ export function formatMoney(amount: number, { currency, signed, compact }: Forma
 
 // Splits "5.884,50 €" into a large whole part and a smaller remainder so the
 // hero amounts can render the cents at a reduced size like the design.
+// Works on the formatted string: formatToParts isn't reliable in Hermes.
 export function formatMoneyParts(amount: number, currency: string): MoneyParts {
-  const parts = formatter(currency, false, Math.abs(amount)).formatToParts(Math.abs(amount));
-  const splitAt = parts.findIndex((part) => part.type === 'decimal');
-  const head = splitAt === -1 ? parts : parts.slice(0, splitAt);
-  const tail = splitAt === -1 ? [] : parts.slice(splitAt);
+  const text = formatter(currency, false, Math.abs(amount)).format(Math.abs(amount));
+  const decimal = new Intl.NumberFormat(locale()).format(1.5).charAt(1);
+  // The decimal separator is the one followed by the two fraction digits.
+  const splitAt = text.search(new RegExp(`\\${decimal}\\d{2}(?!\\d)`));
+  const currencyFirst = !/^\d/.test(text);
 
-  const currencyFirst = parts[0]?.type === 'currency';
-  const whole = head.map((part) => part.value).join('');
-  const rest = tail.map((part) => part.value).join('');
-
-  if (currencyFirst) {
-    return { whole: signFor(amount) + whole + rest, rest: '' };
-  }
-  return { whole: signFor(amount) + whole.trim(), rest };
+  if (splitAt === -1 || currencyFirst) return { whole: signFor(amount) + text, rest: '' };
+  return { whole: signFor(amount) + text.slice(0, splitAt).trim(), rest: text.slice(splitAt) };
 }
 
-// Intl prints the ISO code for these; the design uses the local short form.
-const SYMBOL_OVERRIDES: Record<string, string> = { CHF: 'Fr.' };
+// The currencies the app offers; Intl would print "CHF" where the design
+// uses "Fr.", and formatToParts isn't reliable in Hermes.
+const SYMBOLS: Record<string, string> = { EUR: '€', USD: '$', GBP: '£', CHF: 'Fr.' };
 
 export function currencySymbol(currency: string) {
-  if (SYMBOL_OVERRIDES[currency]) return SYMBOL_OVERRIDES[currency];
-  const parts = new Intl.NumberFormat(locale(), {
-    style: 'currency',
-    currency,
-  }).formatToParts(0);
-  return parts.find((part) => part.type === 'currency')?.value ?? currency;
+  return SYMBOLS[currency] ?? currency;
 }
 
 /** Editable amount without currency or grouping: "12,50" (de) or "12.50" (en). */
