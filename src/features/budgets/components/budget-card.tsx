@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 
 import { CategoryAvatar } from '@/features/categories/components/category-avatar';
 import { formatMoney } from '@/shared/lib/money';
-import { IconButton } from '@/shared/ui/icon-button';
+import { Icon } from '@/shared/ui/icon';
+import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 
 interface BudgetCardProps {
@@ -14,8 +15,6 @@ interface BudgetCardProps {
   remaining: number;
   currency: string;
   onEdit: () => void;
-  /** Blue edit buttons while the sheet is open (2w) */
-  highlighted?: boolean;
 }
 
 export const BUDGET_CARD_WIDTH = 186;
@@ -29,26 +28,23 @@ export function BudgetCard({
   remaining,
   currency,
   onEdit,
-  highlighted,
 }: BudgetCardProps) {
   const { t } = useTranslation();
   const over = remaining < 0;
   const money = (value: number) => formatMoney(value, { currency, compact: true });
 
   return (
-    <View
+    // The whole card opens the limit sheet, like the tiles in onboarding.
+    <Pressable
+      onPress={onEdit}
+      accessibilityLabel={t('budgets.edit', { name })}
       className="gap-3.5 rounded-3xl border border-line bg-surface p-3.5"
       style={{ width: BUDGET_CARD_WIDTH }}>
       <View className="flex-row items-start justify-between">
         <CategoryAvatar icon={icon} hue={hue} />
-        <IconButton
-          icon="pencil-simple"
-          size={36}
-          iconSize={16}
-          variant={highlighted ? 'primary' : 'field'}
-          accessibilityLabel={t('budgets.edit', { name })}
-          onPress={onEdit}
-        />
+        <View className="size-9 items-center justify-center rounded-full bg-field">
+          <Icon name="pencil-simple" size={16} />
+        </View>
       </View>
       <View className="gap-0.5">
         <Text size={15.5} weight="semibold" tracking={-0.01} numberOfLines={1}>
@@ -70,6 +66,6 @@ export function BudgetCard({
             : t('budgets.freeOf', { limit: money(limit) })}
         </Text>
       </View>
-    </View>
+    </Pressable>
   );
 }

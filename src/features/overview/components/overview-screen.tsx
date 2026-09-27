@@ -26,6 +26,7 @@ import { SectionHeader } from '@/shared/components/section-header';
 import { useSheet } from '@/shared/components/sheet';
 import { budgetCycle, formatMonth } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
+import { tabScrollTop } from '@/shared/lib/tab-insets';
 import { shadows } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -90,7 +91,7 @@ export function OverviewScreen() {
       <GradientBackground name="sky" />
       <ScrollView
         contentContainerStyle={{
-          paddingTop: insets.top + 4,
+          paddingTop: tabScrollTop(insets.top, 4),
           paddingHorizontal: 16,
           paddingBottom: 120,
         }}
@@ -143,7 +144,6 @@ export function OverviewScreen() {
             <BudgetCarousel
               cards={summary.cards}
               currency={currency}
-              editingId={editingId}
               onEdit={(id) => {
                 setEditingId(id);
                 sheet.present();

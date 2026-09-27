@@ -12,6 +12,7 @@ import { GradientBackground } from '@/shared/components/gradient-background';
 import { useSheet } from '@/shared/components/sheet';
 import { formatMonth, monthRange } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
+import { tabScrollTop } from '@/shared/lib/tab-insets';
 import { colors, shadows } from '@/shared/lib/theme';
 import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
@@ -83,7 +84,7 @@ export function EntriesScreen() {
         keyboardShouldPersistTaps="handled"
         contentContainerClassName="grow"
         contentContainerStyle={{
-          paddingTop: insets.top + 4,
+          paddingTop: tabScrollTop(insets.top, 4),
           paddingHorizontal: 16,
           paddingBottom: 32,
         }}

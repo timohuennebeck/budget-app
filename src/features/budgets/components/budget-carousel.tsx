@@ -13,11 +13,10 @@ interface BudgetCarouselProps {
   cards: BudgetCardData[];
   currency: string;
   onEdit: (categoryId: string) => void;
-  editingId?: string | null;
 }
 
 /** Horizontally snapping budget cards with page dots (Start). */
-export function BudgetCarousel({ cards, currency, onEdit, editingId }: BudgetCarouselProps) {
+export function BudgetCarousel({ cards, currency, onEdit }: BudgetCarouselProps) {
   const { width } = useWindowDimensions();
   const [offset, setOffset] = useState(0);
   // A peeking second card counts as on the page, so 4 cards give 2 dots.
@@ -45,7 +44,6 @@ export function BudgetCarousel({ cards, currency, onEdit, editingId }: BudgetCar
             limit={card.limit}
             remaining={card.remaining}
             currency={currency}
-            highlighted={editingId === card.category.id}
             onEdit={() => onEdit(card.category.id)}
           />
         ))}

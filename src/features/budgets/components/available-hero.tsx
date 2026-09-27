@@ -2,7 +2,6 @@ import { View } from 'react-native';
 
 import { MoneyText } from '@/shared/components/money-text';
 import { shadows } from '@/shared/lib/theme';
-import { PipAvatar } from '@/shared/ui/pip';
 import { Text } from '@/shared/ui/text';
 
 interface AvailableHeroProps {
@@ -15,7 +14,7 @@ interface AvailableHeroProps {
   detail: string;
 }
 
-/** "Frei verfügbar" headline number with Pip's daily hint below. */
+/** "Frei verfügbar" headline number with the daily hint below. */
 export function AvailableHero({ label, amount, currency, highlight, detail }: AvailableHeroProps) {
   return (
     <View className="mt-[34px] items-center">
@@ -24,9 +23,8 @@ export function AvailableHero({ label, amount, currency, highlight, detail }: Av
       </Text>
       <MoneyText amount={amount} currency={currency} className="mt-1.5" />
       <View
-        className="mt-3 flex-row items-center gap-2 rounded-full bg-surface py-[5px] pr-2.5 pl-[5px]"
+        className="mt-3 flex-row items-center gap-1.5 rounded-full bg-surface px-3.5 py-[7px]"
         style={shadows.card}>
-        <PipAvatar size={26} />
         <Text size={14} weight="semibold">
           {highlight}
         </Text>

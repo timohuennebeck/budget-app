@@ -8,8 +8,9 @@ import {
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { initialWindowMetrics } from 'react-native-safe-area-context';
 
+import { displayCornerRadius } from '@/shared/lib/display-corners';
 import { haptics } from '@/shared/lib/haptics';
 import { colors, shadows } from '@/shared/lib/theme';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -38,12 +39,16 @@ function Backdrop(props: BottomSheetBackdropProps) {
 // backdrop that closes on tap. It rises with the keyboard.
 // Content mounts on open, so state inside starts fresh every time.
 const INSET = 8;
-// Display corner radius of current iPhones (~55pt) minus the inset.
-const RADIUS = 47;
+// Concentric with the display corners: their radius minus the inset.
+const RADIUS = displayCornerRadius() - INSET;
+// The window's home-indicator inset, not useSafeAreaInsets(): inside a tab
+// that one includes the tab bar and pushed the sheet up by its height.
+const WINDOW_BOTTOM = initialWindowMetrics?.insets.bottom ?? 0;
+// Same gap below the sheet as beside it.
+const BOTTOM_INSET = Math.max(WINDOW_BOTTOM - 26, INSET);
 
 export function Sheet({ open, onClose, children, title, height }: SheetProps) {
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
   const ref = useRef<BottomSheetModal>(null);
   const presented = useRef(false);
 
@@ -68,7 +73,7 @@ export function Sheet({ open, onClose, children, title, height }: SheetProps) {
     <BottomSheetModal
       ref={ref}
       detached
-      bottomInset={Math.max(insets.bottom - 26, INSET)}
+      bottomInset={BOTTOM_INSET}
       style={[{ marginHorizontal: INSET }, shadows.sheet]}
       snapPoints={height ? [height] : undefined}
       enableDynamicSizing={!height}

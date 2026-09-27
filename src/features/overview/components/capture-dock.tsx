@@ -1,6 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
+import { SafeAreaView } from 'react-native-screens/experimental';
 import { useTranslation } from 'react-i18next';
 
 import { useEntriesAllowance } from '@/features/paywall/hooks/use-entries-allowance';
@@ -9,6 +10,8 @@ import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
 import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
+
+const DockInset = Platform.OS === 'ios' ? SafeAreaView : View;
 
 // Floating capture bar at the bottom of Start: text field look-alike that
 // opens the capture flow, plus camera and microphone shortcuts.
@@ -19,7 +22,12 @@ export function CaptureDock({ firstName }: { firstName: string }) {
     router.push(allowance.canAdd() ? path : '/limit');
 
   return (
-    <View className="absolute inset-x-0 bottom-0" pointerEvents="box-none">
+    // On iOS the dock sits above the tab bar via its own safe area (the tab's
+    // ScrollView is inset natively); Android already pads the tab.
+    <DockInset
+      edges={{ bottom: true }}
+      style={{ position: 'absolute', left: 0, right: 0, bottom: 0, flex: 0 }}
+      pointerEvents="box-none">
       <LinearGradient
         pointerEvents="none"
         colors={['rgba(247,249,252,0)', colors.canvas]}
@@ -59,6 +67,6 @@ export function CaptureDock({ firstName }: { firstName: string }) {
           />
         </View>
       </View>
-    </View>
+    </DockInset>
   );
 }
