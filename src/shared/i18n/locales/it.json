@@ -240,9 +240,9 @@
     "stop": "Ferma e ordina",
     "stopHint": "Tocca per fermare e ordinare",
     "subtitle": "Scrivi e premi Invio. Ogni voce diventa un'etichetta.",
-    "suggestionDining": "Cena con gli amici",
-    "suggestionFlights": "Biglietti aerei",
-    "suggestionTicket": "Abbonamento mezzi",
+    "suggestionDining": "Cena con gli amici 45 €",
+    "suggestionFlights": "Biglietti aerei 180 €",
+    "suggestionTicket": "Abbonamento mezzi 35 €",
     "tips": {
       "cameraBody": "Fotografa uno scontrino o uno screenshot. Pip legge ogni voce.",
       "cameraTitle": "Fotografa lo scontrino",

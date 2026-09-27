@@ -234,9 +234,9 @@
     "stop": "Stop and sort",
     "stopHint": "Tap to stop and sort",
     "subtitle": "Type and press Return. Each entry becomes a chip.",
-    "suggestionDining": "Dinner with friends",
-    "suggestionFlights": "Plane tickets",
-    "suggestionTicket": "Monthly transit pass",
+    "suggestionDining": "Dinner with friends 45",
+    "suggestionFlights": "Plane tickets 180",
+    "suggestionTicket": "Monthly transit pass 58",
     "tips": {
       "cameraBody": "Snap a receipt or screenshot. Pip reads every item.",
       "cameraTitle": "Snap a receipt",

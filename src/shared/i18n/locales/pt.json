@@ -240,9 +240,9 @@
     "stop": "Parar e organizar",
     "stopHint": "Toca para parar e organizar",
     "subtitle": "Escreve e carrega em Enter. Cada entrada vira uma etiqueta.",
-    "suggestionDining": "Jantar com amigos",
-    "suggestionFlights": "Bilhetes de avião",
-    "suggestionTicket": "Passe mensal",
+    "suggestionDining": "Jantar com amigos 45 €",
+    "suggestionFlights": "Bilhetes de avião 180 €",
+    "suggestionTicket": "Passe mensal 40 €",
     "tips": {
       "cameraBody": "Fotografa um talão ou uma captura de ecrã. O Pip lê todos os itens.",
       "cameraTitle": "Fotografar talão",

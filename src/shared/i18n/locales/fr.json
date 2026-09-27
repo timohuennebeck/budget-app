@@ -240,9 +240,9 @@
     "stop": "Arrêter et trier",
     "stopHint": "Touche pour arrêter et trier",
     "subtitle": "Tape puis appuie sur Entrée. Chaque entrée devient une puce.",
-    "suggestionDining": "Resto entre amis",
-    "suggestionFlights": "Billets d'avion",
-    "suggestionTicket": "Abonnement transports",
+    "suggestionDining": "Resto entre amis 45 €",
+    "suggestionFlights": "Billets d'avion 180 €",
+    "suggestionTicket": "Abonnement transports 86 €",
     "tips": {
       "cameraBody": "Photographie un ticket de caisse ou une capture d'écran. Pip lit chaque ligne.",
       "cameraTitle": "Photographier un reçu",

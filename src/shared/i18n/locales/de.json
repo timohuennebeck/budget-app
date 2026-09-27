@@ -234,9 +234,9 @@
     "stop": "Stoppen und sortieren",
     "stopHint": "Tippen zum Stoppen und Sortieren",
     "subtitle": "Tippen und Enter drücken. Jeder Eintrag wird ein Chip.",
-    "suggestionDining": "Essen gehen mit Freunden",
-    "suggestionFlights": "Flugtickets",
-    "suggestionTicket": "Deutschlandticket",
+    "suggestionDining": "Essen gehen mit Freunden 45 €",
+    "suggestionFlights": "Flugtickets 180 €",
+    "suggestionTicket": "Deutschlandticket 58 €",
     "tips": {
       "cameraBody": "Fotografier einen Kassenbon oder Screenshot. Pip liest alle Posten aus.",
       "cameraTitle": "Beleg fotografieren",

@@ -240,9 +240,9 @@
     "stop": "Parar y ordenar",
     "stopHint": "Toca para parar y ordenar",
     "subtitle": "Escribe y pulsa Intro. Cada entrada se convierte en una etiqueta.",
-    "suggestionDining": "Cena con amigos",
-    "suggestionFlights": "Billetes de avión",
-    "suggestionTicket": "Abono de transporte",
+    "suggestionDining": "Cena con amigos 45 €",
+    "suggestionFlights": "Billetes de avión 180 €",
+    "suggestionTicket": "Abono de transporte 20 €",
     "tips": {
       "cameraBody": "Fotografía un ticket o una captura de pantalla. Pip lee todas las partidas.",
       "cameraTitle": "Fotografiar recibo",

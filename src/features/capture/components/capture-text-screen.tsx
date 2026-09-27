@@ -84,12 +84,8 @@ export function CaptureTextScreen({ mode, initialText, onClose }: CaptureTextScr
     if (current || chips.length === 0) return;
     update(chips.slice(0, -1), chips[chips.length - 1]);
   };
-  // A suggestion starts a new entry; the amount is typed after it.
-  const addSuggestion = (phrase: string) => {
-    const next = addInput(chips, `${current}\n`).chips;
-    update(next, `${phrase} `);
-    input.current?.focus();
-  };
+  // A suggestion comes with an amount, so it's added as a finished entry.
+  const addSuggestion = (phrase: string) => type(`${current}\n${phrase}\n`);
   const placeholder = t('capture.placeholder');
 
   return (
