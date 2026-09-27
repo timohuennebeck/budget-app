@@ -17,6 +17,7 @@ import { useToday } from '@/shared/hooks/use-today';
 import { huePalette } from '@/shared/lib/color';
 import { addDays, budgetCycle, formatLongDate, formatMonth } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
+import { Card } from '@/shared/ui/card';
 import { Pip } from '@/shared/ui/pip';
 import { Text } from '@/shared/ui/text';
 
@@ -132,7 +133,8 @@ export function CategoryBudgetScreen({ id, month: shown }: { id: string; month?:
         <TrendChart trend={trend} hue={category.hue} ticks={ticks} onScrub={setScrub} />
       </View>
 
-      {past ? null : (
+      {/* A forecast needs spending, and a past month has nothing left to forecast. */}
+      {past || !entries.length ? null : (
         <View className="mt-6 flex-row items-center gap-3 px-1">
           <Pip pose={pipPose[trend.status]} size={52} />
           <Text size={15} leading={1.4} className="flex-1 text-ink-soft">
@@ -148,15 +150,23 @@ export function CategoryBudgetScreen({ id, month: shown }: { id: string; month?:
       )}
 
       {/* Grouped by day with the day's total, as on Einträge. */}
-      <View className="mt-8">
-        {entries.length ? (
+      {entries.length ? (
+        <View className="mt-8">
           <EntryList groups={groupByDay(entries)} categories={lookup} currency={currency} />
-        ) : (
-          <Text variant="body" className="px-1 pt-2 text-center">
-            {t('budgets.noEntriesYet')}
+        </View>
+      ) : (
+        <Card className="mt-8 items-center rounded-[28px] px-5 pt-[22px] pb-6">
+          <Pip pose="write" size={120} />
+          <Text variant="heading" className="mt-3 text-center">
+            {past ? t('budgets.emptyTitlePast', { month }) : t('budgets.emptyTitle')}
           </Text>
-        )}
-      </View>
+          <Text size={15} leading={1.45} className="mt-2 max-w-[280px] text-center text-muted-soft">
+            {past
+              ? t('budgets.emptySubtitlePast', { category: category.name })
+              : t('budgets.emptySubtitle', { category: category.name })}
+          </Text>
+        </Card>
+      )}
     </Screen>
   );
 }

@@ -336,7 +336,10 @@
     "trendAhead": "You're slightly over plan. At this pace you'll end at <b>{{amount}}</b>.",
     "trendOver": "You're already <b>{{amount}}</b> over your limit.",
     "trendNoLimit": "At this pace you'll end this month at <b>{{amount}}</b>.",
-    "noEntriesYet": "No entries this month yet.",
+    "emptyTitle": "No spending yet",
+    "emptySubtitle": "As soon as you log something for {{category}}, you'll see how it adds up here.",
+    "emptyTitlePast": "No spending in {{month}}",
+    "emptySubtitlePast": "You didn't log anything for {{category}} that month.",
     "untilDay": "Up to {{date}}",
     "onDay": "{{amount}} that day",
     "noSpendOnDay": "No spending that day"

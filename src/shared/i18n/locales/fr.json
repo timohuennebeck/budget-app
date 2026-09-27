@@ -344,7 +344,10 @@
     "trendAhead": "Tu es un peu au-dessus du plan. À ce rythme, tu finiras à <b>{{amount}}</b>.",
     "trendOver": "Tu as déjà dépassé ta limite de <b>{{amount}}</b>.",
     "trendNoLimit": "À ce rythme, tu finiras le mois à <b>{{amount}}</b>.",
-    "noEntriesYet": "Aucune dépense ce mois-ci pour l’instant.",
+    "emptyTitle": "Pas encore de dépenses",
+    "emptySubtitle": "Dès que tu notes quelque chose pour {{category}}, tu verras ici comment ça évolue.",
+    "emptyTitlePast": "Aucune dépense en {{month}}",
+    "emptySubtitlePast": "Tu n’as rien noté pour {{category}} ce mois-là.",
     "untilDay": "Jusqu’au {{date}}",
     "onDay": "{{amount}} ce jour-là",
     "noSpendOnDay": "Aucune dépense ce jour-là"
