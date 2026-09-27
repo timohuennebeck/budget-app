@@ -20,7 +20,7 @@ export function BalanceHero({ label, amount, currency, over }: BalanceHeroProps)
         <Text size={15} weight="medium" className="text-muted">
           {label}
         </Text>
-        <MoneyText amount={amount} currency={currency} danger={over} className="mt-2" />
+        <MoneyText amount={amount} currency={currency} danger={over} className="mt-3.5" />
       </View>
       <Pip pose={over ? 'dizzy' : 'cheers-arms'} size={112} />
     </View>
