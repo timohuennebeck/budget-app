@@ -185,7 +185,9 @@ export function CheckInsScreen() {
       </View>
 
       <ScrollView
-        className="flex-1"
+        // The gap sits outside the list, as on Einträge, so rows scroll
+        // out of view below the chips instead of right against them.
+        className={checkIns.length ? 'mt-3.5 flex-1' : 'flex-1'}
         contentInsetAdjustmentBehavior={layout.contentInsetAdjustmentBehavior}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
@@ -205,7 +207,7 @@ export function CheckInsScreen() {
             </Text>
           </Card>
         ) : (
-          <View className="mt-3.5 gap-3">
+          <View className="gap-3">
             {groups.length ? (
               groups.map((group) => (
                 <View key={group.key} className="gap-2">
