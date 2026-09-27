@@ -87,9 +87,8 @@ export function CategoryBudgetScreen({ id }: { id: string }) {
           className="mt-3.5"
         />
         {scrub !== null ? (
-          // Empty on days without spending; the line keeps its height.
           <Text size={15} className="mt-2.5 text-muted">
-            {dayAmount(scrub) > 0 ? t('budgets.onDay', { amount: money(dayAmount(scrub)) }) : ' '}
+            {t('budgets.onDay', { amount: money(dayAmount(scrub)) })}
           </Text>
         ) : (
           <Text size={15} className="mt-2.5 text-muted">
