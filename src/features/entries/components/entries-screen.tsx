@@ -9,8 +9,7 @@ import { useCategoryLookup } from '@/features/categories/hooks/use-category-look
 import { categoryIdOf } from '@/features/categories/lib/category-ref';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
-import { useSheet } from '@/shared/components/sheet';
-import { type DateRange, formatRangeLabel, monthRange } from '@/shared/lib/dates';
+import { formatRangeLabel, monthRange } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { tabListProps } from '@/shared/lib/tab-insets';
 import { colors, shadows } from '@/shared/lib/theme';
@@ -20,11 +19,11 @@ import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 
+import { usePeriodStore } from '../data/period-store';
 import { useEntries } from '../hooks/use-entries';
 import { countByCategory, groupByDay, netTotal } from '../lib/entry-stats';
 import { EmptySearch } from './empty-search';
 import { EntryList } from './entry-list';
-import { DateRangeSheet } from './date-range-sheet';
 
 // Einträge (2t): entries of a period (this month by default) grouped by day,
 // with search, category filter chips and a from–till picker.
@@ -35,7 +34,6 @@ export function EntriesScreen() {
   const { search } = useLocalSearchParams<{ search?: string }>();
   const categories = useAppCategoryDisplays();
   const lookup = useCategoryLookup();
-  const rangeSheet = useSheet();
   const searchInput = useRef<TextInput>(null);
 
   // "Suchen" on Start opens this tab with ?search=1; focus the field and
@@ -48,7 +46,8 @@ export function EntriesScreen() {
     }, [search]),
   );
 
-  const [range, setRange] = useState<DateRange>(() => monthRange(new Date()));
+  // This month unless a period was picked on the period page.
+  const range = usePeriodStore((state) => state.ranges.entries) ?? monthRange(new Date());
   const [query, setQuery] = useState('');
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const { data: entries = [] } = useEntries(range);
@@ -84,7 +83,9 @@ export function EntriesScreen() {
       <View style={{ paddingTop: layout.headerPaddingTop, paddingHorizontal: 16 }}>
         <View className="h-10 flex-row items-center px-1">
           <Pressable
-            onPress={rangeSheet.present}
+            onPress={() =>
+              router.push({ pathname: '/select-period', params: { target: 'entries' } })
+            }
             haptic="none"
             accessibilityLabel={t('range.title')}
             className="flex-row items-center gap-2 rounded-full bg-surface px-3.5 py-[9px]"
@@ -168,14 +169,6 @@ export function EntriesScreen() {
           )}
         </ScrollView>
       )}
-      <DateRangeSheet
-        {...rangeSheet.controls}
-        value={range}
-        onSelect={(next) => {
-          setRange(next);
-          rangeSheet.dismiss();
-        }}
-      />
     </View>
   );
 }

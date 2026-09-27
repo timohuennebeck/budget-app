@@ -4,10 +4,9 @@ import { ScrollView, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { DateRangeSheet } from '@/features/entries/components/date-range-sheet';
+import { usePeriodStore } from '@/features/entries/data/period-store';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
-import { useSheet } from '@/shared/components/sheet';
 import { useAppConfig } from '@/shared/hooks/use-app-config';
 import { formatMonth, formatRangeLabel, formatWeekRange } from '@/shared/lib/dates';
 import { huePalette } from '@/shared/lib/color';
@@ -88,8 +87,11 @@ export function CheckInsScreen() {
   const layout = tabListProps(insets.top, 4);
   const currency = useCurrency();
   const { data: checkIns = [] } = useCheckIns();
-  const [period, setPeriod] = useState<CheckInPeriod>('all');
-  const rangeSheet = useSheet();
+  // A range from the period page wins over the chips; a chip clears it.
+  const [chip, setChip] = useState<Exclude<CheckInPeriod, object>>('all');
+  const range = usePeriodStore((state) => state.ranges['check-ins']);
+  const setRange = usePeriodStore((state) => state.setRange);
+  const period: CheckInPeriod = range ?? chip;
 
   const money = (value: number) => formatMoney(value, { currency, compact: true });
   const detail = (checkIn: CheckIn) =>
@@ -119,7 +121,9 @@ export function CheckInsScreen() {
       <View style={{ paddingTop: layout.headerPaddingTop, paddingHorizontal: 16 }}>
         <View className="h-10 flex-row items-center px-1">
           <Pressable
-            onPress={rangeSheet.present}
+            onPress={() =>
+              router.push({ pathname: '/select-period', params: { target: 'check-ins' } })
+            }
             haptic="none"
             accessibilityLabel={t('range.title')}
             className="flex-row items-center gap-2 rounded-full bg-surface px-3.5 py-[9px]"
@@ -160,7 +164,10 @@ export function CheckInsScreen() {
                   label={option.label}
                   size="sm"
                   variant={period === option.value ? 'dark' : 'outline'}
-                  onPress={() => setPeriod(option.value)}
+                  onPress={() => {
+                    setChip(option.value);
+                    setRange('check-ins', null);
+                  }}
                 />
               ))}
             </ScrollView>
@@ -213,14 +220,6 @@ export function CheckInsScreen() {
           </View>
         )}
       </ScrollView>
-      <DateRangeSheet
-        {...rangeSheet.controls}
-        value={typeof period === 'object' ? period : null}
-        onSelect={(range) => {
-          setPeriod(range);
-          rangeSheet.dismiss();
-        }}
-      />
     </View>
   );
 }
