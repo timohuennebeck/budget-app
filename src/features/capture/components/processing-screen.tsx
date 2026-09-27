@@ -7,7 +7,7 @@ import { useUserId } from '@/features/auth/lib/auth-provider';
 import { useCategories } from '@/features/categories/hooks/use-categories';
 import { usePresets } from '@/features/categories/hooks/use-presets';
 import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store';
-import { resolveCategoryIds } from '@/features/onboarding/hooks/use-selected-category-ids';
+import { resolveCategoryIds } from '@/features/onboarding/lib/category-ids';
 import { Screen } from '@/shared/components/screen';
 import { haptics } from '@/shared/lib/haptics';
 import { Pip } from '@/shared/ui/pip';
@@ -89,8 +89,11 @@ export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
       onboarding.addEntries(result);
       // Categories Pip used for the first entries start out selected.
       const used = result.map((draft) => draft.categoryId).filter((id): id is string => !!id);
-      const selected = resolveCategoryIds(onboarding.categoryIds, presets);
-      onboarding.update({ categoryIds: [...new Set([...selected, ...used])] });
+      // Without presets the suggested selection is unknown; keep it unset.
+      if (onboarding.categoryIds || presets) {
+        const selected = resolveCategoryIds(onboarding.categoryIds, presets);
+        onboarding.update({ categoryIds: [...new Set([...selected, ...used])] });
+      }
     }
     router.replace(captureHref(mode, mode === 'onboarding' ? 'saved' : 'review'));
   }, [progress, result, mode, presets, t]);

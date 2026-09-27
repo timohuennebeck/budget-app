@@ -1,7 +1,7 @@
 import { encodeBase64 } from 'jsr:@std/encoding@1/base64';
 
 import { HttpError, json, serve } from '../_shared/http.ts';
-import { admin, readAiUsage, readConfig, requireUser } from '../_shared/supabase.ts';
+import { admin, claimCapture, readConfig, readProfile, requireUser } from '../_shared/supabase.ts';
 import { getProvider } from './providers/index.ts';
 import type { CategoryChoice, MerchantHint, ParsedEntry } from './providers/types.ts';
 
@@ -59,11 +59,7 @@ async function readCategories(userId: string, locale: string): Promise<CategoryC
     } | null;
     return {
       id: category.id,
-      name:
-        preset?.names[locale] ??
-        preset?.names[locale.split('-')[0]] ??
-        preset?.names.en ??
-        category.name,
+      name: preset?.names[locale] ?? category.name,
       keywords: preset ? [...new Set(Object.values(preset.keywords).flat())] : [],
     };
   });
@@ -103,7 +99,7 @@ function clean(entries: ParsedEntry[], categoryIds: Set<string>) {
           ? entry.category_id
           : null;
       return {
-        title: (entry.title || '').trim().slice(0, 120),
+        title: (entry.title || '').trim().slice(0, 120) || '—',
         amount: Math.round(entry.amount * 100) / 100,
         kind: entry.kind === 'income' ? 'income' : 'expense',
         category_id: categoryId,
@@ -126,53 +122,31 @@ serve(async (request) => {
     throw new HttpError(400, 'invalid_text');
   if (body.capture_id && !UUID.test(body.capture_id))
     throw new HttpError(400, 'invalid_capture_id');
-  if (source === 'camera' && !body.receipt_path?.startsWith(`${user.id}/`)) {
+  const receiptPath = new RegExp(`^${user.id}/[0-9a-f-]{36}\\.(jpg|jpeg|png|webp|heic)$`);
+  if (source === 'camera' && !receiptPath.test(body.receipt_path ?? '')) {
     throw new HttpError(400, 'invalid_receipt_path');
   }
 
-  const config = await readConfig({
-    ai_provider: 'openai',
-    ai_model: 'gpt-6-luna',
-    ai_captures_free: 20,
-    ai_captures_plus: 200,
-  });
-  const usage = await readAiUsage(user.id);
-
-  // A voice session already created its capture (and counted it) in
-  // transcribe-session; reuse that row instead of counting twice.
-  const { data: existing } = body.capture_id
-    ? await admin
-        .from('captures')
-        .select('id, status')
-        .eq('id', body.capture_id)
-        .eq('profile_id', user.id)
-        .maybeSingle()
-    : { data: null };
-  if (existing && existing.status !== 'pending') throw new HttpError(409, 'capture_already_parsed');
-  if (!existing) {
-    const limit = Number(usage.plus ? config.ai_captures_plus : config.ai_captures_free);
-    if (usage.usedToday >= limit) throw new HttpError(429, 'ai_limit_reached');
-  }
-
-  const captureId = existing?.id ?? body.capture_id ?? crypto.randomUUID();
-  const captureRow = {
-    id: captureId,
-    profile_id: user.id,
-    source,
-    input_text: source === 'camera' ? null : text,
-    receipt_path: source === 'camera' ? body.receipt_path : null,
+  const [config, profile] = await Promise.all([
+    readConfig({ ai_provider: 'openai', ai_model: 'gpt-6-luna' }),
+    readProfile(user.id),
+  ]);
+  // A voice capture was counted by transcribe-session; this claims it once.
+  const captureId = await claimCapture({
+    profileId: user.id,
+    source: source as 'text' | 'voice' | 'camera',
+    status: 'processing',
+    captureId: body.capture_id,
+    inputText: source === 'camera' ? null : text,
+    receiptPath: source === 'camera' ? body.receipt_path : null,
     provider: String(config.ai_provider),
     model: String(config.ai_model),
-  };
-  const saved = existing
-    ? await admin.from('captures').update(captureRow).eq('id', captureId)
-    : await admin.from('captures').insert(captureRow);
-  if (saved.error) throw saved.error;
+  });
 
   const started = Date.now();
   try {
     const [categories, hints, image] = await Promise.all([
-      readCategories(user.id, usage.profile.locale),
+      readCategories(user.id, profile.locale),
       readHints(user.id),
       source === 'camera' ? readReceipt(body.receipt_path!) : Promise.resolve(undefined),
     ]);
@@ -182,9 +156,9 @@ serve(async (request) => {
         image,
         categories,
         hints,
-        currency: usage.profile.currency,
-        locale: usage.profile.locale,
-        localNow: localNow(usage.profile.time_zone),
+        currency: profile.currency,
+        locale: profile.locale,
+        localNow: localNow(profile.time_zone),
       },
       String(config.ai_model),
     );

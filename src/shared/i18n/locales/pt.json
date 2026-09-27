@@ -200,10 +200,6 @@
     "errorTipLight": "Mais luz, sem reflexos",
     "errorTipSteady": "Segura o iPhone firme",
     "errorTitle": "Isto não correu bem.",
-    "accountSubtitle": "O Pip lê talões quando a tua conta estiver pronta. Por agora, escreve a tua primeira entrada.",
-    "accountTitle": "Os talões ficam para daqui a pouco.",
-    "limitSubtitle": "Já usaste as leituras de talões de hoje. Escreve-o e o Pip organiza na mesma.",
-    "limitTitle": "O Pip precisa de uma pausa.",
     "flip": "Trocar câmara",
     "guess": "{{name}}?",
     "incomeSaved": "Receita\nguardada",
@@ -216,6 +212,16 @@
     "placeholder": "p. ex. 40€ supermercado, 12€ Uber, café 3,50€",
     "processingTitle": "O Pip está a organizar os teus registos.",
     "receipt": "Talão",
+    "receiptErrors": {
+      "account": {
+        "title": "Os talões ficam para daqui a pouco.",
+        "subtitle": "O Pip lê talões quando a tua conta estiver pronta. Por agora, escreve a tua primeira entrada."
+      },
+      "limit": {
+        "title": "O Pip precisa de uma pausa.",
+        "subtitle": "Já usaste as leituras de talões de hoje. Escreve-o e o Pip organiza na mesma."
+      }
+    },
     "recognized": "reconhecido",
     "removeDraft": "Remover registo",
     "retakePhoto": "Tirar nova foto",

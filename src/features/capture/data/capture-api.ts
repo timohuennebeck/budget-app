@@ -14,7 +14,7 @@ export interface ParsedEntry {
   confident: boolean;
 }
 
-export interface ParseRequest {
+interface ParseRequest {
   source: 'text' | 'voice' | 'camera';
   text?: string;
   capture_id?: string;
@@ -32,7 +32,7 @@ export class CaptureError extends Error {
 }
 
 // Turns functions.invoke errors into a CaptureError with the JSON error code.
-export async function toCaptureError(error: unknown) {
+async function toCaptureError(error: unknown) {
   if (error instanceof FunctionsHttpError) {
     const response = error.context as Response;
     const body = await response.json().catch(() => ({}));
@@ -66,7 +66,7 @@ export async function uploadReceipt(userId: string, captureId: string, uri: stri
   const path = `${userId}/${captureId}.jpg`;
   const { error } = await supabase.storage
     .from('receipts')
-    .upload(path, body, { contentType: 'image/jpeg', upsert: true });
+    .upload(path, body, { contentType: 'image/jpeg' });
   if (error) throw new CaptureError('upload_failed', 0);
   return path;
 }

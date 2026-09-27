@@ -11,9 +11,3 @@ export function presetName(preset: Pick<CategoryPreset, 'names'>, language = i18
 export function presetKeywords(preset: Pick<CategoryPreset, 'keywords'>) {
   return [...new Set(Object.values(preset.keywords).flat())];
 }
-
-// Preset categories are named in the app language so switching it renames
-// them; custom categories keep the name the user typed.
-export function categoryName(category: { name: string }, preset?: CategoryPreset) {
-  return preset ? presetName(preset) : category.name;
-}

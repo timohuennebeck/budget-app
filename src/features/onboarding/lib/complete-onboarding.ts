@@ -15,7 +15,7 @@ import { deviceTimeZone } from '@/shared/lib/dates';
 import { queryClient } from '@/shared/lib/query-client';
 
 import type { OnboardingDraft } from '../data/onboarding-store';
-import { resolveCategoryIds } from '../hooks/use-selected-category-ids';
+import { resolveCategoryIds } from './category-ids';
 
 // Writes everything collected during onboarding to the new account: profile
 // answers, chosen categories with limits, the first captured entries and
@@ -50,7 +50,7 @@ export async function completeOnboarding(
   const categoryIds = [...new Set([...resolveCategoryIds(draft.categoryIds, presets), ...usedIds])];
   const existing = await fetchCategories();
 
-  // The row a draft id (preset key or custom draft id) becomes.
+  // The row each draft id (preset key or custom draft id) becomes.
   const describe = (id: string) => {
     const preset = presets.find((row) => row.key === id);
     if (preset) {
@@ -60,8 +60,9 @@ export async function completeOnboarding(
     const custom = draft.customCategories.find((category) => category.id === id);
     return custom && { preset_key: null, name: custom.name, icon: custom.icon, hue: custom.hue };
   };
+  const described = new Map(categoryIds.map((id) => [id, describe(id)]));
   const findSaved = (id: string, rows: typeof existing) => {
-    const category = describe(id);
+    const category = described.get(id);
     if (!category) return undefined;
     return rows.find((row) =>
       category.preset_key
@@ -71,7 +72,7 @@ export async function completeOnboarding(
   };
 
   const rows = categoryIds.flatMap((id, index): CategoryInsert[] => {
-    const category = describe(id);
+    const category = described.get(id);
     if (!category || findSaved(id, existing)) return [];
     const limit = draft.budgetMode === 'per_category' ? (draft.categoryLimits[id] ?? null) : null;
     return [{ profile_id: userId, ...category, monthly_limit: limit, sort_order: index }];

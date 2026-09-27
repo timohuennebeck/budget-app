@@ -5,6 +5,8 @@ import { Platform } from 'react-native';
 
 import { storage } from '@/shared/lib/storage';
 
+import { registerPushToken } from '../data/notifications-api';
+
 const TOKEN_KEY = 'push-token';
 
 // Pushes that arrive while the app is open still show as a banner.
@@ -58,3 +60,16 @@ export const savedPushToken = {
     storage.remove(TOKEN_KEY);
   },
 };
+
+/** Links this device's push token to the signed-in user, if permitted. Never throws. */
+export async function registerDevice() {
+  try {
+    if (!(await hasNotificationPermission())) return;
+    const token = await getPushToken();
+    if (!token) return;
+    await registerPushToken(token, Platform.OS === 'ios' ? 'ios' : 'android');
+    savedPushToken.set(token);
+  } catch (error) {
+    console.warn('Push registration failed', error);
+  }
+}

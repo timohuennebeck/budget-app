@@ -34,30 +34,54 @@ export async function readConfig<T extends Record<string, unknown>>(defaults: T)
   return { ...defaults, ...values } as T;
 }
 
-export interface AiUsage {
-  profile: { locale: string; currency: string; time_zone: string; plus_expires_at: string | null };
-  plus: boolean;
-  usedToday: number;
+export interface CaptureProfile {
+  locale: string;
+  currency: string;
+  time_zone: string;
 }
 
-/** The user's profile and how many AI captures they started in the last 24 hours. */
-export async function readAiUsage(userId: string): Promise<AiUsage> {
-  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-  const [profile, captures] = await Promise.all([
-    admin
-      .from('profiles')
-      .select('locale, currency, time_zone, plus_expires_at')
-      .eq('id', userId)
-      .single(),
-    admin
-      .from('captures')
-      .select('id', { count: 'exact', head: true })
-      .eq('profile_id', userId)
-      .gte('created_at', since),
-  ]);
-  if (profile.error) throw profile.error;
-  if (captures.error) throw captures.error;
-  const plus =
-    !!profile.data.plus_expires_at && new Date(profile.data.plus_expires_at) > new Date();
-  return { profile: profile.data, plus, usedToday: captures.count ?? 0 };
+export async function readProfile(userId: string): Promise<CaptureProfile> {
+  const { data, error } = await admin
+    .from('profiles')
+    .select('locale, currency, time_zone')
+    .eq('id', userId)
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+interface CaptureClaim {
+  profileId: string;
+  source: 'text' | 'voice' | 'camera';
+  status: 'pending' | 'processing';
+  captureId?: string;
+  inputText?: string | null;
+  receiptPath?: string | null;
+  provider?: string;
+  model?: string;
+}
+
+/**
+ * Logs an AI capture and counts it against the daily limit in one locked
+ * step (claim_ai_capture), or claims a pending voice capture once.
+ */
+export async function claimCapture(claim: CaptureClaim): Promise<string> {
+  const { data, error } = await admin.rpc('claim_ai_capture', {
+    p_profile_id: claim.profileId,
+    p_source: claim.source,
+    p_status: claim.status,
+    p_capture_id: claim.captureId ?? null,
+    p_input_text: claim.inputText ?? null,
+    p_receipt_path: claim.receiptPath ?? null,
+    p_provider: claim.provider ?? null,
+    p_model: claim.model ?? null,
+  });
+  if (error) {
+    if (error.message.includes('ai_limit_reached')) throw new HttpError(429, 'ai_limit_reached');
+    if (error.message.includes('capture_already_parsed') || error.code === '23505') {
+      throw new HttpError(409, 'capture_already_parsed');
+    }
+    throw error;
+  }
+  return data as string;
 }

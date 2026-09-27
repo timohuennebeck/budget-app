@@ -615,6 +615,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_ai_capture: {
+        Args: {
+          p_capture_id?: string
+          p_input_text?: string
+          p_model?: string
+          p_profile_id: string
+          p_provider?: string
+          p_receipt_path?: string
+          p_source: Database["public"]["Enums"]["entry_source"]
+          p_status: Database["public"]["Enums"]["capture_status"]
+        }
+        Returns: string
+      }
       delete_own_account: { Args: never; Returns: undefined }
       is_notifications_cron_secret: {
         Args: { p_secret: string }
@@ -630,7 +643,7 @@ export type Database = {
     }
     Enums: {
       budget_mode: "monthly" | "per_category" | "none"
-      capture_status: "pending" | "parsed" | "failed"
+      capture_status: "pending" | "processing" | "parsed" | "failed"
       entry_kind: "expense" | "income"
       entry_source: "text" | "voice" | "camera" | "manual"
       legal_doc_kind: "terms" | "privacy"
@@ -772,7 +785,7 @@ export const Constants = {
   public: {
     Enums: {
       budget_mode: ["monthly", "per_category", "none"],
-      capture_status: ["pending", "parsed", "failed"],
+      capture_status: ["pending", "processing", "parsed", "failed"],
       entry_kind: ["expense", "income"],
       entry_source: ["text", "voice", "camera", "manual"],
       legal_doc_kind: ["terms", "privacy"],

@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { ReminderScreen } from '@/features/notifications/components/reminder-screen';
-import { useEnsureNotificationPermission } from '@/features/notifications/hooks/use-enable-notifications';
+import { useEnsureNotificationPermission } from '@/features/notifications/hooks/use-ensure-notification-permission';
 import {
   useNotificationSettings,
   useUpdateNotificationSettings,

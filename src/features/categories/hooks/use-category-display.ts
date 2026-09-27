@@ -5,7 +5,7 @@ import { useSelectedCategoryIds } from '@/features/onboarding/hooks/use-selected
 import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store';
 
 import type { CategoryPreset } from '../data/presets-api';
-import { categoryName, presetKeywords, presetName } from '../lib/category-name';
+import { presetKeywords, presetName } from '../lib/category-name';
 import { useCategories } from './use-categories';
 import { usePresets } from './use-presets';
 
@@ -53,7 +53,8 @@ export function useAppCategoryDisplays(enabled = true, includeArchived = false):
           return {
             id: category.id,
             presetKey: category.preset_key,
-            name: categoryName(category, preset),
+            // Presets follow the app language; custom names stay as typed.
+            name: preset ? presetName(preset) : category.name,
             icon: category.icon,
             hue: category.hue,
             keywords: preset ? presetKeywords(preset) : [],

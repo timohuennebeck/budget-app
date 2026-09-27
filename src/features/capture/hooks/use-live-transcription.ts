@@ -4,27 +4,22 @@ import { CaptureError, exchangeRealtimeSdp, startVoiceSession } from '../data/ca
 import {
   applyTranscriptEvent,
   emptyTranscript,
-  isCompletedEvent,
+  isSettled,
+  type RealtimeEvent,
   transcriptText,
 } from '../lib/transcript';
 import { mediaDevices, RTCPeerConnection } from '../lib/webrtc';
 
 export type VoiceError = 'account' | 'permission' | 'limit' | 'unavailable';
-export type VoiceStatus = 'connecting' | 'listening' | 'stopping' | 'error';
+type VoiceStatus = 'connecting' | 'listening' | 'stopping' | 'error';
 
-/** How long stop() waits for the last words after committing the audio. */
-const FINAL_WAIT_MS = 2500;
+/** Upper bound for stop() to wait for the last words after the commit. */
+const FINAL_WAIT_MS = 4000;
 
 interface Connection {
   peer: RTCPeerConnection;
   stream: MediaStream;
   channel: RTCDataChannel;
-}
-
-function close(connection: Connection | null) {
-  connection?.stream.getTracks().forEach((track) => track.stop());
-  connection?.channel.close();
-  connection?.peer.close();
 }
 
 /**
@@ -41,29 +36,29 @@ export function useLiveTranscription(enabled: boolean) {
   const connection = useRef<Connection | null>(null);
   const latest = useRef(emptyTranscript);
   const captureId = useRef<string | null>(null);
-  const onFinal = useRef<(() => void) | null>(null);
+  // Called with every data-channel event while stop() waits.
+  const onEvent = useRef<((event: RealtimeEvent) => void) | null>(null);
+
+  const disconnect = () => {
+    const current = connection.current;
+    connection.current = null;
+    current?.stream.getTracks().forEach((track) => track.stop());
+    current?.channel.close();
+    current?.peer.close();
+  };
 
   useEffect(() => {
     if (!enabled) return;
     let cancelled = false;
     const fail = (code: VoiceError) => {
       if (cancelled) return;
-      close(connection.current);
-      connection.current = null;
+      disconnect();
       setError(code);
       setStatus('error');
     };
 
     (async () => {
-      let session;
-      try {
-        session = await startVoiceSession();
-      } catch (reason) {
-        return fail(
-          reason instanceof CaptureError && reason.status === 429 ? 'limit' : 'unavailable',
-        );
-      }
-      if (cancelled) return;
+      // The microphone first: a denied permission shouldn't use up an AI capture.
       let stream: MediaStream;
       try {
         stream = await mediaDevices.getUserMedia({ audio: true });
@@ -74,15 +69,23 @@ export function useLiveTranscription(enabled: boolean) {
       stream.getTracks().forEach((track) => peer.addTrack(track, stream));
       const channel = peer.createDataChannel('oai-events');
       connection.current = { peer, stream, channel };
-      if (cancelled) return close(connection.current);
+      if (cancelled) return disconnect();
 
       channel.addEventListener('message', (message: MessageEvent) => {
-        const event = JSON.parse(String(message.data));
+        const event = JSON.parse(String(message.data)) as RealtimeEvent;
         latest.current = applyTranscriptEvent(latest.current, event);
         setTranscript(latest.current);
-        if (isCompletedEvent(event) || event.type === 'error') onFinal.current?.();
+        onEvent.current?.(event);
       });
 
+      let session;
+      try {
+        session = await startVoiceSession();
+      } catch (reason) {
+        return fail(
+          reason instanceof CaptureError && reason.status === 429 ? 'limit' : 'unavailable',
+        );
+      }
       try {
         const offer = await peer.createOffer();
         await peer.setLocalDescription(offer);
@@ -99,8 +102,7 @@ export function useLiveTranscription(enabled: boolean) {
 
     return () => {
       cancelled = true;
-      close(connection.current);
-      connection.current = null;
+      disconnect();
     };
   }, [enabled]);
 
@@ -116,18 +118,29 @@ export function useLiveTranscription(enabled: boolean) {
 
   /** Ends the recording and resolves with the final text and capture id. */
   const stop = async () => {
-    const current = connection.current;
-    if (current?.channel.readyState === 'open') {
+    const channel = connection.current?.channel;
+    if (channel?.readyState === 'open') {
       setStatus('stopping');
-      // Without turn detection the last words only arrive after a commit.
+      // Commit what's still buffered, then wait until every turn (also one
+      // server VAD committed earlier) has its final text.
       await new Promise<void>((resolve) => {
-        onFinal.current = resolve;
-        setTimeout(resolve, FINAL_WAIT_MS);
-        current.channel.send(JSON.stringify({ type: 'input_audio_buffer.commit' }));
+        let committed = false;
+        const timer = setTimeout(resolve, FINAL_WAIT_MS);
+        const finish = () => {
+          clearTimeout(timer);
+          resolve();
+        };
+        onEvent.current = (event) => {
+          if (event.type === 'input_audio_buffer.committed') committed = true;
+          // An empty buffer can't be committed; then nothing new is coming.
+          if (event.type === 'error') committed = true;
+          if (committed && isSettled(latest.current)) finish();
+        };
+        channel.send(JSON.stringify({ type: 'input_audio_buffer.commit' }));
       });
+      onEvent.current = null;
     }
-    close(current);
-    connection.current = null;
+    disconnect();
     return { text: transcriptText(latest.current), captureId: captureId.current };
   };
 

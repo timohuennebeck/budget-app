@@ -197,10 +197,6 @@
     "errorTipLight": "Mehr Licht, keine Spiegelungen",
     "errorTipSteady": "iPhone ruhig halten",
     "errorTitle": "Das hat nicht geklappt.",
-    "accountSubtitle": "Pip liest Belege, sobald dein Konto steht. Tipp deinen ersten Eintrag erstmal ein.",
-    "accountTitle": "Belege kommen gleich.",
-    "limitSubtitle": "Deine Beleg-Scans für heute sind aufgebraucht. Tipp es ein, Pip sortiert trotzdem.",
-    "limitTitle": "Pip braucht eine Pause.",
     "flip": "Kamera wechseln",
     "guess": "{{name}}?",
     "incomeSaved": "Einnahme\ngespeichert",
@@ -213,6 +209,16 @@
     "placeholder": "z. B. 40€ Lebensmittel, 12€ Uber, Kaffee 3,50",
     "processingTitle": "Pip sortiert deine Einträge.",
     "receipt": "Beleg",
+    "receiptErrors": {
+      "account": {
+        "title": "Belege kommen gleich.",
+        "subtitle": "Pip liest Belege, sobald dein Konto steht. Tipp deinen ersten Eintrag erstmal ein."
+      },
+      "limit": {
+        "title": "Pip braucht eine Pause.",
+        "subtitle": "Deine Beleg-Scans für heute sind aufgebraucht. Tipp es ein, Pip sortiert trotzdem."
+      }
+    },
     "recognized": "erkannt",
     "removeDraft": "Eintrag entfernen",
     "retakePhoto": "Neues Foto machen",

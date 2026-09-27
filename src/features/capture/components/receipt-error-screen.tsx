@@ -25,23 +25,20 @@ const TIPS: {
 ];
 
 // Codes where another photo won't help: the daily AI limit and no account yet.
-const COPY = {
-  '401': { title: 'capture.accountTitle', subtitle: 'capture.accountSubtitle' },
-  '429': { title: 'capture.limitTitle', subtitle: 'capture.limitSubtitle' },
-} as const;
+const SPECIAL = { '401': 'account', '429': 'limit' } as const;
 
 /** Unreadable receipt (2z2) with photo tips and the error code. */
 export function ReceiptErrorScreen({ mode }: { mode: CaptureMode }) {
   const { t } = useTranslation();
   const { code = '422' } = useLocalSearchParams<{ code?: string }>();
-  const copy = COPY[code as keyof typeof COPY];
+  const special = SPECIAL[code as keyof typeof SPECIAL];
   const now = new Date();
   const typeInstead = () => router.dismissTo(captureHref(mode, 'index'));
 
   return (
     <Screen
       footer={
-        copy ? (
+        special ? (
           <Button label={t('capture.typeInstead')} onPress={typeInstead} />
         ) : (
           <View>
@@ -63,10 +60,12 @@ export function ReceiptErrorScreen({ mode }: { mode: CaptureMode }) {
         <StatusHero
           pose="dizzy"
           pipSize={150}
-          title={t(copy?.title ?? 'capture.errorTitle')}
-          subtitle={t(copy?.subtitle ?? 'capture.errorSubtitle')}
+          title={t(special ? `capture.receiptErrors.${special}.title` : 'capture.errorTitle')}
+          subtitle={t(
+            special ? `capture.receiptErrors.${special}.subtitle` : 'capture.errorSubtitle',
+          )}
         />
-        {copy ? null : (
+        {special ? null : (
           <Card className="gap-2.5 self-stretch px-[18px] py-4">
             {TIPS.map((tip) => (
               <View key={tip.key} className="flex-row items-center gap-3">

@@ -197,10 +197,6 @@
     "errorTipLight": "More light, no glare",
     "errorTipSteady": "Hold your iPhone steady",
     "errorTitle": "That didn't work.",
-    "accountSubtitle": "Pip reads receipts once your account is set up. Type your first entry for now.",
-    "accountTitle": "Receipts come a bit later.",
-    "limitSubtitle": "You've used today's receipt scans. Type it in instead, Pip still sorts it.",
-    "limitTitle": "Pip needs a break.",
     "flip": "Switch camera",
     "guess": "{{name}}?",
     "incomeSaved": "Income\nsaved",
@@ -213,6 +209,16 @@
     "placeholder": "e.g. €40 groceries, €12 Uber, coffee €3.50",
     "processingTitle": "Pip is sorting your entries.",
     "receipt": "Receipt",
+    "receiptErrors": {
+      "account": {
+        "title": "Receipts come a bit later.",
+        "subtitle": "Pip reads receipts once your account is set up. Type your first entry for now."
+      },
+      "limit": {
+        "title": "Pip needs a break.",
+        "subtitle": "You've used today's receipt scans. Type it in instead, Pip still sorts it."
+      }
+    },
     "recognized": "recognized",
     "removeDraft": "Remove entry",
     "retakePhoto": "Take a new photo",

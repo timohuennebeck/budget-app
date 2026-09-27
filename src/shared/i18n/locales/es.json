@@ -200,10 +200,6 @@
     "errorTipLight": "Más luz, sin reflejos",
     "errorTipSteady": "Sujeta el iPhone quieto",
     "errorTitle": "Algo no ha salido bien.",
-    "accountSubtitle": "Pip lee tickets cuando tu cuenta esté lista. Por ahora, escribe tu primera entrada.",
-    "accountTitle": "Los tickets, un poco más tarde.",
-    "limitSubtitle": "Ya usaste los escaneos de tickets de hoy. Escríbelo y Pip lo ordena igual.",
-    "limitTitle": "Pip necesita un descanso.",
     "flip": "Cambiar cámara",
     "guess": "¿{{name}}?",
     "incomeSaved": "Ingreso\nguardado",
@@ -216,6 +212,16 @@
     "placeholder": "p. ej. 40€ supermercado, 12€ Uber, café 3,50",
     "processingTitle": "Pip está ordenando tus registros.",
     "receipt": "Recibo",
+    "receiptErrors": {
+      "account": {
+        "title": "Los tickets, un poco más tarde.",
+        "subtitle": "Pip lee tickets cuando tu cuenta esté lista. Por ahora, escribe tu primera entrada."
+      },
+      "limit": {
+        "title": "Pip necesita un descanso.",
+        "subtitle": "Ya usaste los escaneos de tickets de hoy. Escríbelo y Pip lo ordena igual."
+      }
+    },
     "recognized": "detectado",
     "removeDraft": "Quitar registro",
     "retakePhoto": "Hacer otra foto",

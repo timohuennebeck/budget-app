@@ -1,8 +1,7 @@
 import { Alert, Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { requestNotificationPermission } from '../lib/push';
-import { registerDevice } from './use-push-registration';
+import { registerDevice, requestNotificationPermission } from '../lib/push';
 
 /**
  * Asks for permission before a notification is switched on; if the user
@@ -12,7 +11,7 @@ export function useEnsureNotificationPermission() {
   const { t } = useTranslation();
   return async () => {
     if (await requestNotificationPermission()) {
-      registerDevice().catch((error) => console.warn('Push registration failed', error));
+      registerDevice();
       return true;
     }
     Alert.alert(t('reminders.permissionTitle'), t('reminders.permissionMessage'), [

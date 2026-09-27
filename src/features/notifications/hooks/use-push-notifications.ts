@@ -3,16 +3,8 @@ import { type Href, router } from 'expo-router';
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
 
-import { markNotificationOpened, registerPushToken } from '../data/notifications-api';
-import { getPushToken, hasNotificationPermission, savedPushToken } from '../lib/push';
-
-export async function registerDevice() {
-  if (!(await hasNotificationPermission())) return;
-  const token = await getPushToken();
-  if (!token) return;
-  await registerPushToken(token, Platform.OS === 'ios' ? 'ios' : 'android');
-  savedPushToken.set(token);
-}
+import { markNotificationOpened } from '../data/notifications-api';
+import { registerDevice } from '../lib/push';
 
 function open(response: Notifications.NotificationResponse) {
   const data = response.notification.request.content.data as {
@@ -30,7 +22,7 @@ function open(response: Notifications.NotificationResponse) {
 export function usePushNotifications(userId: string) {
   useEffect(() => {
     if (!userId || Platform.OS === 'web') return;
-    registerDevice().catch((error) => console.warn('Push registration failed', error));
+    registerDevice();
 
     const last = Notifications.getLastNotificationResponse();
     if (last) {

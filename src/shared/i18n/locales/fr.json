@@ -200,10 +200,6 @@
     "errorTipLight": "Plus de lumière, pas de reflets",
     "errorTipSteady": "Tiens ton iPhone bien droit",
     "errorTitle": "Ça n'a pas marché.",
-    "accountSubtitle": "Pip lit les tickets dès que ton compte est prêt. Tape ta première entrée pour l'instant.",
-    "accountTitle": "Les tickets, c'est pour bientôt.",
-    "limitSubtitle": "Tu as utilisé tes scans de tickets du jour. Tape-le, Pip le classe quand même.",
-    "limitTitle": "Pip fait une pause.",
     "flip": "Changer de caméra",
     "guess": "{{name}} ?",
     "incomeSaved": "Revenu\nenregistré",
@@ -216,6 +212,16 @@
     "placeholder": "ex. 40€ courses, 12€ Uber, café 3,50",
     "processingTitle": "Pip trie tes entrées.",
     "receipt": "Reçu",
+    "receiptErrors": {
+      "account": {
+        "title": "Les tickets, c'est pour bientôt.",
+        "subtitle": "Pip lit les tickets dès que ton compte est prêt. Tape ta première entrée pour l'instant."
+      },
+      "limit": {
+        "title": "Pip fait une pause.",
+        "subtitle": "Tu as utilisé tes scans de tickets du jour. Tape-le, Pip le classe quand même."
+      }
+    },
     "recognized": "détecté",
     "removeDraft": "Retirer l'entrée",
     "retakePhoto": "Reprendre la photo",

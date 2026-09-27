@@ -38,10 +38,11 @@ function toDrafts(captureId: string, entries: ParsedEntry[], source: DraftEntry[
  */
 export async function captureDrafts(input: CaptureInput): Promise<DraftEntry[]> {
   const { mode, source, userId, text, photoUri, captureId, categories } = input;
+  // No AI before sign-up (onboarding runs without an account).
+  const canUseAi = mode === 'app' && !!userId;
 
   if (source === 'camera') {
-    // No AI before sign-up (onboarding runs without an account).
-    if (mode === 'onboarding' || !userId) throw new CaptureError('signed_out', 401);
+    if (!canUseAi) throw new CaptureError('signed_out', 401);
     if (!photoUri) throw new CaptureError('no_photo', 400);
     const id = randomUUID();
     const path = await uploadReceipt(userId, id, photoUri);
@@ -50,7 +51,7 @@ export async function captureDrafts(input: CaptureInput): Promise<DraftEntry[]> 
   }
 
   const local = () => parseEntries(text, categories, { source }).entries;
-  if (mode === 'onboarding' || !userId) return local();
+  if (!canUseAi) return local();
   try {
     const result = await parseCapture({
       source: source === 'voice' ? 'voice' : 'text',

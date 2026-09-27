@@ -120,4 +120,7 @@ values
   ('other', 'other', '{"en": "Other", "de": "Sonstiges", "es": "Otros", "fr": "Autres", "it": "Altro", "pt": "Outros", "pt-BR": "Outros"}'::jsonb,
    '{"en": [], "de": [], "es": [], "fr": [], "it": [], "pt": [], "pt-BR": []}'::jsonb,
    'dots-three', 220, null, false, 38)
-on conflict (key) do nothing;
+on conflict (key) do update set
+  group_key = excluded.group_key, names = excluded.names, keywords = excluded.keywords,
+  icon = excluded.icon, hue = excluded.hue, peer_average = excluded.peer_average,
+  suggested = excluded.suggested, sort_order = excluded.sort_order;

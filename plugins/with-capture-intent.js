@@ -12,7 +12,9 @@ const {
 
 const SOURCE_DIR = path.join(__dirname, 'capture-intent');
 const FILES = ['CaptureExpenseIntent.swift', 'AppIntents.xcstrings'];
-const LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'pt', 'pt-BR'];
+const LANGUAGES = fs
+  .readdirSync(path.join(__dirname, '..', 'src/shared/i18n/locales'))
+  .map((file) => path.basename(file, '.json'));
 
 function withIntentFiles(config) {
   return withDangerousMod(config, [

@@ -200,10 +200,6 @@
     "errorTipLight": "Più luce, niente riflessi",
     "errorTipSteady": "Tieni fermo l'iPhone",
     "errorTitle": "Non ha funzionato.",
-    "accountSubtitle": "Pip legge gli scontrini quando il tuo account è pronto. Per ora scrivi la tua prima voce.",
-    "accountTitle": "Gli scontrini tra poco.",
-    "limitSubtitle": "Hai usato le scansioni di scontrini di oggi. Scrivilo, Pip lo ordina comunque.",
-    "limitTitle": "Pip ha bisogno di una pausa.",
     "flip": "Cambia fotocamera",
     "guess": "{{name}}?",
     "incomeSaved": "Entrata\nsalvata",
@@ -216,6 +212,16 @@
     "placeholder": "es. 40€ spesa, 12€ Uber, caffè 3,50",
     "processingTitle": "Pip sta ordinando i tuoi movimenti.",
     "receipt": "Scontrino",
+    "receiptErrors": {
+      "account": {
+        "title": "Gli scontrini tra poco.",
+        "subtitle": "Pip legge gli scontrini quando il tuo account è pronto. Per ora scrivi la tua prima voce."
+      },
+      "limit": {
+        "title": "Pip ha bisogno di una pausa.",
+        "subtitle": "Hai usato le scansioni di scontrini di oggi. Scrivilo, Pip lo ordina comunque."
+      }
+    },
     "recognized": "riconosciuto",
     "removeDraft": "Rimuovi movimento",
     "retakePhoto": "Scatta un'altra foto",

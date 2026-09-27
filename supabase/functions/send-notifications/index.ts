@@ -23,23 +23,32 @@ interface Ticket {
   details?: { error?: string };
 }
 
+// Never throws: a network or Expo failure becomes an error ticket per
+// message, so claimed rows always end up sent, failed or skipped.
 async function sendBatch(messages: Record<string, unknown>[]): Promise<Ticket[]> {
   const token = Deno.env.get('EXPO_ACCESS_TOKEN');
-  const response = await fetch(EXPO_PUSH_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    body: JSON.stringify(messages),
-  });
-  const body = (await response.json()) as { data?: Ticket[]; errors?: { message: string }[] };
-  if (!response.ok || !body.data) {
-    const message = body.errors?.[0]?.message ?? `expo_${response.status}`;
-    return messages.map(() => ({ status: 'error', message }));
+  const failAll = (message: string) => messages.map((): Ticket => ({ status: 'error', message }));
+  try {
+    const response = await fetch(EXPO_PUSH_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify(messages),
+    });
+    const body = (await response.json().catch(() => ({}))) as {
+      data?: Ticket[];
+      errors?: { message: string }[];
+    };
+    if (!response.ok || !body.data) {
+      return failAll(body.errors?.[0]?.message ?? `expo_${response.status}`);
+    }
+    return body.data;
+  } catch (error) {
+    return failAll(error instanceof Error ? error.message.slice(0, 200) : 'expo_unreachable');
   }
-  return body.data;
 }
 
 serve(async (request) => {

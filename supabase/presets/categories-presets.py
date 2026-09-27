@@ -2,9 +2,13 @@
 
 Run `python3 supabase/presets/categories-presets.py` after editing the list;
 it rewrites supabase/migrations/20260926220502_categories_presets_data.sql.
+To change presets on a project that already has them, pass a new migration
+name (`... categories-presets.py 20261001120000_update_presets.sql`); rows
+are upserted by key.
 Keywords are lower-case words and merchants the parsers match per language.
 """
 import json
+import sys
 from pathlib import Path
 
 LOCALES = ['en', 'de', 'es', 'fr', 'it', 'pt', 'pt-BR']
@@ -419,6 +423,12 @@ insert into public.categories_presets
   (key, group_key, names, keywords, icon, hue, peer_average, suggested, sort_order)
 values
 """
-out = Path(__file__).resolve().parents[1] / 'migrations' / '20260926220502_categories_presets_data.sql'
-out.write_text(header + ',\n'.join(rows) + '\non conflict (key) do nothing;\n', encoding='utf-8')
+name = sys.argv[1] if len(sys.argv) > 1 else '20260926220502_categories_presets_data.sql'
+out = Path(__file__).resolve().parents[1] / 'migrations' / name
+upsert = '''on conflict (key) do update set
+  group_key = excluded.group_key, names = excluded.names, keywords = excluded.keywords,
+  icon = excluded.icon, hue = excluded.hue, peer_average = excluded.peer_average,
+  suggested = excluded.suggested, sort_order = excluded.sort_order;
+'''
+out.write_text(header + ',\n'.join(rows) + '\n' + upsert, encoding='utf-8')
 print(f'{len(P)} presets -> {out.name}')

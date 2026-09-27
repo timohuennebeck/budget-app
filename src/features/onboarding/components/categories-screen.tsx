@@ -24,7 +24,10 @@ export function CategoriesScreen() {
   const presets = usePresetDisplays();
   const customCategories = useOnboardingStore((state) => state.customCategories);
   const toggleCategory = useOnboardingStore((state) => state.toggleCategory);
-  const toggle = (id: string) => toggleCategory(id, selectedIds);
+  // Before the presets load, the suggested selection isn't known yet.
+  const toggle = (id: string) => {
+    if (presets.length) toggleCategory(id, selectedIds);
+  };
 
   const options = [
     ...presets.map(({ id, name }) => ({ id, name })),

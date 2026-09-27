@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 
 import { useUserId } from '@/features/auth/lib/auth-provider';
-import { usePushNotifications } from '@/features/notifications/hooks/use-push-registration';
+import { usePushNotifications } from '@/features/notifications/hooks/use-push-notifications';
 import { useSyncTimeZone } from '@/features/profile/hooks/use-profile';
 
 export const unstable_settings = { anchor: '(tabs)' };

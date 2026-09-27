@@ -1,6 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Linking, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -8,6 +8,7 @@ import { useUserId } from '@/features/auth/lib/auth-provider';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { StatusHero } from '@/shared/components/status-hero';
+import { cn } from '@/shared/lib/cn';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
@@ -38,11 +39,20 @@ export function VoiceScreen({ mode }: { mode: CaptureMode }) {
   const voice = useLiveTranscription(signedIn);
   const preview = useParsePreview(voice.transcript, mode);
   const typeInstead = () => router.dismissTo(captureHref(mode, 'index'));
+  // stop() waits for the last words; the user may close the screen meanwhile.
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
 
   const finish = async () => {
     if (voice.status === 'stopping') return;
     if (voice.status !== 'listening') return typeInstead();
     const { text, captureId } = await voice.stop();
+    if (!mounted.current) return;
     setText(text, captureId);
     if (text.trim()) router.replace(captureHref(mode, 'processing', { source: 'voice' }));
     else typeInstead();
@@ -76,11 +86,10 @@ export function VoiceScreen({ mode }: { mode: CaptureMode }) {
         trailing={
           <View className="flex-row items-center gap-2">
             <View
-              className={
-                voice.status === 'connecting'
-                  ? 'size-2 rounded-full bg-faint'
-                  : 'size-2 rounded-full bg-primary'
-              }
+              className={cn(
+                'size-2 rounded-full',
+                voice.status === 'connecting' ? 'bg-faint' : 'bg-primary',
+              )}
             />
             <Text size={15} weight="medium" className="text-primary">
               {voice.status === 'connecting' ? t('capture.connecting') : t('capture.listening')}
