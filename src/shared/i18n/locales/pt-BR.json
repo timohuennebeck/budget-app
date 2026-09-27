@@ -370,16 +370,18 @@
     "heroOpen_one": "Aberto · falta {{count}} dia",
     "heroOpen_other": "Aberto · faltam {{count}} dias",
     "heroOpenTitle": "Últimos 7 dias, quanto foi?",
-    "heroLockedTitle": "A semana ainda está rolando",
+    "heroLockedTitle": "Registre tudo até domingo",
     "start": "Começar",
     "rowDetail": "{{guess}} estimado · {{actual}} real",
     "lastMonths": "Últimos 3 meses",
     "noResults": "Nenhum check-in encontrado",
-    "nextOn": "O próximo: {{date}}",
-    "from": "A partir de {{date}}",
     "heroMissedTitle": "Você não estimou esta semana",
     "allMonths": "Todos os meses",
-    "notOpenYet": "Ainda não abriu"
+    "notOpenYet": "Ainda não abriu",
+    "opensIn": "Abre em {{time}}",
+    "nextIn": "O próximo em {{time}}",
+    "countdownDays": "{{days}} d {{hours}} h",
+    "countdownHours": "{{hours}} h {{minutes}} min"
   },
   "profile": {
     "account": "Conta",

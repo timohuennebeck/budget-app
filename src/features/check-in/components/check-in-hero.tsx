@@ -3,7 +3,8 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { GradientPanel } from '@/shared/components/gradient-panel';
-import { addDays, formatShortDate, formatTime, formatWeekRange } from '@/shared/lib/dates';
+import { useNow } from '@/shared/hooks/use-now';
+import { addDays, formatWeekRange } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { colors, shadows } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
@@ -11,6 +12,7 @@ import { Text } from '@/shared/ui/text';
 
 import { useCheckInState } from '../hooks/use-check-in-state';
 import { accuracyPercent } from '../lib/check-in-window';
+import { formatCountdown } from '../lib/countdown';
 
 /** A small card on two tilted ones: "???" until done, then the result. */
 function Paper({ value, range }: { value: string; range: string }) {
@@ -42,8 +44,10 @@ function Paper({ value, range }: { value: string; range: string }) {
 // in every state; only the texts change, and the button works while open.
 export function CheckInHero({ currency }: { currency: string }) {
   const { t } = useTranslation();
-  const { status, window, current, daysLeft } = useCheckInState();
-  const at = (date: Date) => `${formatShortDate(date)}, ${formatTime(date)}`;
+  // Ticks every second so the countdown runs and the card opens on time.
+  const now = useNow();
+  const { status, window, current, daysLeft } = useCheckInState(now);
+  const until = (date: Date) => formatCountdown(date.getTime() - now.getTime());
   // After this week's check-in the next one opens a week later.
   const nextOpen = window.isOpen ? addDays(window.opensAt, 7) : window.opensAt;
   const percent = current ? accuracyPercent(current) : null;
@@ -68,20 +72,20 @@ export function CheckInHero({ currency }: { currency: string }) {
                     guess: money(Number(current.guess)),
                     actual: money(Number(current.actual ?? 0)),
                   }),
-            button: t('checkIn.nextOn', { date: at(nextOpen) }),
+            button: t('checkIn.nextIn', { time: until(nextOpen) }),
           }
         : status === 'missed'
           ? {
               value: '???',
               eyebrow: t('checkIn.missedTitle'),
               title: t('checkIn.heroMissedTitle'),
-              button: t('checkIn.nextOn', { date: at(nextOpen) }),
+              button: t('checkIn.nextIn', { time: until(nextOpen) }),
             }
           : {
               value: '???',
               eyebrow: t('checkIn.notOpenYet'),
               title: t('checkIn.heroLockedTitle'),
-              button: t('checkIn.from', { date: at(window.opensAt) }),
+              button: t('checkIn.opensIn', { time: until(window.opensAt) }),
             };
 
   return (

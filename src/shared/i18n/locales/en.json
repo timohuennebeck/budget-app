@@ -361,16 +361,18 @@
     "heroOpen_one": "Open · {{count}} day left",
     "heroOpen_other": "Open · {{count}} days left",
     "heroOpenTitle": "Last 7 days, how much was it?",
-    "heroLockedTitle": "The week is still running",
+    "heroLockedTitle": "Log everything until Sunday",
     "start": "Start",
     "rowDetail": "{{guess}} guessed · {{actual}} actual",
     "lastMonths": "Last 3 months",
     "noResults": "No check-in found",
-    "nextOn": "Next on {{date}}",
-    "from": "From {{date}}",
     "heroMissedTitle": "You didn’t guess this week",
     "allMonths": "All months",
-    "notOpenYet": "Not open yet"
+    "notOpenYet": "Not open yet",
+    "opensIn": "Opens in {{time}}",
+    "nextIn": "Next in {{time}}",
+    "countdownDays": "{{days}}d {{hours}}h",
+    "countdownHours": "{{hours}}h {{minutes}}m"
   },
   "profile": {
     "account": "Account",
