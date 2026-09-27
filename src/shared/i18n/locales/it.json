@@ -296,7 +296,9 @@
     "noResults": "Nessun movimento per “{{query}}”. Prova un'altra parola.",
     "noResultsTitle": "Nessun movimento\ntrovato",
     "title": "Movimenti",
-    "emptyRange": "Nessuna voce in questo periodo."
+    "chooseMonth": "Scegli mese",
+    "emptyMonth": "Ancora nessun movimento questo mese.",
+    "editTitle": "Modifica nome"
   },
   "overview": {
     "daysLeft_many": "· {{count}} giorni",
@@ -385,7 +387,6 @@
     "allMonths": "Tutti i mesi",
     "notOpenYet": "Non ancora aperto",
     "opensIn": "Tra {{time}}",
-    "nextIn": "Il prossimo tra {{time}}",
     "countdownDays": "{{days}} g {{hours}} h",
     "countdownHours": "{{hours}} h {{minutes}} min"
   },
@@ -481,15 +482,5 @@
     "title": "Cosa è entrato?",
     "subtitle": "Stipendio, un rimborso o qualcosa che hai venduto. Aggiungi quello che hai ricevuto.",
     "save": "Salva entrata"
-  },
-  "range": {
-    "title": "Scegli periodo",
-    "from": "Dal",
-    "till": "Al",
-    "thisMonth": "Questo mese",
-    "lastMonth": "Mese scorso",
-    "last30Days": "Ultimi 30 giorni",
-    "previousMonth": "Mese precedente",
-    "nextMonth": "Mese successivo"
   }
 }

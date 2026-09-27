@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -68,6 +68,8 @@ export function EntryEditor({
 }: EntryEditorProps) {
   const { t } = useTranslation();
   const dateSheet = useSheet();
+  const titleInput = useRef<TextInput>(null);
+  const [titleWidth, setTitleWidth] = useState(0);
   // Typed text while editing; otherwise the formatted amount.
   const [amountDraft, setAmountDraft] = useState<string | null>(null);
   const visual = entryVisual(value.kind, category);
@@ -85,15 +87,37 @@ export function EntryEditor({
     <View>
       <View className="mt-[26px] items-center">
         <CategoryAvatar icon={visual.icon} hue={visual.hue} size={56} />
-        <TextInput
-          value={value.title}
-          onChangeText={(title) => onChange({ title })}
-          placeholder={t('entries.titlePlaceholder')}
-          placeholderTextColor={colors.faint}
-          selectionColor={colors.primary}
-          className="mt-3 min-w-[120px] text-center font-inter-semibold text-[20px] text-ink"
-          style={{ letterSpacing: -0.4, padding: 0 }}
-        />
+        {/* The pencil shows the name can be edited; tapping it focuses the field.
+            The field is sized to its text (measured by a hidden copy), so the
+            pencil sits right after the name. */}
+        <Pressable
+          haptic="none"
+          accessibilityLabel={t('entries.editTitle')}
+          onPress={() => titleInput.current?.focus()}
+          className="mt-3 max-w-full flex-row items-center gap-1.5 px-6">
+          <Text
+            size={20}
+            weight="semibold"
+            tracking={-0.02}
+            numberOfLines={1}
+            onLayout={(event) => setTitleWidth(event.nativeEvent.layout.width)}
+            className="absolute opacity-0">
+            {value.title || t('entries.titlePlaceholder')}
+          </Text>
+          {/* Mirrors the pencil so the name itself stays centred. */}
+          <View className="w-4" />
+          <TextInput
+            ref={titleInput}
+            value={value.title}
+            onChangeText={(title) => onChange({ title })}
+            placeholder={t('entries.titlePlaceholder')}
+            placeholderTextColor={colors.faint}
+            selectionColor={colors.primary}
+            className="text-center font-inter-semibold text-[20px] text-ink"
+            style={{ letterSpacing: -0.4, padding: 0, width: titleWidth + 4, maxWidth: '100%' }}
+          />
+          <Icon name="pencil-simple" size={16} color={colors.subtle} />
+        </Pressable>
         <View className="mt-2 flex-row items-baseline">
           <Text size={52} weight="bold" tracking={-0.05} leading={1}>
             {value.kind === 'income' ? '+' : '−'}

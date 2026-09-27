@@ -296,7 +296,9 @@
     "noResults": "Nenhum registro para “{{query}}”. Tente outro termo.",
     "noResultsTitle": "Nenhum registro\nencontrado",
     "title": "Registros",
-    "emptyRange": "Não há lançamentos neste período."
+    "chooseMonth": "Escolher mês",
+    "emptyMonth": "Ainda não há registros neste mês.",
+    "editTitle": "Editar nome"
   },
   "overview": {
     "daysLeft_many": "· {{count}} dias",
@@ -385,7 +387,6 @@
     "allMonths": "Todos os meses",
     "notOpenYet": "Ainda não abriu",
     "opensIn": "Em {{time}}",
-    "nextIn": "O próximo em {{time}}",
     "countdownDays": "{{days}} d {{hours}} h",
     "countdownHours": "{{hours}} h {{minutes}} min"
   },
@@ -481,15 +482,5 @@
     "title": "O que entrou?",
     "subtitle": "Salário, um reembolso ou algo que você vendeu. Adicione o que recebeu.",
     "save": "Salvar receita"
-  },
-  "range": {
-    "title": "Escolher período",
-    "from": "De",
-    "till": "Até",
-    "thisMonth": "Este mês",
-    "lastMonth": "Mês passado",
-    "last30Days": "Últimos 30 dias",
-    "previousMonth": "Mês anterior",
-    "nextMonth": "Próximo mês"
   }
 }

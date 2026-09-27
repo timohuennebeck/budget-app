@@ -4,11 +4,12 @@ import { ScrollView, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { usePeriodStore } from '@/features/entries/data/period-store';
+import { MonthSheet } from '@/features/entries/components/month-sheet';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
+import { useSheet } from '@/shared/components/sheet';
 import { useAppConfig } from '@/shared/hooks/use-app-config';
-import { formatMonth, formatRangeLabel, formatWeekRange } from '@/shared/lib/dates';
+import { formatMonth, formatRangeLabel, formatWeekRange, monthRange } from '@/shared/lib/dates';
 import { huePalette } from '@/shared/lib/color';
 import { formatMoney } from '@/shared/lib/money';
 import { tabListProps } from '@/shared/lib/tab-insets';
@@ -87,11 +88,8 @@ export function CheckInsScreen() {
   const layout = tabListProps(insets.top, 4);
   const currency = useCurrency();
   const { data: checkIns = [] } = useCheckIns();
-  // A range from the period page wins over the chips; a chip clears it.
-  const [chip, setChip] = useState<Exclude<CheckInPeriod, object>>('all');
-  const range = usePeriodStore((state) => state.ranges['check-ins']);
-  const setRange = usePeriodStore((state) => state.setRange);
-  const period: CheckInPeriod = range ?? chip;
+  const [period, setPeriod] = useState<CheckInPeriod>('all');
+  const monthSheet = useSheet();
 
   const money = (value: number) => formatMoney(value, { currency, compact: true });
   const detail = (checkIn: CheckIn) =>
@@ -116,16 +114,14 @@ export function CheckInsScreen() {
   return (
     <View className="flex-1 bg-canvas">
       <GradientBackground name="sky" height={420} />
-      {/* Period, title, this week's card and chips stay put; only the
+      {/* Month, title, this week's card and chips stay put; only the
           history scrolls. */}
       <View style={{ paddingTop: layout.headerPaddingTop, paddingHorizontal: 16 }}>
         <View className="h-10 flex-row items-center px-1">
           <Pressable
-            onPress={() =>
-              router.push({ pathname: '/select-period', params: { target: 'check-ins' } })
-            }
+            onPress={monthSheet.present}
             haptic="none"
-            accessibilityLabel={t('range.title')}
+            accessibilityLabel={t('entries.chooseMonth')}
             className="flex-row items-center gap-2 rounded-full bg-surface px-3.5 py-[9px]"
             style={shadows.card}>
             <Text size={15} weight="semibold" tracking={-0.01} className="capitalize">
@@ -164,10 +160,7 @@ export function CheckInsScreen() {
                   label={option.label}
                   size="sm"
                   variant={period === option.value ? 'dark' : 'outline'}
-                  onPress={() => {
-                    setChip(option.value);
-                    setRange('check-ins', null);
-                  }}
+                  onPress={() => setPeriod(option.value)}
                 />
               ))}
             </ScrollView>
@@ -220,6 +213,14 @@ export function CheckInsScreen() {
           </View>
         )}
       </ScrollView>
+      <MonthSheet
+        {...monthSheet.controls}
+        selected={typeof period === 'object' ? period.start : new Date()}
+        onSelect={(month) => {
+          setPeriod(monthRange(month));
+          monthSheet.dismiss();
+        }}
+      />
     </View>
   );
 }

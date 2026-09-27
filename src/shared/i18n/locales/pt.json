@@ -296,7 +296,9 @@
     "noResults": "Nenhum registo para «{{query}}». Experimenta outro termo.",
     "noResultsTitle": "Nenhum registo\nencontrado",
     "title": "Registos",
-    "emptyRange": "Não há movimentos neste período."
+    "chooseMonth": "Escolher mês",
+    "emptyMonth": "Ainda não há registos este mês.",
+    "editTitle": "Editar nome"
   },
   "overview": {
     "daysLeft_many": "· {{count}} dias",
@@ -385,7 +387,6 @@
     "allMonths": "Todos os meses",
     "notOpenYet": "Ainda não abriu",
     "opensIn": "Daqui a {{time}}",
-    "nextIn": "O próximo daqui a {{time}}",
     "countdownDays": "{{days}} d {{hours}} h",
     "countdownHours": "{{hours}} h {{minutes}} min"
   },
@@ -481,15 +482,5 @@
     "title": "O que entrou?",
     "subtitle": "Salário, um reembolso ou algo que vendeste. Adiciona o que recebeste.",
     "save": "Guardar rendimento"
-  },
-  "range": {
-    "title": "Escolher período",
-    "from": "De",
-    "till": "Até",
-    "thisMonth": "Este mês",
-    "lastMonth": "Mês passado",
-    "last30Days": "Últimos 30 dias",
-    "previousMonth": "Mês anterior",
-    "nextMonth": "Mês seguinte"
   }
 }

@@ -9,6 +9,7 @@ import { useCategoryLookup } from '@/features/categories/hooks/use-category-look
 import { categoryIdOf } from '@/features/categories/lib/category-ref';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
+import { useSheet } from '@/shared/components/sheet';
 import { formatRangeLabel, monthRange } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { tabListProps } from '@/shared/lib/tab-insets';
@@ -19,14 +20,14 @@ import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 
-import { usePeriodStore } from '../data/period-store';
 import { useEntries } from '../hooks/use-entries';
 import { countByCategory, groupByDay, netTotal } from '../lib/entry-stats';
 import { EmptySearch } from './empty-search';
 import { EntryList } from './entry-list';
+import { MonthSheet } from './month-sheet';
 
-// Einträge (2t): entries of a period (this month by default) grouped by day,
-// with search, category filter chips and a from–till picker.
+// Einträge (2t): a month of entries grouped by day, with search, category
+// filter chips and a month picker.
 export function EntriesScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
@@ -46,8 +47,9 @@ export function EntriesScreen() {
     }, [search]),
   );
 
-  // This month unless a period was picked on the period page.
-  const range = usePeriodStore((state) => state.ranges.entries) ?? monthRange(new Date());
+  const monthSheet = useSheet();
+  const [month, setMonth] = useState(() => new Date());
+  const range = monthRange(month);
   const [query, setQuery] = useState('');
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const { data: entries = [] } = useEntries(range);
@@ -67,7 +69,7 @@ export function EntriesScreen() {
   }, [entries, query, categoryId, lookup]);
 
   const groups = useMemo(() => groupByDay(filtered), [filtered]);
-  // Chips only for categories this period actually has, the most used first.
+  // Chips only for categories this month actually has, the most used first.
   const chips = useMemo(() => {
     const counts = countByCategory(entries);
     return categories
@@ -79,15 +81,13 @@ export function EntriesScreen() {
   return (
     <View className="flex-1 bg-canvas">
       <GradientBackground name="sky" height={420} />
-      {/* Period, title, search and chips stay put; only the list scrolls. */}
+      {/* Month, title, search and chips stay put; only the list scrolls. */}
       <View style={{ paddingTop: layout.headerPaddingTop, paddingHorizontal: 16 }}>
         <View className="h-10 flex-row items-center px-1">
           <Pressable
-            onPress={() =>
-              router.push({ pathname: '/select-period', params: { target: 'entries' } })
-            }
+            onPress={monthSheet.present}
             haptic="none"
-            accessibilityLabel={t('range.title')}
+            accessibilityLabel={t('entries.chooseMonth')}
             className="flex-row items-center gap-2 rounded-full bg-surface px-3.5 py-[9px]"
             style={shadows.card}>
             <Text size={15} weight="semibold" tracking={-0.01} className="capitalize">
@@ -164,11 +164,19 @@ export function EntriesScreen() {
             <EntryList groups={groups} categories={lookup} currency={currency} />
           ) : (
             <Text variant="body" className="px-1 pt-6 text-center">
-              {t('entries.emptyRange')}
+              {t('entries.emptyMonth')}
             </Text>
           )}
         </ScrollView>
       )}
+      <MonthSheet
+        {...monthSheet.controls}
+        selected={month}
+        onSelect={(next) => {
+          setMonth(next);
+          monthSheet.dismiss();
+        }}
+      />
     </View>
   );
 }

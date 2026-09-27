@@ -289,7 +289,9 @@
     "noResults": "No entries for “{{query}}”. Try another term.",
     "noResultsTitle": "No entry\nfound",
     "title": "Entries",
-    "emptyRange": "There are no entries in this period."
+    "chooseMonth": "Choose month",
+    "emptyMonth": "No entries this month yet.",
+    "editTitle": "Edit name"
   },
   "overview": {
     "emptySubtitle": "Log what you spent. Pip files it under the right category.",
@@ -376,7 +378,6 @@
     "allMonths": "All months",
     "notOpenYet": "Not open yet",
     "opensIn": "In {{time}}",
-    "nextIn": "Next in {{time}}",
     "countdownDays": "{{days}}d {{hours}}h",
     "countdownHours": "{{hours}}h {{minutes}}m"
   },
@@ -471,15 +472,5 @@
     "title": "What came in?",
     "subtitle": "Salary, a refund or something you sold. Add what you received.",
     "save": "Save income"
-  },
-  "range": {
-    "title": "Choose period",
-    "from": "From",
-    "till": "To",
-    "thisMonth": "This month",
-    "lastMonth": "Last month",
-    "last30Days": "Last 30 days",
-    "previousMonth": "Previous month",
-    "nextMonth": "Next month"
   }
 }

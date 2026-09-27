@@ -296,7 +296,9 @@
     "noResults": "Aucune entrée pour « {{query}} ». Essaie un autre mot.",
     "noResultsTitle": "Aucune entrée\ntrouvée",
     "title": "Entrées",
-    "emptyRange": "Aucune dépense sur cette période."
+    "chooseMonth": "Choisir le mois",
+    "emptyMonth": "Aucune entrée pour ce mois pour l'instant.",
+    "editTitle": "Modifier le nom"
   },
   "overview": {
     "daysLeft_many": "· {{count}} jours",
@@ -385,7 +387,6 @@
     "allMonths": "Tous les mois",
     "notOpenYet": "Pas encore ouvert",
     "opensIn": "Dans {{time}}",
-    "nextIn": "Prochain dans {{time}}",
     "countdownDays": "{{days}} j {{hours}} h",
     "countdownHours": "{{hours}} h {{minutes}} min"
   },
@@ -481,15 +482,5 @@
     "title": "Qu’est-ce qui est entré ?",
     "subtitle": "Salaire, remboursement ou une vente. Ajoute ce que tu as reçu.",
     "save": "Enregistrer le revenu"
-  },
-  "range": {
-    "title": "Choisir la période",
-    "from": "Du",
-    "till": "Au",
-    "thisMonth": "Ce mois-ci",
-    "lastMonth": "Mois dernier",
-    "last30Days": "30 derniers jours",
-    "previousMonth": "Mois précédent",
-    "nextMonth": "Mois suivant"
   }
 }

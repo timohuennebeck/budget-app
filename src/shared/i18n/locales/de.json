@@ -289,7 +289,9 @@
     "noResults": "Keine Einträge zu „{{query}}“. Probier einen anderen Begriff.",
     "noResultsTitle": "Keinen Eintrag\ngefunden",
     "title": "Einträge",
-    "emptyRange": "In diesem Zeitraum gibt es keine Einträge."
+    "chooseMonth": "Monat wählen",
+    "emptyMonth": "In diesem Monat gibt es noch keine Einträge.",
+    "editTitle": "Namen bearbeiten"
   },
   "overview": {
     "emptySubtitle": "Erfasse was du ausgegeben hast. Pip ordnet es der passenden Kategorie zu.",
@@ -376,7 +378,6 @@
     "allMonths": "Alle Monate",
     "notOpenYet": "Noch nicht offen",
     "opensIn": "In {{time}}",
-    "nextIn": "Nächster in {{time}}",
     "countdownDays": "{{days}} T {{hours}} Std",
     "countdownHours": "{{hours}} Std {{minutes}} Min"
   },
@@ -471,15 +472,5 @@
     "title": "Was kam rein?",
     "subtitle": "Gehalt, Erstattung oder ein Verkauf. Trag ein, was du bekommen hast.",
     "save": "Einnahme speichern"
-  },
-  "range": {
-    "title": "Zeitraum wählen",
-    "from": "Von",
-    "till": "Bis",
-    "thisMonth": "Dieser Monat",
-    "lastMonth": "Letzter Monat",
-    "last30Days": "Letzte 30 Tage",
-    "previousMonth": "Vorheriger Monat",
-    "nextMonth": "Nächster Monat"
   }
 }

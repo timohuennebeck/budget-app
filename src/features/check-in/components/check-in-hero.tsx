@@ -72,14 +72,14 @@ export function CheckInHero({ currency }: { currency: string }) {
                     guess: money(Number(current.guess)),
                     actual: money(Number(current.actual ?? 0)),
                   }),
-            button: t('checkIn.nextIn', { time: until(nextOpen) }),
+            button: t('checkIn.opensIn', { time: until(nextOpen) }),
           }
         : status === 'missed'
           ? {
               value: '???',
               eyebrow: t('checkIn.missedTitle'),
               title: t('checkIn.heroMissedTitle'),
-              button: t('checkIn.nextIn', { time: until(nextOpen) }),
+              button: t('checkIn.opensIn', { time: until(nextOpen) }),
             }
           : {
               value: '???',
