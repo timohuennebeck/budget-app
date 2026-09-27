@@ -290,8 +290,7 @@
     "noResultsTitle": "Keinen Eintrag\ngefunden",
     "title": "Einträge",
     "chooseMonth": "Monat wählen",
-    "emptyMonth": "In diesem Monat gibt es noch keine Einträge.",
-    "editTitle": "Namen bearbeiten"
+    "emptyMonth": "In diesem Monat gibt es noch keine Einträge."
   },
   "overview": {
     "emptySubtitle": "Erfasse was du ausgegeben hast. Pip ordnet es der passenden Kategorie zu.",

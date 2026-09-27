@@ -297,8 +297,7 @@
     "noResultsTitle": "Nessun movimento\ntrovato",
     "title": "Movimenti",
     "chooseMonth": "Scegli mese",
-    "emptyMonth": "Ancora nessun movimento questo mese.",
-    "editTitle": "Modifica nome"
+    "emptyMonth": "Ancora nessun movimento questo mese."
   },
   "overview": {
     "daysLeft_many": "· {{count}} giorni",

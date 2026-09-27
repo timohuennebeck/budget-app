@@ -297,8 +297,7 @@
     "noResultsTitle": "Aucune entrée\ntrouvée",
     "title": "Entrées",
     "chooseMonth": "Choisir le mois",
-    "emptyMonth": "Aucune entrée pour ce mois pour l'instant.",
-    "editTitle": "Modifier le nom"
+    "emptyMonth": "Aucune entrée pour ce mois pour l'instant."
   },
   "overview": {
     "daysLeft_many": "· {{count}} jours",

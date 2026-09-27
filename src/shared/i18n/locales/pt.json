@@ -297,8 +297,7 @@
     "noResultsTitle": "Nenhum registo\nencontrado",
     "title": "Registos",
     "chooseMonth": "Escolher mês",
-    "emptyMonth": "Ainda não há registos este mês.",
-    "editTitle": "Editar nome"
+    "emptyMonth": "Ainda não há registos este mês."
   },
   "overview": {
     "daysLeft_many": "· {{count}} dias",

@@ -290,8 +290,7 @@
     "noResultsTitle": "No entry\nfound",
     "title": "Entries",
     "chooseMonth": "Choose month",
-    "emptyMonth": "No entries this month yet.",
-    "editTitle": "Edit name"
+    "emptyMonth": "No entries this month yet."
   },
   "overview": {
     "emptySubtitle": "Log what you spent. Pip files it under the right category.",
