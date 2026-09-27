@@ -89,24 +89,30 @@ export function CheckInHero({ currency }: { currency: string }) {
             };
 
   return (
-    <GradientPanel style={{ marginTop: 18, padding: 20, borderWidth: 1, borderColor: colors.line }}>
-      <Paper value={content.value} range={formatWeekRange(window.week)} />
-      <Text
-        size={12.5}
-        weight="semibold"
-        tracking={0.08}
-        className="mt-4 text-center text-muted-soft">
-        {content.eyebrow.toUpperCase()}
-      </Text>
-      <Text size={20} weight="semibold" tracking={-0.02} className="mt-1.5 text-center">
-        {content.title}
-      </Text>
-      <Button
-        className="mt-[18px]"
-        label={content.button}
-        disabled={status !== 'open'}
-        onPress={() => router.push('/check-in')}
-      />
-    </GradientPanel>
+    // The border sits on a wrapper: iOS draws the gradient over a border set
+    // on the gradient view itself.
+    <View
+      className="mt-[18px] overflow-hidden rounded-[28px] border"
+      style={{ borderColor: colors.line }}>
+      <GradientPanel style={{ marginTop: 0, borderRadius: 0, padding: 20 }}>
+        <Paper value={content.value} range={formatWeekRange(window.week)} />
+        <Text
+          size={12.5}
+          weight="semibold"
+          tracking={0.08}
+          className="mt-4 text-center text-muted-soft">
+          {content.eyebrow.toUpperCase()}
+        </Text>
+        <Text size={20} weight="semibold" tracking={-0.02} className="mt-1.5 text-center">
+          {content.title}
+        </Text>
+        <Button
+          className="mt-[18px]"
+          label={content.button}
+          disabled={status !== 'open'}
+          onPress={() => router.push('/check-in')}
+        />
+      </GradientPanel>
+    </View>
   );
 }

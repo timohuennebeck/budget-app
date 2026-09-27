@@ -51,6 +51,9 @@ export function Screen({
     <ScrollView
       className="flex-1"
       scrollEnabled={scroll}
+      // The native tabs miss this nested ScrollView, so it clears the tab
+      // bar itself; its frame starts below the status bar already.
+      contentInsetAdjustmentBehavior={tabBar ? 'automatic' : 'never'}
       contentContainerClassName="grow"
       contentContainerStyle={[padding, { paddingBottom: footer ? (scroll ? 16 : 0) : bottom }]}
       keyboardShouldPersistTaps="handled"
