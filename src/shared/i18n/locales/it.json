@@ -348,7 +348,7 @@
     "trendNoLimit": "A questo ritmo finirai il mese a <b>{{amount}}</b>.",
     "noEntriesYet": "Ancora nessuna voce questo mese.",
     "untilDay": "Fino al {{date}}",
-    "onDay": "{{amount}} quel giorno"
+    "onDay": "<b>{{amount}}</b> quel giorno"
   },
   "checkIn": {
     "accuracy": "Preciso al {{percent}}%",

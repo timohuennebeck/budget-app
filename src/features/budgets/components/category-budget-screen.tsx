@@ -97,7 +97,12 @@ export function CategoryBudgetScreen({ id }: { id: string }) {
         />
         {scrub !== null ? (
           <Text size={15} className="mt-2.5 text-muted">
-            {t('budgets.onDay', { amount: money(dayAmount(scrub)) })}
+            {/* With cents and in bold, like the amount above: "0,00 €", not "0 €". */}
+            <Trans
+              i18nKey="budgets.onDay"
+              values={{ amount: formatMoney(dayAmount(scrub), { currency }) }}
+              components={{ b: <Text size={15} weight="semibold" className="text-ink" /> }}
+            />
           </Text>
         ) : (
           <Text size={15} className="mt-2.5 text-muted">
