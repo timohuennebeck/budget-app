@@ -18,7 +18,6 @@ export const colors = {
   canvas: '#F7F9FC',
   white: '#FFFFFF',
   calendarRed: '#DB4241',
-  danger: '#C92F33',
 } as const;
 
 export const gradients = {
