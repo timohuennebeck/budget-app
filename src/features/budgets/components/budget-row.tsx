@@ -12,6 +12,8 @@ import { Text } from '@/shared/ui/text';
 import type { BudgetListRow } from '../lib/budget-list';
 
 interface BudgetRowProps extends BudgetListRow {
+  /** Entries in the month, shown for categories without a limit */
+  count: number;
   currency: string;
   /** Greyed: nothing spent and no limit this month */
   idle?: boolean;
@@ -26,6 +28,7 @@ export function BudgetRow({
   category,
   spent,
   limit,
+  count,
   currency,
   idle,
   onOpen,
@@ -38,7 +41,9 @@ export function BudgetRow({
     ? `${money(spent - limit)} ${t('budgets.over', { limit: money(limit) })}`
     : limit !== null
       ? `${money(limit - spent)} ${t('budgets.freeOf', { limit: money(limit) })}`
-      : null;
+      : count > 0
+        ? t('entries.count', { count })
+        : null;
 
   return (
     <Pressable
@@ -55,7 +60,6 @@ export function BudgetRow({
             {money(spent)}
           </Text>
         </View>
-        {/* Rows without a limit sit under "Ohne Limit": nothing more to say. */}
         {detail ? (
           <Text
             size={13.5}

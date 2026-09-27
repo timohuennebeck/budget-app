@@ -322,7 +322,7 @@
     "monthlyTitle": "How much do you want\nto spend per month?",
     "moreCategories": "More categories",
     "noLimit": "No limit",
-    "withoutLimit": "No limit",
+    "withoutLimit": "Categories without a limit",
     "over": "over · of {{limit}}",
     "peerAverage": "Avg. {{amount}} for people your age",
     "showAll": "Show {{count}} more categories",

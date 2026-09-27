@@ -10,7 +10,7 @@ import {
   useSetCategoryLimit,
 } from '@/features/categories/hooks/use-category-limits';
 import { useEntries, useRecentEntries } from '@/features/entries/hooks/use-entries';
-import { spendByCategory } from '@/features/entries/lib/entry-stats';
+import { countByCategory, spendByCategory } from '@/features/entries/lib/entry-stats';
 import { useCurrency, useProfile, useUpdateProfile } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
 import { MonthSheet } from '@/shared/components/month-sheet';
@@ -65,6 +65,7 @@ export function BudgetsScreen() {
     [categories],
   );
   const { budgets, unlimited, idle } = budgetList(expenses, limits, spendByCategory(entries));
+  const counts = countByCategory(entries.filter((entry) => entry.kind === 'expense'));
   const [showIdle, setShowIdle] = useState(false);
   const summary = profile ? summarizeBudget(profile, expenses, limits, entries) : null;
   const recentTotals = spendByCategory(recent);
@@ -92,6 +93,7 @@ export function BudgetsScreen() {
           <BudgetRow
             key={row.category.id}
             {...row}
+            count={counts.get(row.category.id) ?? 0}
             currency={currency}
             idle={faded}
             onOpen={() => open(row.category.id)}
