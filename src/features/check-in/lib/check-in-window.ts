@@ -1,4 +1,4 @@
-import { addDays, type DateRange, weekRange } from '@/shared/lib/dates';
+import { addDays, type DateRange, startOfDay, weekRange } from '@/shared/lib/dates';
 
 import type { CheckIn } from '../data/check-ins-api';
 
@@ -31,6 +31,17 @@ export function currentCheckInWindow(now = new Date()): CheckInWindow {
   if (now >= previous.opensAt && now < previous.closesAt) return { ...previous, isOpen: true };
   const current = windowWeeksAgo(now, 0);
   return { ...current, isOpen: now >= current.opensAt };
+}
+
+/** A new user's first check-in opens at least this many days after signup. */
+const FIRST_CHECK_IN_AFTER_DAYS = 7;
+
+/** The first window a user gets: the one opening a week or more after signup. */
+export function firstCheckInWindow(signedUpAt: Date): CheckInWindow {
+  const earliest = addDays(startOfDay(signedUpAt), FIRST_CHECK_IN_AFTER_DAYS);
+  // Windows open on Sunday evening, so the week holding `earliest` always
+  // opens on or after it.
+  return { ...windowWeeksAgo(earliest, 0), isOpen: false };
 }
 
 /** The most recent window that has already closed. */

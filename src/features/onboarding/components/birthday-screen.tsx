@@ -15,14 +15,18 @@ import { ONBOARDING_STEPS } from '../lib/steps';
 import { OnboardingHeader } from './onboarding-header';
 import { StepIntro } from './step-intro';
 
-const DEFAULT_BIRTH_DATE = new Date(1995, 0, 1);
+// Starts on today's date, 18 years back.
+const defaultBirthDate = () => {
+  const today = new Date();
+  return new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+};
 
 export function BirthdayScreen() {
   const { t } = useTranslation();
   const stored = useOnboardingStore((state) => state.birthDate);
   const firstName = useOnboardingStore((state) => state.firstName);
   const update = useOnboardingStore((state) => state.update);
-  const [date, setDate] = useState(stored ? fromISODate(stored) : DEFAULT_BIRTH_DATE);
+  const [date, setDate] = useState(() => (stored ? fromISODate(stored) : defaultBirthDate()));
 
   return (
     <Screen
