@@ -14,7 +14,7 @@ export default function TabsLayout() {
       <NativeTabs.Trigger name="overview">
         <NativeTabs.Trigger.Label>{t('tabs.overview')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          sf={{ default: 'chart.pie', selected: 'chart.pie.fill' }}
+          sf={{ default: 'book.pages', selected: 'book.pages.fill' }}
           md={{ default: 'pie_chart', selected: 'pie_chart' }}
         />
       </NativeTabs.Trigger>
@@ -23,6 +23,13 @@ export default function TabsLayout() {
         <NativeTabs.Trigger.Icon
           sf={{ default: 'list.bullet.rectangle', selected: 'list.bullet.rectangle.fill' }}
           md={{ default: 'receipt_long', selected: 'receipt_long' }}
+        />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="check-ins">
+        <NativeTabs.Trigger.Label>{t('tabs.checkIns')}</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          sf={{ default: 'calendar.badge.clock', selected: 'calendar.badge.clock' }}
+          md={{ default: 'event_upcoming', selected: 'event_upcoming' }}
         />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="profile">

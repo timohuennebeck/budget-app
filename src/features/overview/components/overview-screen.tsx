@@ -9,7 +9,6 @@ import { BudgetSheet } from '@/features/budgets/components/budget-sheet';
 import { AvailableHero } from '@/features/budgets/components/available-hero';
 import { SpendBar } from '@/features/budgets/components/spend-bar';
 import { summarizeBudget } from '@/features/budgets/lib/budget-summary';
-import { CheckInCard } from '@/features/check-in/components/check-in-card';
 import { useAppCategoryDisplays } from '@/features/categories/hooks/use-category-display';
 import {
   useCategoryLimits,
@@ -133,8 +132,6 @@ export function OverviewScreen() {
           total={summary.total}
           currency={currency}
         />
-
-        <CheckInCard />
 
         {summary.cards.length ? (
           <>

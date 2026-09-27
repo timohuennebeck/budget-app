@@ -52,7 +52,7 @@ export function ResultScreen() {
             variant="ghost"
             className="mt-2.5"
             label={t('checkIn.viewHistory')}
-            onPress={() => router.replace('/check-in/history')}
+            onPress={() => router.navigate('/check-ins')}
           />
         </View>
       }>
