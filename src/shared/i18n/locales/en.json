@@ -274,7 +274,6 @@
   },
   "entries": {
     "all": "All",
-    "captureQuery": "Log “{{query}}” as an entry",
     "category": "Category",
     "titlePlaceholder": "What for?",
     "chooseMonth": "Choose month",

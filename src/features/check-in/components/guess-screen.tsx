@@ -86,7 +86,7 @@ function GuessForm({ window, previous, actual, expenseCount }: GuessFormProps) {
           <Button variant="ghost" className="mt-2.5" label={t('checkIn.skipWeek')} onPress={skip} />
         </View>
       }>
-      <CheckInHeader window={window} />
+      <CheckInHeader week={window.week} />
       <Text variant="display" leading={1.08} className="mt-[22px]">
         {t('checkIn.guessTitle', { name: profile?.first_name ?? '' })}
       </Text>

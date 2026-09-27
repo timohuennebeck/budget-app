@@ -274,7 +274,6 @@
   },
   "entries": {
     "all": "Alle",
-    "captureQuery": "„{{query}}“ als Eintrag erfassen",
     "category": "Kategorie",
     "titlePlaceholder": "Wofür?",
     "chooseMonth": "Monat wählen",

@@ -280,7 +280,6 @@
   },
   "entries": {
     "all": "Tutti",
-    "captureQuery": "Registra “{{query}}” come movimento",
     "category": "Categoria",
     "titlePlaceholder": "Per cosa?",
     "chooseMonth": "Scegli mese",

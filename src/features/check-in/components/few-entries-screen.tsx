@@ -39,7 +39,7 @@ export function FewEntriesScreen() {
           />
         </View>
       }>
-      <CheckInHeader window={window} />
+      <CheckInHeader week={window.week} />
       <View className="flex-1 items-center justify-center">
         <Pip pose="reading" size={200} />
       </View>

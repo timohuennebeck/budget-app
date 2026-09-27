@@ -280,7 +280,6 @@
   },
   "entries": {
     "all": "Tout",
-    "captureQuery": "Saisir « {{query}} » comme entrée",
     "category": "Catégorie",
     "titlePlaceholder": "Pour quoi ?",
     "chooseMonth": "Choisir le mois",

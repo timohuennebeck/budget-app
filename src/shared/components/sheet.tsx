@@ -6,7 +6,8 @@ import {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
+import Animated, { useAnimatedKeyboard, useAnimatedStyle } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 import { initialWindowMetrics } from 'react-native-safe-area-context';
 
@@ -41,7 +42,7 @@ function Backdrop(props: BottomSheetBackdropProps) {
 
 // Floating sheet from the design: inset 8px from the screen edges, corners
 // concentric with the iPhone's display corners, grabber on top and a dimmed
-// backdrop that closes on tap. It rises with the keyboard.
+// backdrop that closes on tap. With the keyboard up it grows to meet it.
 // Content mounts on open, so state inside starts fresh every time.
 const INSET = 8;
 // Concentric with the display corners: their radius minus the inset.
@@ -51,6 +52,21 @@ const RADIUS = displayCornerRadius() - INSET;
 const WINDOW_BOTTOM = initialWindowMetrics?.insets.bottom ?? 0;
 // Same gap below the sheet as beside it.
 const BOTTOM_INSET = Math.max(WINDOW_BOTTOM - 26, INSET);
+
+// Space between the sheet's last button and the keyboard.
+const KEYBOARD_GAP = 12;
+const CONTENT_BOTTOM = 26;
+
+// iOS: instead of lifting the whole sheet above the keyboard (which left a
+// gap below it), the sheet stays anchored and grows upward, white down to the
+// keyboard, with its last button just above it.
+function KeyboardSpacer() {
+  const keyboard = useAnimatedKeyboard();
+  const style = useAnimatedStyle(() => ({
+    height: Math.max(0, keyboard.height.value - BOTTOM_INSET - CONTENT_BOTTOM + KEYBOARD_GAP),
+  }));
+  return <Animated.View style={style} />;
+}
 
 export function Sheet({ open, onClose, children, title, height, panContent = true }: SheetProps) {
   const { t } = useTranslation();
@@ -83,7 +99,7 @@ export function Sheet({ open, onClose, children, title, height, panContent = tru
       snapPoints={height ? [height] : undefined}
       enableDynamicSizing={!height}
       enableContentPanningGesture={panContent}
-      keyboardBehavior="interactive"
+      keyboardBehavior={Platform.OS === 'ios' ? 'extend' : 'interactive'}
       keyboardBlurBehavior="restore"
       backdropComponent={Backdrop}
       onDismiss={handleDismiss}
@@ -91,7 +107,11 @@ export function Sheet({ open, onClose, children, title, height, panContent = tru
       backgroundStyle={{ borderRadius: RADIUS, backgroundColor: colors.white }}
       handleIndicatorStyle={{ width: 36, height: 5, backgroundColor: colors.grabber }}>
       <BottomSheetView
-        style={{ paddingHorizontal: 20, paddingBottom: 26, flex: height ? 1 : undefined }}>
+        style={{
+          paddingHorizontal: 20,
+          paddingBottom: CONTENT_BOTTOM,
+          flex: height ? 1 : undefined,
+        }}>
         {title ? (
           <View className="mt-1.5 flex-row items-center justify-between">
             <View className="size-[34px]" />
@@ -109,6 +129,7 @@ export function Sheet({ open, onClose, children, title, height, panContent = tru
         <InputComponentContext.Provider value={BottomSheetTextInput as InputComponent}>
           {children}
         </InputComponentContext.Provider>
+        {Platform.OS === 'ios' ? <KeyboardSpacer /> : null}
       </BottomSheetView>
     </BottomSheetModal>
   );

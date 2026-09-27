@@ -156,31 +156,29 @@ export function EntriesScreen() {
         </ScrollView>
       </View>
 
-      <ScrollView
-        className="mt-3.5 flex-1"
-        contentInsetAdjustmentBehavior={layout.contentInsetAdjustmentBehavior}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-        contentContainerClassName="grow"
-        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
-        showsVerticalScrollIndicator={false}>
-        <View className="flex-1">
-          {noResults ? (
-            <EmptySearch
-              query={query.trim()}
-              onCapture={() =>
-                router.push({ pathname: '/capture', params: { text: query.trim() } })
-              }
-            />
-          ) : groups.length ? (
+      {noResults ? (
+        // Nothing to scroll: the empty state stays put under the search.
+        <View className="mt-3.5 flex-1 px-4">
+          <EmptySearch query={query.trim()} />
+        </View>
+      ) : (
+        <ScrollView
+          className="mt-3.5 flex-1"
+          contentInsetAdjustmentBehavior={layout.contentInsetAdjustmentBehavior}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          contentContainerClassName="grow"
+          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          showsVerticalScrollIndicator={false}>
+          {groups.length ? (
             <EntryList groups={groups} categories={lookup} currency={currency} />
           ) : (
             <Text variant="body" className="px-1 pt-6 text-center">
               {t('entries.emptyMonth')}
             </Text>
           )}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      )}
       <MonthSheet
         {...monthSheet.controls}
         selected={month}

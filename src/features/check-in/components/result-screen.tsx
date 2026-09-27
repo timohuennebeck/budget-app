@@ -1,10 +1,11 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
 import { EntryRow } from '@/features/entries/components/entry-row';
-import { countByCategory, spendByCategory } from '@/features/entries/lib/entry-stats';
+import { useEntries } from '@/features/entries/hooks/use-entries';
+import { countByCategory, spendByCategory, sumExpenses } from '@/features/entries/lib/entry-stats';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { Screen } from '@/shared/components/screen';
 import { useAppConfig } from '@/shared/hooks/use-app-config';
@@ -17,15 +18,27 @@ import { Pip } from '@/shared/ui/pip';
 import { Text } from '@/shared/ui/text';
 
 import { useCheckInState } from '../hooks/use-check-in-state';
+import { useCheckIns } from '../hooks/use-check-ins';
+import { weekOf } from '../lib/check-in-list';
 import { guessAccuracy } from '../lib/check-in-window';
 import { AccuracyPill } from './accuracy-pill';
 import { CheckInHeader } from './check-in-header';
 
 // Reveal (5g-b): guess and actual side by side, accuracy pill and the
-// biggest categories of the week. Close guesses get a trophy Pip.
+// biggest categories of the week. Close guesses get a trophy Pip. With
+// ?week=YYYY-MM-DD it shows that past check-in from the history, with the
+// total as it was when the user checked in.
 export function ResultScreen() {
   const { t } = useTranslation();
-  const { window, current, entries, actual } = useCheckInState();
+  const { week } = useLocalSearchParams<{ week?: string }>();
+  const live = useCheckInState();
+  const { data: checkIns = [] } = useCheckIns();
+  const past = week ? checkIns.find((checkIn) => checkIn.week_start === week) : undefined;
+  const range = past ? weekOf(past) : live.window.week;
+  const { data: pastEntries = [] } = useEntries(range, past !== undefined);
+  const current = past ?? live.current;
+  const entries = past ? pastEntries : live.entries;
+  const actual = past ? Number(past.actual ?? sumExpenses(pastEntries)) : live.actual;
   const { checkInCloseRatio } = useAppConfig();
   const categories = useCategoryLookup();
   const currency = useCurrency();
@@ -48,15 +61,17 @@ export function ResultScreen() {
       footer={
         <View>
           <Button label={t('common.done')} onPress={() => router.dismissAll()} />
-          <Button
-            variant="ghost"
-            className="mt-2.5"
-            label={t('checkIn.viewHistory')}
-            onPress={() => router.navigate('/check-ins')}
-          />
+          {past ? null : (
+            <Button
+              variant="ghost"
+              className="mt-2.5"
+              label={t('checkIn.viewHistory')}
+              onPress={() => router.navigate('/check-ins')}
+            />
+          )}
         </View>
       }>
-      <CheckInHeader window={window} />
+      <CheckInHeader week={range} />
       <Pip
         pose={close ? 'trophy-cheer' : 'magnifier'}
         size={150}
