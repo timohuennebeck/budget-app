@@ -68,8 +68,11 @@ export function AmountStepper({
 
   return (
     <View className="items-center gap-2.5 self-stretch">
+      {/* The row keeps the full-size height, so a shrunk number doesn't
+          pull the buttons and the sheet around. */}
       <View
         className="flex-row items-center justify-between self-stretch"
+        style={{ minHeight: Math.ceil(base.number * 1.15) }}
         onLayout={(event) => setRowWidth(event.nativeEvent.layout.width)}>
         <IconButton
           icon="minus"

@@ -125,7 +125,7 @@ export function Sheet({ open, onClose, children, title, height, panContent = tru
       <BottomSheetView
         style={{ paddingHorizontal: 20, paddingBottom: 26, flex: height ? 1 : undefined }}>
         {title ? (
-          <View className="mt-1.5 flex-row items-center justify-between">
+          <View className="mt-1.5 mb-3 flex-row items-center justify-between">
             <View className="size-[34px]" />
             <Text size={17} weight="semibold" tracking={-0.01}>
               {title}
