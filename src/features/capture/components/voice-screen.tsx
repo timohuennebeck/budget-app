@@ -88,7 +88,7 @@ export function VoiceScreen({ mode }: { mode: CaptureMode }) {
         trailing={
           <View className="flex-row items-center gap-2">
             <View className={cn('size-2 rounded-full', recording ? 'bg-danger' : 'bg-faint')} />
-            <Text size={15} weight="medium" className="text-primary">
+            <Text size={15} weight="medium" className={recording ? 'text-danger' : 'text-muted'}>
               {t('capture.listening')}
             </Text>
           </View>

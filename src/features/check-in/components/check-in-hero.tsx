@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { GradientPanel } from '@/shared/components/gradient-panel';
 import { useNow } from '@/shared/hooks/use-now';
+import { cn } from '@/shared/lib/cn';
 import { addDays, formatWeekRange, isSameDay } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { colors, shadows } from '@/shared/lib/theme';
@@ -106,7 +107,13 @@ export function CheckInHero({ currency }: { currency: string }) {
           className="mt-4 text-center text-muted-soft">
           {content.eyebrow.toUpperCase()}
         </Text>
-        <Text size={20} weight="semibold" tracking={-0.02} className="mt-1.5 text-center">
+        <Text
+          size={20}
+          weight="semibold"
+          tracking={-0.02}
+          // Inset so the longer prompts wrap before the card's edge; the done
+          // line ("290 € geschätzt · 312,40 € echt") keeps the full width.
+          className={cn('mt-1.5 text-center', status !== 'done' && 'px-6')}>
           {content.title}
         </Text>
         <Button
