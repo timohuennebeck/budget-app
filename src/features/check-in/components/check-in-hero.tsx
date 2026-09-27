@@ -84,12 +84,14 @@ export function CheckInHero({ currency }: { currency: string }) {
           : {
               value: '???',
               eyebrow: t('checkIn.notOpenYet'),
-              // On a Sunday whose check-in isn't today's (a new user's first
-              // week), plain "Sunday" would read as today.
+              // Plain "Sunday" reads oddly on a Sunday: it opens tonight, or
+              // (a new user's first week) only next Sunday.
               title:
-                now.getDay() === 0 && !isSameDay(window.opensAt, now)
-                  ? t('checkIn.heroLockedTitleNextWeek')
-                  : t('checkIn.heroLockedTitle'),
+                now.getDay() !== 0
+                  ? t('checkIn.heroLockedTitle')
+                  : isSameDay(window.opensAt, now)
+                    ? t('checkIn.heroLockedTitleTonight')
+                    : t('checkIn.heroLockedTitleNextWeek'),
               button: t('checkIn.opensIn', { time: until(window.opensAt) }),
             };
 

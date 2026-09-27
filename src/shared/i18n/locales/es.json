@@ -380,6 +380,7 @@
     "heroOpenTitle": "Últimos 7 días, ¿cuánto fue?",
     "heroLockedTitle": "Anota todo hasta el domingo",
     "heroLockedTitleNextWeek": "Anota todo hasta el próximo domingo",
+    "heroLockedTitleTonight": "Anota todo hasta esta noche",
     "start": "Empezar",
     "rowDetail": "{{guess}} estimado · {{actual}} real",
     "lastMonths": "Últimos 3 meses",

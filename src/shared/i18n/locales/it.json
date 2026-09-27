@@ -380,6 +380,7 @@
     "heroOpenTitle": "Ultimi 7 giorni, quanto hai speso?",
     "heroLockedTitle": "Registra tutto fino a domenica",
     "heroLockedTitleNextWeek": "Registra tutto fino a domenica prossima",
+    "heroLockedTitleTonight": "Registra tutto entro stasera",
     "start": "Inizia",
     "rowDetail": "{{guess}} stimato · {{actual}} reale",
     "lastMonths": "Ultimi 3 mesi",
