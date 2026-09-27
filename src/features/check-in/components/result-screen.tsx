@@ -66,7 +66,7 @@ export function ResultScreen() {
               variant="ghost"
               className="mt-2.5"
               label={t('checkIn.viewHistory')}
-              onPress={() => router.navigate('/check-ins')}
+              onPress={() => router.dismissTo('/check-ins')}
             />
           )}
         </View>

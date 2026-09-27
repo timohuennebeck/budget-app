@@ -7,8 +7,8 @@ import { cn } from '@/shared/lib/cn';
 import { GradientBackground, type GradientName } from './gradient-background';
 
 const KEYBOARD_GAP = 24;
-// Inside a modal sheet there is no status bar inset; keep the header clear
-// of the sheet's top edge.
+// Least top padding, for when there's no status bar inset (web, some
+// modals), so the header stays clear of the top edge.
 const MIN_TOP = 14;
 
 export interface ScreenProps {

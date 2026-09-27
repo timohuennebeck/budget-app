@@ -20,34 +20,39 @@ import { Text } from '@/shared/ui/text';
 
 import { type CaptureMode, useCaptureStore } from '../data/capture-store';
 import { useVoiceRecording, type VoiceError } from '../hooks/use-voice-recording';
+import { blockingError } from '../lib/capture-errors';
 import { captureHref } from '../lib/capture-routes';
 
 /** Shows the seconds left once the cap is this close. */
 const COUNTDOWN_FROM = 10;
-// Errors from parse-capture by HTTP status, when processing sends us back.
-const SERVER_ERRORS: Record<string, VoiceError> = { '401': 'account', '429': 'limit' };
 
 const clock = (seconds: number) =>
   `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 
 // Voice capture (2i). Recording starts as the screen opens; stopping sends
 // the audio to parse-capture, which transcribes and sorts it. Every failure
-// falls back to typing.
+// falls back to typing. When processing fails it comes back here with ?code=,
+// which shows the error without opening the microphone again.
 export function VoiceScreen({ mode }: { mode: CaptureMode }) {
+  const { code } = useLocalSearchParams<{ code?: string }>();
+  const typeInstead = () => router.dismissTo(captureHref(mode, 'index'));
+  if (!code) return <VoiceRecorder mode={mode} onType={typeInstead} />;
+  return <VoiceErrorView error={blockingError(code) ?? 'unavailable'} onType={typeInstead} />;
+}
+
+function VoiceRecorder({ mode, onType }: { mode: CaptureMode; onType: () => void }) {
   const { t } = useTranslation();
-  const { error: serverError } = useLocalSearchParams<{ error?: string }>();
   const { voiceMaxSeconds } = useAppConfig();
   const setRecording = useCaptureStore((state) => state.setRecording);
   const voice = useVoiceRecording();
-  const typeInstead = () => router.dismissTo(captureHref(mode, 'index'));
   const finishing = useRef(false);
 
   const finish = async () => {
     if (finishing.current) return;
-    if (voice.status !== 'recording') return typeInstead();
+    if (voice.status !== 'recording') return onType();
     finishing.current = true;
     const recording = await voice.stop();
-    if (!recording) return typeInstead();
+    if (!recording) return onType();
     setRecording(recording);
     router.replace(captureHref(mode, 'processing', { source: 'voice' }));
   };
@@ -59,20 +64,13 @@ export function VoiceScreen({ mode }: { mode: CaptureMode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [secondsLeft, voice.status]);
 
-  const error: VoiceError | null = serverError
-    ? (SERVER_ERRORS[serverError] ?? 'unavailable')
-    : voice.error;
-  useEffect(() => {
-    if (error) haptics.warning();
-  }, [error]);
-
   // The rings around the stop button breathe with the voice.
   const level = voice.level;
   const rings = useAnimatedStyle(() => ({
     transform: [{ scale: withTiming(1 + level * 0.35, { duration: 120 }) }],
   }));
 
-  if (error) return <VoiceErrorView error={error} onType={typeInstead} />;
+  if (voice.error) return <VoiceErrorView error={voice.error} onType={onType} />;
 
   const recording = voice.status === 'recording';
 
@@ -144,6 +142,9 @@ export function VoiceScreen({ mode }: { mode: CaptureMode }) {
 
 function VoiceErrorView({ error, onType }: { error: VoiceError; onType: () => void }) {
   const { t } = useTranslation();
+  useEffect(() => {
+    haptics.warning();
+  }, []);
   return (
     <Screen
       footer={

@@ -2,7 +2,6 @@
 // shadows). Keep in sync with the @theme tokens in src/global.css.
 export const colors = {
   primary: '#2F7CF6',
-  primaryDark: '#1F63D6',
   primarySoft: '#DCE8FC',
   primaryTint: '#EAF2FE',
   ink: '#15181F',
@@ -17,7 +16,6 @@ export const colors = {
   line: '#EDF1F6',
   canvas: '#F7F9FC',
   white: '#FFFFFF',
-  calendarRed: '#DB4241',
 } as const;
 
 export const gradients = {

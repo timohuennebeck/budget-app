@@ -11,6 +11,15 @@ const sources = {
 
 export type SoundName = keyof typeof sources;
 
+/**
+ * The app's audio mode. Pass it whole: expo-audio resets every field left out,
+ * so a partial mode after recording would mute these sounds again.
+ */
+export const APP_AUDIO_MODE = {
+  playsInSilentMode: true,
+  interruptionMode: 'mixWithOthers',
+} as const;
+
 const players = new Map<SoundName, AudioPlayer>();
 
 function player(name: SoundName) {
@@ -25,9 +34,7 @@ function player(name: SoundName) {
 /** Sets the audio mode and loads every sound, so the first play isn't lost. */
 export function preloadSounds() {
   try {
-    setAudioModeAsync({ playsInSilentMode: true, interruptionMode: 'mixWithOthers' }).catch(
-      () => {},
-    );
+    setAudioModeAsync(APP_AUDIO_MODE).catch(() => {});
     (Object.keys(sources) as SoundName[]).forEach(player);
   } catch {
     // Without the native module (an old build) the app just stays silent.

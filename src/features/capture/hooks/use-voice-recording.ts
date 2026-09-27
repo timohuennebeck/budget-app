@@ -8,10 +8,12 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 
+import { APP_AUDIO_MODE } from '@/shared/lib/sounds';
+
 import type { VoiceRecording } from '../data/capture-store';
 
 export type VoiceError = 'account' | 'permission' | 'limit' | 'unavailable';
-type VoiceStatus = 'starting' | 'recording' | 'error';
+type VoiceStatus = 'starting' | 'recording';
 
 // Speech needs little: 16 kHz mono AAC at 32 kbit/s keeps a minute ~240 KB.
 const OPTIONS = {
@@ -42,16 +44,14 @@ export function useVoiceRecording() {
   useEffect(() => {
     let cancelled = false;
     const fail = (code: VoiceError) => {
-      if (cancelled) return;
-      setError(code);
-      setStatus('error');
+      if (!cancelled) setError(code);
     };
 
     (async () => {
       const permission = await requestRecordingPermissionsAsync().catch(() => null);
       if (!permission?.granted) return fail('permission');
       try {
-        await setAudioModeAsync({ allowsRecording: true, playsInSilentMode: true });
+        await setAudioModeAsync({ ...APP_AUDIO_MODE, allowsRecording: true });
         await recorder.prepareToRecordAsync();
         if (cancelled) return;
         recorder.record();
@@ -67,17 +67,20 @@ export function useVoiceRecording() {
     return () => {
       cancelled = true;
       active.current = false;
-      setAudioModeAsync({ allowsRecording: false }).catch(() => {});
+      setAudioModeAsync(APP_AUDIO_MODE).catch(() => {});
     };
   }, [recorder]);
 
-  /** Ends the recording and returns the file, or null if nothing was recorded. */
+  /** Ends the recording and returns the file, or null if there's none to send. */
   const stop = async (): Promise<VoiceRecording | null> => {
     if (!active.current) return null;
     active.current = false;
-    await recorder.stop();
-    await setAudioModeAsync({ allowsRecording: false }).catch(() => {});
-    if (!recorder.uri) return null;
+    const stopped = await recorder.stop().then(
+      () => true,
+      () => false,
+    );
+    await setAudioModeAsync(APP_AUDIO_MODE).catch(() => {});
+    if (!stopped || !recorder.uri) return null;
     return { uri: recorder.uri, type: Platform.OS === 'web' ? 'audio/webm' : 'audio/m4a' };
   };
 

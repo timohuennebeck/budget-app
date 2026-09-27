@@ -23,8 +23,8 @@ const DURATION_MS = 2400;
 const TICK_MS = 60;
 const WAITING_CEILING = 0.92;
 
-// "Pip sortiert deine Einträge" (2j). Parses the text, recording or receipt while the
-// ring fills (at least), then continues to review (app) or saved (onboarding).
+// "Pip sortiert deine Einträge" (2j). Parses the text, recording or receipt
+// while the ring fills (at least), then continues to review.
 export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
   const { t } = useTranslation();
   const { source } = useLocalSearchParams<{ source?: DraftEntry['source'] }>();
@@ -37,6 +37,15 @@ export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<DraftEntry[] | null>(null);
   const started = useRef(false);
+  // Android's back button can leave while the request runs; a late failure
+  // then must not replace whatever screen is showing by now.
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (started.current || categoriesPending) return;
@@ -53,17 +62,12 @@ export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
     })
       .then(setResult)
       .catch((error) => {
+        if (!mounted.current) return;
         haptics.error();
         const code = error instanceof CaptureError && error.status ? error.status : 500;
         // Voice explains the problem on its own screen, with "type instead".
         const step = source === 'voice' ? 'voice' : 'receipt-error';
-        router.replace(
-          captureHref(
-            mode,
-            step,
-            step === 'voice' ? { error: String(code) } : { code: String(code) },
-          ),
-        );
+        router.replace(captureHref(mode, step, { code: String(code) }));
       });
   }, [categories, categoriesPending, mode, source]);
 

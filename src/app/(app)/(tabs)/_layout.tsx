@@ -4,8 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { colors } from '@/shared/lib/theme';
 
 // Content scrolls behind the tab bar: iOS insets each tab's first ScrollView
-// at the bottom, Android pads the tab above the bar. Floating content
-// like the capture dock on Start keeps clear of the bar itself.
+// at the bottom, Android pads the tab above the bar.
 export default function TabsLayout() {
   const { t } = useTranslation();
 

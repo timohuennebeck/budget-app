@@ -16,38 +16,32 @@ export function useCategories(enabled = true) {
 /** New categories carry their id (expo-crypto randomUUID) so the list updates at once. */
 export type NewCategory = Omit<CategoryInsert, 'profile_id'> & { id: string };
 
-// Shows the change in the cached list right away and rolls it back on error.
-function useCategoryMutation<T>(
-  mutationFn: (variables: T) => Promise<unknown>,
-  apply: (list: Category[], variables: T) => Category[],
-) {
+// Shows the new category in the cached list right away; rolls back on error.
+export function useCreateCategory() {
+  const userId = useUserId();
   const client = useQueryClient();
   return useMutation({
-    mutationFn,
+    mutationFn: (category: NewCategory) => insertCategories([{ ...category, profile_id: userId }]),
     meta: { optimistic: true },
-    onMutate: async (variables: T) => {
+    onMutate: async (category) => {
       const saved = await snapshot(client, { queryKey: listKey });
-      client.setQueryData<Category[]>(listKey, (list) => list && apply(list, variables));
+      client.setQueryData<Category[]>(
+        listKey,
+        (list) =>
+          list && [
+            ...list,
+            {
+              archived_at: null,
+              sort_order: list.length,
+              created_at: new Date().toISOString(),
+              ...category,
+              profile_id: userId,
+            },
+          ],
+      );
       return { saved };
     },
     onError: (_error, _variables, context) => restore(client, context?.saved),
     onSettled: () => client.invalidateQueries({ queryKey: categoryQueries._def }),
   });
-}
-
-export function useCreateCategory() {
-  const userId = useUserId();
-  return useCategoryMutation(
-    (category: NewCategory) => insertCategories([{ ...category, profile_id: userId }]),
-    (list, category) => [
-      ...list,
-      {
-        archived_at: null,
-        sort_order: list.length,
-        created_at: new Date().toISOString(),
-        ...category,
-        profile_id: userId,
-      },
-    ],
-  );
 }

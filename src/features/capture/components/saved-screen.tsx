@@ -8,7 +8,7 @@ import { CategoryPill } from '@/features/categories/components/category-pill';
 import { categoryColumns } from '@/features/categories/lib/category-ref';
 import { EntryRow } from '@/features/entries/components/entry-row';
 import { useRecentEntries } from '@/features/entries/hooks/use-entries';
-import { entryVisual } from '@/features/entries/lib/entry-display';
+import { entrySubtitle, entryVisual } from '@/features/entries/lib/entry-display';
 import { spendByCategory } from '@/features/entries/lib/entry-stats';
 import { useRatingPrompt } from '@/features/rating/hooks/use-rating-prompt';
 import { Screen } from '@/shared/components/screen';
@@ -60,7 +60,7 @@ export function SavedScreen({ mode }: { mode: CaptureMode }) {
         key: draft.id,
         ...entryVisual(draft.kind, category),
         title: draft.title,
-        subtitle: `${category?.name ?? (draft.kind === 'income' ? t('entries.income') : t('entries.noCategory'))} · ${t('common.today')}`,
+        subtitle: `${entrySubtitle(draft, category?.name)} · ${t('common.today')}`,
         amount: draft.amount,
         kind: draft.kind,
       });

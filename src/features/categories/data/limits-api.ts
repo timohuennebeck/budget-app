@@ -1,7 +1,7 @@
 import type { Tables } from '@/shared/lib/database.types';
 import { supabase } from '@/shared/lib/supabase';
 
-import { type CategoryColumns, categoryColumns } from '../lib/category-ref';
+import { categoryColumns } from '../lib/category-ref';
 
 export type CategoryLimit = Tables<'categories_limits'>;
 
@@ -14,10 +14,11 @@ export async function fetchLimits() {
 // Only categories with a limit have a row; "no limit" deletes it.
 export async function setLimit(profileId: string, categoryId: string, amount: number | null) {
   if (amount === null) {
-    const { error } = await matchCategory(
-      supabase.from('categories_limits').delete(),
-      categoryColumns(categoryId),
-    );
+    const { category_id, preset_id } = categoryColumns(categoryId);
+    const query = supabase.from('categories_limits').delete();
+    const { error } = await (category_id
+      ? query.eq('category_id', category_id)
+      : query.eq('preset_id', preset_id!));
     if (error) throw error;
     return;
   }
@@ -32,11 +33,4 @@ export async function upsertLimits(profileId: string, limits: [string, number][]
     { onConflict: 'profile_id,category_id,preset_id' },
   );
   if (error) throw error;
-}
-
-function matchCategory<Q extends { eq: (column: string, value: string) => Q }>(
-  query: Q,
-  { category_id, preset_id }: CategoryColumns,
-) {
-  return category_id ? query.eq('category_id', category_id) : query.eq('preset_id', preset_id!);
 }

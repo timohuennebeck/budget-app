@@ -6,7 +6,7 @@ import { decodeBase64 } from 'jsr:@std/encoding@1/base64';
 
 const TRANSCRIPTIONS_URL = 'https://api.openai.com/v1/audio/transcriptions';
 
-/** About two minutes of the app's 32 kbit/s mono AAC, with headroom. */
+/** About six minutes of the app's 32 kbit/s mono AAC; recordings stop at 60 s. */
 export const MAX_AUDIO_BYTES = 1_500_000;
 
 const EXTENSIONS: Record<string, string> = {

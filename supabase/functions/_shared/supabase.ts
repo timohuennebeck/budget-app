@@ -53,7 +53,6 @@ export async function readProfile(userId: string): Promise<CaptureProfile> {
 interface CaptureClaim {
   profileId: string;
   source: 'text' | 'voice' | 'camera';
-  status: 'pending' | 'processing';
   captureId?: string;
   inputText?: string | null;
   receiptPath?: string | null;
@@ -62,14 +61,14 @@ interface CaptureClaim {
 }
 
 /**
- * Logs an AI capture and counts it against the daily limit in one locked
- * step (claim_ai_capture), or claims a pending voice capture once.
+ * Logs an AI capture as processing and counts it against the daily limit in
+ * one locked step (claim_ai_capture). A reused id (a retried receipt) is 409.
  */
 export async function claimCapture(claim: CaptureClaim): Promise<string> {
   const { data, error } = await admin.rpc('claim_ai_capture', {
     p_profile_id: claim.profileId,
     p_source: claim.source,
-    p_status: claim.status,
+    p_status: 'processing',
     p_capture_id: claim.captureId ?? null,
     p_input_text: claim.inputText ?? null,
     p_receipt_path: claim.receiptPath ?? null,
@@ -78,7 +77,7 @@ export async function claimCapture(claim: CaptureClaim): Promise<string> {
   });
   if (error) {
     if (error.message.includes('ai_limit_reached')) throw new HttpError(429, 'ai_limit_reached');
-    if (error.message.includes('capture_already_parsed') || error.code === '23505') {
+    if (error.code === '23505') {
       throw new HttpError(409, 'capture_already_parsed');
     }
     throw error;

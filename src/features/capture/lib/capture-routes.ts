@@ -3,7 +3,15 @@ import type { Href } from 'expo-router';
 import type { CaptureMode } from '../data/capture-store';
 
 type CaptureStep =
-  'index' | 'camera' | 'voice' | 'processing' | 'review' | 'saved' | 'receipt-error';
+  | 'index'
+  | 'camera'
+  | 'voice'
+  | 'processing'
+  | 'review'
+  | 'edit/[id]'
+  | 'select-category'
+  | 'saved'
+  | 'receipt-error';
 
 // The capture flow runs under /first-entry during onboarding and /capture in
 // the app; screens build their links through here.

@@ -39,7 +39,8 @@ export function categoryTrend(
   for (const entry of entries) {
     if (entry.kind !== 'expense') continue;
     const index = daysBetween(cycle.start, startOfDay(new Date(entry.occurred_at)));
-    if (index >= 0 && index < elapsed) perDay[index] += Number(entry.amount);
+    // Entries dated later this cycle count today, as they do on the budget card.
+    if (index >= 0 && index < days) perDay[Math.min(index, elapsed - 1)] += Number(entry.amount);
   }
   let running = 0;
   const cumulative = perDay.map((amount) => (running = roundMoney(running + amount)));

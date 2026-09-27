@@ -205,7 +205,6 @@ serve(async (request) => {
   const captureId = await claimCapture({
     profileId: user.id,
     source: source as 'text' | 'voice' | 'camera',
-    status: 'processing',
     // Receipts bring the id of their uploaded photo; text and voice get a new one.
     captureId: source === 'camera' ? body.capture_id : undefined,
     inputText: source === 'text' ? text : null,

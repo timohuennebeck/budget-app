@@ -3,7 +3,6 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { categoryColumns } from '@/features/categories/lib/category-ref';
 import { EntryRow } from '@/features/entries/components/entry-row';
 import { useCreateEntries } from '@/features/entries/hooks/use-entries';
 import { entryAmount, entrySubtitle, entryVisual } from '@/features/entries/lib/entry-display';
@@ -24,6 +23,7 @@ import { type CaptureMode, useCaptureStore } from '../data/capture-store';
 import { useCaptureCategories } from '../hooks/use-capture-categories';
 import { useCaptureContext } from '../hooks/use-capture-context';
 import { captureHref } from '../lib/capture-routes';
+import { draftRow } from '../lib/draft-row';
 import { draftsTotal } from '../lib/parse-entries';
 import type { DraftEntry } from '../lib/types';
 import { TodayLabel } from './today-label';
@@ -42,16 +42,9 @@ export function ReviewScreen({ mode = 'app' }: { mode?: CaptureMode }) {
 
   const categoryFor = (draft: DraftEntry) =>
     categories.find((category) => category.id === draft.categoryId);
-  const edit = (draft: DraftEntry) =>
-    router.push({
-      pathname: mode === 'onboarding' ? '/first-entry/edit/[id]' : '/capture/edit/[id]',
-      params: { id: draft.id },
-    });
+  const edit = (draft: DraftEntry) => router.push(captureHref(mode, 'edit/[id]', { id: draft.id }));
   const pickCategory = (draft: DraftEntry) =>
-    router.push({
-      pathname: mode === 'onboarding' ? '/first-entry/select-category' : '/capture/select-category',
-      params: { draftId: draft.id },
-    });
+    router.push(captureHref(mode, 'select-category', { draftId: draft.id }));
 
   const save = () => {
     // Onboarding keeps the entries until the account exists (saved at sign-up).
@@ -66,18 +59,7 @@ export function ReviewScreen({ mode = 'app' }: { mode?: CaptureMode }) {
     }
     const paymentIds = drafts.flatMap((draft) => draft.paymentId ?? []);
     createEntries
-      .mutateAsync(
-        drafts.map((draft) => ({
-          id: randomUUID(),
-          title: draft.title,
-          amount: draft.amount,
-          kind: draft.kind,
-          ...categoryColumns(draft.categoryId),
-          source: draft.source,
-          capture_id: draft.captureId ?? null,
-          occurred_at: draft.occurredAt,
-        })),
-      )
+      .mutateAsync(drafts.map((draft) => ({ id: randomUUID(), ...draftRow(draft) })))
       // Apple Pay payments leave the inbox only once they're really saved.
       .then(() => removePayments(paymentIds))
       .catch(() => {});

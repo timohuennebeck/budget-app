@@ -29,8 +29,6 @@ export interface SheetProps extends SheetControls {
   children: ReactNode;
   /** Centered title with a close button, like the budget sheets */
   title?: string;
-  /** Fixed height in px; by default the sheet sizes to its content */
-  height?: number;
   /**
    * Whether dragging the content moves the sheet. Off for sheets with
    * scrolling wheels, which would otherwise pull the sheet instead.
@@ -83,7 +81,7 @@ function SheetBackground({ style }: BottomSheetBackgroundProps) {
   );
 }
 
-export function Sheet({ open, onClose, children, title, height, panContent = true }: SheetProps) {
+export function Sheet({ open, onClose, children, title, panContent = true }: SheetProps) {
   const { t } = useTranslation();
   const ref = useRef<BottomSheetModal>(null);
   const presented = useRef(false);
@@ -111,8 +109,6 @@ export function Sheet({ open, onClose, children, title, height, panContent = tru
       detached
       bottomInset={BOTTOM_INSET}
       style={[{ marginHorizontal: INSET }, shadows.sheet]}
-      snapPoints={height ? [height] : undefined}
-      enableDynamicSizing={!height}
       enableContentPanningGesture={panContent}
       keyboardBehavior="interactive"
       keyboardBlurBehavior="restore"
@@ -122,8 +118,7 @@ export function Sheet({ open, onClose, children, title, height, panContent = tru
       backgroundComponent={SheetBackground}
       backgroundStyle={{ borderRadius: RADIUS, backgroundColor: colors.white }}
       handleIndicatorStyle={{ width: 36, height: 5, backgroundColor: colors.grabber }}>
-      <BottomSheetView
-        style={{ paddingHorizontal: 20, paddingBottom: 26, flex: height ? 1 : undefined }}>
+      <BottomSheetView style={{ paddingHorizontal: 20, paddingBottom: 26 }}>
         {title ? (
           <View className="mt-1.5 mb-3 flex-row items-center justify-between">
             <View className="size-[34px]" />

@@ -3,7 +3,6 @@ import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { categoryColumns } from '@/features/categories/lib/category-ref';
 import { EntryEditor } from '@/features/entries/components/entry-editor';
 import { useCreateEntries } from '@/features/entries/hooks/use-entries';
 import { useEntriesAllowance } from '@/features/paywall/hooks/use-entries-allowance';
@@ -16,6 +15,7 @@ import { useCaptureStore } from '../data/capture-store';
 import { useCaptureCategories } from '../hooks/use-capture-categories';
 import { useCaptureContext } from '../hooks/use-capture-context';
 import { captureHref } from '../lib/capture-routes';
+import { draftRow } from '../lib/draft-row';
 
 // "Was kam rein?": logs money the user received (salary, a refund, a sale)
 // by hand. The entry lives as the only draft of a capture session, so the
@@ -57,18 +57,7 @@ export function IncomeScreen() {
     const title = draft.title.trim() || category?.name || t('entries.income');
     updateDraft(draft.id, { title });
     createEntries
-      .mutateAsync([
-        {
-          id: randomUUID(),
-          title,
-          amount: draft.amount,
-          kind: 'income',
-          ...categoryColumns(draft.categoryId),
-          source: 'manual',
-          capture_id: null,
-          occurred_at: draft.occurredAt,
-        },
-      ])
+      .mutateAsync([{ id: randomUUID(), ...draftRow({ ...draft, title }) }])
       .catch(() => {});
     router.replace(captureHref('app', 'saved'));
   };
@@ -97,7 +86,7 @@ export function IncomeScreen() {
         currency={currency}
         onChange={(patch) => updateDraft(draft.id, patch)}
         onCategoryPress={() =>
-          router.push({ pathname: '/capture/select-category', params: { draftId: draft.id } })
+          router.push(captureHref('app', 'select-category', { draftId: draft.id }))
         }
       />
     </Screen>

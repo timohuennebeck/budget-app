@@ -129,13 +129,9 @@ export function formatWeekRange({ start, end }: DateRange) {
   return `${format.format(start)} – ${format.format(last)}`;
 }
 
-/** "September" for a whole month (with the year if it isn't this one), else "3.–15. Sept." */
-export function formatRangeLabel(range: DateRange, now = new Date()) {
-  const month = monthRange(range.start);
-  const wholeMonth =
-    month.start.getTime() === range.start.getTime() && month.end.getTime() === range.end.getTime();
-  if (wholeMonth) return formatMonth(range.start, range.start.getFullYear() !== now.getFullYear());
-  return formatWeekRange(range);
+/** "September", with the year if it isn't this one: "Dezember 2025" */
+export function formatMonthLabel(date: Date, now = new Date()) {
+  return formatMonth(date, date.getFullYear() !== now.getFullYear());
 }
 
 /** "Heute", "Gestern" or "24. September" */
@@ -144,13 +140,4 @@ export function formatDayLabel(date: Date, now = new Date()) {
   if (diff === 0) return t('common.today');
   if (diff === 1) return t('common.yesterday');
   return formatLongDate(date);
-}
-
-/** Two-letter weekday headers starting Monday: ["Mo", "Di", …] */
-export function weekdayInitials() {
-  const format = new Intl.DateTimeFormat(locale(), { weekday: 'short' });
-  const monday = new Date(2024, 0, 1);
-  return Array.from({ length: 7 }, (_, index) =>
-    format.format(addDays(monday, index)).replace('.', '').slice(0, 2),
-  );
 }

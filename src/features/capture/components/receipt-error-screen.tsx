@@ -13,6 +13,7 @@ import { Icon, type IconName } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
 
 import type { CaptureMode } from '../data/capture-store';
+import { blockingError } from '../lib/capture-errors';
 import { captureHref } from '../lib/capture-routes';
 
 const TIPS: {
@@ -24,14 +25,12 @@ const TIPS: {
   { icon: 'hand', key: 'capture.errorTipSteady' },
 ];
 
-// Codes where another photo won't help: the daily AI limit and no account yet.
-const SPECIAL = { '401': 'account', '429': 'limit' } as const;
-
 /** Unreadable receipt (2z2) with photo tips and the error code. */
 export function ReceiptErrorScreen({ mode }: { mode: CaptureMode }) {
   const { t } = useTranslation();
   const { code = '422' } = useLocalSearchParams<{ code?: string }>();
-  const special = SPECIAL[code as keyof typeof SPECIAL];
+  // Another photo won't help without an account or past the daily limit.
+  const special = blockingError(code);
   const now = new Date();
   const typeInstead = () => router.dismissTo(captureHref(mode, 'index'));
 

@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -73,12 +73,21 @@ export function EntryEditor({
   const visual = entryVisual(value.kind, category);
   const occurred = new Date(value.occurredAt);
 
+  // The amount applies while typing, since a footer button doesn't blur the
+  // field. entries.amount must be > 0, so a "-" or an empty field (typed on
+  // Android) is skipped, and leaving it that way restores the earlier amount.
+  const amountBefore = useRef(value.amount);
+  const typeAmount = (text: string) => {
+    setAmountDraft(text);
+    const parsed = parseAmount(text);
+    if (parsed && parsed > 0) onChange({ amount: parsed });
+  };
   const commitAmount = () => {
     const parsed = amountDraft === null ? null : parseAmount(amountDraft);
     setAmountDraft(null);
-    // entries.amount must be > 0; a "-" typed on Android would fail the save.
-    if (!parsed || parsed <= 0) return;
-    onChange({ amount: parsed });
+    if (amountDraft !== null && !(parsed && parsed > 0)) {
+      onChange({ amount: amountBefore.current });
+    }
   };
 
   return (
@@ -101,8 +110,11 @@ export function EntryEditor({
           <FittedInput
             size={52}
             value={amountDraft ?? formatAmountInput(value.amount)}
-            onChangeText={setAmountDraft}
-            onFocus={() => setAmountDraft(formatAmountInput(value.amount))}
+            onChangeText={typeAmount}
+            onFocus={() => {
+              amountBefore.current = value.amount;
+              setAmountDraft(formatAmountInput(value.amount));
+            }}
             onBlur={commitAmount}
             onSubmitEditing={commitAmount}
             keyboardType="decimal-pad"

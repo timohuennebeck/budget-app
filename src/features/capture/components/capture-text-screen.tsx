@@ -33,7 +33,7 @@ const SUGGESTIONS = [
 
 interface CaptureTextScreenProps {
   mode: CaptureMode;
-  /** Prefill, e.g. the search term from "„Lunch“ als Eintrag erfassen" */
+  /** Prefill, e.g. an example picked on Start's empty card */
   initialText?: string;
   /** Where the × goes in the app */
   onClose: () => void;

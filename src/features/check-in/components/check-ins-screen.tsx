@@ -8,12 +8,12 @@ import { MonthSheet } from '@/features/entries/components/month-sheet';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
 import { useSheet } from '@/shared/components/sheet';
+import { ChipRow, MonthPill, TabTitle } from '@/shared/components/tab-header';
 import { useAppConfig } from '@/shared/hooks/use-app-config';
-import { formatMonth, formatRangeLabel, formatWeekRange, monthRange } from '@/shared/lib/dates';
+import { formatMonthLabel, formatWeekRange, monthRange } from '@/shared/lib/dates';
 import { huePalette } from '@/shared/lib/color';
-import { formatMoney } from '@/shared/lib/money';
 import { tabListProps } from '@/shared/lib/tab-insets';
-import { colors, shadows } from '@/shared/lib/theme';
+import { colors } from '@/shared/lib/theme';
 import { Card } from '@/shared/ui/card';
 import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
@@ -25,18 +25,19 @@ import type { CheckIn } from '../data/check-ins-api';
 import { useCheckIns } from '../hooks/use-check-ins';
 import {
   averageAccuracy,
+  checkInDetail,
   type CheckInPeriod,
   checkInYears,
   filterCheckIns,
   groupByMonth,
   weekOf,
 } from '../lib/check-in-list';
-import { checkInAccuracy } from '../lib/check-in-window';
+import { checkInAccuracy, formatAccuracy } from '../lib/check-in-window';
 import { CheckInHero } from './check-in-hero';
 
 const GREEN = huePalette(150);
 
-function CheckInRow({ checkIn, detail }: { checkIn: CheckIn; detail: string }) {
+function CheckInRow({ checkIn, currency }: { checkIn: CheckIn; currency: string }) {
   const { checkInCloseRatio } = useAppConfig();
   const accuracy = checkInAccuracy(checkIn);
   const close = accuracy !== null && accuracy >= checkInCloseRatio;
@@ -58,11 +59,11 @@ function CheckInRow({ checkIn, detail }: { checkIn: CheckIn; detail: string }) {
           {formatWeekRange(weekOf(checkIn))}
         </Text>
         <Text size={13.5} className="text-subtle" numberOfLines={1}>
-          {detail}
+          {checkInDetail(checkIn, currency)}
         </Text>
       </View>
       <Text size={16} weight="semibold" style={{ fontVariant: ['tabular-nums'] }}>
-        {accuracy === null ? '–' : `${Math.round(accuracy * 100)} %`}
+        {formatAccuracy(checkIn)}
       </Text>
     </>
   );
@@ -81,7 +82,7 @@ function CheckInRow({ checkIn, detail }: { checkIn: CheckIn; detail: string }) {
 }
 
 // Check-ins tab (5t-m): this week's check-in as a big card, then every past
-// one with search and period chips, grouped by month.
+// one with period chips and a month pill, grouped by month.
 export function CheckInsScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
@@ -91,18 +92,8 @@ export function CheckInsScreen() {
   const [period, setPeriod] = useState<CheckInPeriod>('all');
   const monthSheet = useSheet();
 
-  const money = (value: number) => formatMoney(value, { currency, compact: true });
-  const detail = (checkIn: CheckIn) =>
-    checkIn.guess === null
-      ? t('checkIn.skipped')
-      : t('checkIn.rowDetail', {
-          guess: money(Number(checkIn.guess)),
-          actual: money(Number(checkIn.actual ?? 0)),
-        });
-
   const average = averageAccuracy(checkIns);
   const years = useMemo(() => checkInYears(checkIns), [checkIns]);
-  const thisYear = new Date().getFullYear();
   const groups = groupByMonth(filterCheckIns(checkIns, period));
 
   const periods: { value: Exclude<CheckInPeriod, object>; label: string }[] = [
@@ -117,54 +108,30 @@ export function CheckInsScreen() {
       {/* Month, title, this week's card and chips stay put; only the
           history scrolls. */}
       <View style={{ paddingTop: layout.headerPaddingTop, paddingHorizontal: 16 }}>
-        <View className="h-10 flex-row items-center px-1">
-          <Pressable
-            onPress={monthSheet.present}
-            haptic="none"
-            accessibilityLabel={t('entries.chooseMonth')}
-            className="flex-row items-center gap-2 rounded-full bg-surface px-3.5 py-[9px]"
-            style={shadows.card}>
-            <Text size={15} weight="semibold" tracking={-0.01} className="capitalize">
-              {typeof period === 'object' ? formatRangeLabel(period) : t('checkIn.allMonths')}
-            </Text>
-            <Icon name="caret-down" size={11} color={colors.primary} />
-          </Pressable>
-        </View>
-
-        <View className="mt-[22px] flex-row items-baseline justify-between px-1">
-          <Text size={34} weight="semibold" tracking={-0.04} leading={1.05}>
-            {t('checkIn.title')}
-          </Text>
-          {average !== null ? (
-            <Text size={14.5} className="text-muted">
-              <Text size={14.5} weight="semibold">
-                {`Ø ${Math.round(average * 100)} %`}
-              </Text>
-              {` · ${checkIns.length}`}
-            </Text>
-          ) : null}
-        </View>
-
+        <MonthPill
+          label={
+            typeof period === 'object' ? formatMonthLabel(period.start) : t('checkIn.allMonths')
+          }
+          onPress={monthSheet.present}
+        />
+        <TabTitle
+          title={t('checkIn.title')}
+          value={average !== null ? `Ø ${Math.round(average * 100)} %` : undefined}
+          count={checkIns.length}
+        />
         <CheckInHero currency={currency} />
         {checkIns.length ? (
-          <>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              className="-mx-4 mt-[18px]"
-              style={{ height: 36, flexGrow: 0, flexShrink: 0 }}
-              contentContainerStyle={{ paddingHorizontal: 16, gap: 8, alignItems: 'center' }}>
-              {periods.map((option) => (
-                <Chip
-                  key={option.value}
-                  label={option.label}
-                  size="sm"
-                  variant={period === option.value ? 'dark' : 'outline'}
-                  onPress={() => setPeriod(option.value)}
-                />
-              ))}
-            </ScrollView>
-          </>
+          <ChipRow className="mt-[18px]">
+            {periods.map((option) => (
+              <Chip
+                key={option.value}
+                label={option.label}
+                size="sm"
+                variant={period === option.value ? 'dark' : 'outline'}
+                onPress={() => setPeriod(option.value)}
+              />
+            ))}
+          </ChipRow>
         ) : null}
       </View>
 
@@ -196,19 +163,17 @@ export function CheckInsScreen() {
           // out of view below the chips instead of right against them.
           className="mt-3.5 flex-1"
           contentInsetAdjustmentBehavior={layout.contentInsetAdjustmentBehavior}
-          keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
           showsVerticalScrollIndicator={false}>
           <View className="gap-3">
             {groups.map((group) => (
               <View key={group.key} className="gap-2">
                 <Text size={13} weight="semibold" className="px-1.5 text-muted capitalize">
-                  {formatMonth(group.date, group.date.getFullYear() !== thisYear)}
+                  {formatMonthLabel(group.date)}
                 </Text>
                 <Card className="py-1">
                   {group.checkIns.map((checkIn) => (
-                    <CheckInRow key={checkIn.id} checkIn={checkIn} detail={detail(checkIn)} />
+                    <CheckInRow key={checkIn.id} checkIn={checkIn} currency={currency} />
                   ))}
                 </Card>
               </View>

@@ -21,6 +21,7 @@ import { useCurrency, useProfile } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
 import { SectionHeader } from '@/shared/components/section-header';
 import { useSheet } from '@/shared/components/sheet';
+import { useToday } from '@/shared/hooks/use-today';
 import { budgetCycle, formatMonth } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { tabScrollProps } from '@/shared/lib/tab-insets';
@@ -48,7 +49,8 @@ export function OverviewScreen() {
   const categories = useAppCategoryDisplays();
   const { data: limits = NO_LIMITS } = useCategoryLimits();
   const lookup = useCategoryLookup();
-  const cycle = budgetCycle(new Date(), profile?.month_start_day ?? 1);
+  const today = useToday();
+  const cycle = budgetCycle(today, profile?.month_start_day ?? 1);
   const { data: entries = [] } = useEntries(cycle);
   const { data: recent = [] } = useRecentEntries();
   const setLimit = useSetCategoryLimit();
@@ -118,7 +120,7 @@ export function OverviewScreen() {
           label={
             summary.total === null
               ? t('overview.spentThisMonth')
-              : t('overview.leftIn', { month: formatMonth(new Date()) })
+              : t('overview.leftIn', { month: formatMonth(today) })
           }
           amount={summary.total === null ? summary.spent : (summary.free ?? 0)}
           currency={currency}

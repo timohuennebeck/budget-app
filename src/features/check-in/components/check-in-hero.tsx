@@ -6,13 +6,13 @@ import { GradientPanel } from '@/shared/components/gradient-panel';
 import { useNow } from '@/shared/hooks/use-now';
 import { cn } from '@/shared/lib/cn';
 import { addDays, formatWeekRange, isSameDay } from '@/shared/lib/dates';
-import { formatMoney } from '@/shared/lib/money';
 import { colors, shadows } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Text } from '@/shared/ui/text';
 
 import { useCheckInState } from '../hooks/use-check-in-state';
-import { accuracyPercent } from '../lib/check-in-window';
+import { checkInDetail } from '../lib/check-in-list';
+import { formatAccuracy } from '../lib/check-in-window';
 import { formatCountdown } from '../lib/countdown';
 
 /** A small card on two tilted ones: "???" until done, then the result. */
@@ -51,50 +51,46 @@ export function CheckInHero({ currency }: { currency: string }) {
   const until = (date: Date) => formatCountdown(date.getTime() - now.getTime());
   // After this week's check-in the next one opens a week later.
   const nextOpen = window.isOpen ? addDays(window.opensAt, 7) : window.opensAt;
-  const percent = current ? accuracyPercent(current) : null;
-  const money = (value: number) => formatMoney(value, { currency, compact: true });
-
-  const content =
-    status === 'open'
-      ? {
-          value: '???',
-          eyebrow: t('checkIn.heroOpen', { count: daysLeft }),
-          title: t('checkIn.heroOpenTitle'),
-          button: t('checkIn.start'),
-        }
-      : status === 'done' && current
-        ? {
-            value: percent === null ? '–' : `${percent} %`,
-            eyebrow: t('checkIn.doneTitle'),
-            title:
-              current.guess === null
-                ? t('checkIn.skipped')
-                : t('checkIn.rowDetail', {
-                    guess: money(Number(current.guess)),
-                    actual: money(Number(current.actual ?? 0)),
-                  }),
-            button: t('checkIn.opensIn', { time: until(nextOpen) }),
-          }
-        : status === 'missed'
-          ? {
-              value: '???',
-              eyebrow: t('checkIn.missedTitle'),
-              title: t('checkIn.heroMissedTitle'),
-              button: t('checkIn.opensIn', { time: until(nextOpen) }),
-            }
-          : {
-              value: '???',
-              eyebrow: t('checkIn.notOpenYet'),
-              // Plain "Sunday" reads oddly on a Sunday: it opens tonight, or
-              // (a new user's first week) only next Sunday.
-              title:
-                now.getDay() !== 0
-                  ? t('checkIn.heroLockedTitle')
-                  : isSameDay(window.opensAt, now)
-                    ? t('checkIn.heroLockedTitleTonight')
-                    : t('checkIn.heroLockedTitleNextWeek'),
-              button: t('checkIn.opensIn', { time: until(window.opensAt) }),
-            };
+  const describe = () => {
+    if (status === 'open') {
+      return {
+        value: '???',
+        eyebrow: t('checkIn.heroOpen', { count: daysLeft }),
+        title: t('checkIn.heroOpenTitle'),
+        button: t('checkIn.start'),
+      };
+    }
+    if (status === 'done' && current) {
+      return {
+        value: formatAccuracy(current),
+        eyebrow: t('checkIn.doneTitle'),
+        title: checkInDetail(current, currency),
+        button: t('checkIn.opensIn', { time: until(nextOpen) }),
+      };
+    }
+    if (status === 'missed') {
+      return {
+        value: '???',
+        eyebrow: t('checkIn.missedTitle'),
+        title: t('checkIn.heroMissedTitle'),
+        button: t('checkIn.opensIn', { time: until(nextOpen) }),
+      };
+    }
+    return {
+      value: '???',
+      eyebrow: t('checkIn.notOpenYet'),
+      // Plain "Sunday" reads oddly on a Sunday: it opens tonight, or (a new
+      // user's first week) only next Sunday.
+      title:
+        now.getDay() !== 0
+          ? t('checkIn.heroLockedTitle')
+          : isSameDay(window.opensAt, now)
+            ? t('checkIn.heroLockedTitleTonight')
+            : t('checkIn.heroLockedTitleNextWeek'),
+      button: t('checkIn.opensIn', { time: until(window.opensAt) }),
+    };
+  };
+  const content = describe();
 
   return (
     <View className="mt-[18px] overflow-hidden rounded-[28px]">

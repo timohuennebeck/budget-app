@@ -16,13 +16,16 @@ interface EntryRowsProps {
   entries: Entry[];
   categories: Map<string, CategoryDisplay>;
   currency: string;
+  /** Second line; by default the category and time (or "Favorit") */
+  subtitle?: (entry: Entry, category: CategoryDisplay | undefined) => string;
 }
 
-interface EntryListProps extends Omit<EntryRowsProps, 'entries'> {
+interface EntryListProps extends Omit<EntryRowsProps, 'entries' | 'subtitle'> {
   groups: DayGroup[];
 }
 
-function EntryRows({ entries, categories, currency }: EntryRowsProps) {
+/** One tappable row per entry, opening the entry. */
+export function EntryRows({ entries, categories, currency, subtitle }: EntryRowsProps) {
   return entries.map((entry) => {
     const categoryId = categoryIdOf(entry);
     const category = categoryId ? categories.get(categoryId) : undefined;
@@ -31,7 +34,7 @@ function EntryRows({ entries, categories, currency }: EntryRowsProps) {
         key={entry.id}
         {...entryVisual(entry.kind, category)}
         title={entry.title}
-        subtitle={entrySubtitle(entry, category?.name)}
+        subtitle={subtitle ? subtitle(entry, category) : entrySubtitle(entry, category?.name)}
         amount={entryAmount(entry, currency)}
         onPress={() => router.push({ pathname: '/entry/[id]', params: { id: entry.id } })}
       />

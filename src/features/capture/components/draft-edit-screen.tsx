@@ -12,6 +12,7 @@ import { Button } from '@/shared/ui/button';
 import { type CaptureMode, useCaptureStore } from '../data/capture-store';
 import { useCaptureCategories } from '../hooks/use-capture-categories';
 import { useCaptureContext } from '../hooks/use-capture-context';
+import { captureHref } from '../lib/capture-routes';
 
 /** Corrects a parsed entry before it is saved (tap on a review row). */
 export function DraftEditScreen({ id, mode = 'app' }: { id: string; mode?: CaptureMode }) {
@@ -63,13 +64,7 @@ export function DraftEditScreen({ id, mode = 'app' }: { id: string; mode?: Captu
         category={category}
         currency={currency}
         onChange={(patch) => setDraft({ ...draft, ...patch })}
-        onCategoryPress={() =>
-          router.push({
-            pathname:
-              mode === 'onboarding' ? '/first-entry/select-category' : '/capture/select-category',
-            params: { draftId: id },
-          })
-        }
+        onCategoryPress={() => router.push(captureHref(mode, 'select-category', { draftId: id }))}
       />
     </Screen>
   );

@@ -10,13 +10,11 @@ import { categoryIdOf } from '@/features/categories/lib/category-ref';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
 import { useSheet } from '@/shared/components/sheet';
-import { formatRangeLabel, monthRange } from '@/shared/lib/dates';
+import { ChipRow, MonthPill, TabTitle } from '@/shared/components/tab-header';
+import { formatMonthLabel, monthRange } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { tabListProps } from '@/shared/lib/tab-insets';
-import { colors, shadows } from '@/shared/lib/theme';
 import { Chip } from '@/shared/ui/chip';
-import { Icon } from '@/shared/ui/icon';
-import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 
@@ -83,31 +81,12 @@ export function EntriesScreen() {
       <GradientBackground name="sky" height={420} />
       {/* Month, title, search and chips stay put; only the list scrolls. */}
       <View style={{ paddingTop: layout.headerPaddingTop, paddingHorizontal: 16 }}>
-        <View className="h-10 flex-row items-center px-1">
-          <Pressable
-            onPress={monthSheet.present}
-            haptic="none"
-            accessibilityLabel={t('entries.chooseMonth')}
-            className="flex-row items-center gap-2 rounded-full bg-surface px-3.5 py-[9px]"
-            style={shadows.card}>
-            <Text size={15} weight="semibold" tracking={-0.01} className="capitalize">
-              {formatRangeLabel(range)}
-            </Text>
-            <Icon name="caret-down" size={11} color={colors.primary} />
-          </Pressable>
-        </View>
-
-        <View className="mt-[22px] flex-row items-baseline justify-between px-1">
-          <Text size={34} weight="semibold" tracking={-0.04} leading={1.05}>
-            {t('entries.title')}
-          </Text>
-          <Text size={14.5} className="text-muted">
-            <Text size={14.5} weight="semibold">
-              {formatMoney(netTotal(filtered), { currency, signed: true })}
-            </Text>
-            {` · ${filtered.length}`}
-          </Text>
-        </View>
+        <MonthPill label={formatMonthLabel(month)} onPress={monthSheet.present} />
+        <TabTitle
+          title={t('entries.title')}
+          value={formatMoney(netTotal(filtered), { currency, signed: true })}
+          count={filtered.length}
+        />
 
         <TextField
           ref={searchInput}
@@ -120,14 +99,7 @@ export function EntriesScreen() {
           clearable
           returnKeyType="search"
         />
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          className="-mx-4 mt-3"
-          // Fixed height: on web a horizontal ScrollView inside a growing
-          // column otherwise stretches and pushes the list off-screen.
-          style={{ height: 36, flexGrow: 0, flexShrink: 0 }}
-          contentContainerStyle={{ paddingHorizontal: 16, gap: 8, alignItems: 'center' }}>
+        <ChipRow className="mt-3">
           <Chip
             label={t('entries.all')}
             size="sm"
@@ -143,7 +115,7 @@ export function EntriesScreen() {
               onPress={() => setCategoryId(categoryId === category.id ? null : category.id)}
             />
           ))}
-        </ScrollView>
+        </ChipRow>
       </View>
 
       {noResults ? (

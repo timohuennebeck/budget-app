@@ -7,7 +7,6 @@ import { roundMoney } from '@/shared/lib/money';
 export interface BudgetCard {
   category: CategoryDisplay;
   limit: number;
-  spent: number;
   /** Negative when the category is over budget */
   remaining: number;
 }
@@ -75,14 +74,8 @@ export function summarizeBudget(
       .sort((a, b) => b.amount - a.amount),
     // The per-category cards only show in that mode; totals still use limits.
     cards: (profile.budget_mode === 'per_category' ? limited : []).map((category) => {
-      const categorySpent = byCategory.get(category.id) ?? 0;
       const limit = limits.get(category.id)!;
-      return {
-        category,
-        limit,
-        spent: categorySpent,
-        remaining: roundMoney(limit - categorySpent),
-      };
+      return { category, limit, remaining: roundMoney(limit - (byCategory.get(category.id) ?? 0)) };
     }),
   };
 }

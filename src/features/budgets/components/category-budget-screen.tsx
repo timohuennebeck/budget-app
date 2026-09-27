@@ -104,17 +104,20 @@ export function CategoryBudgetScreen({ id }: { id: string }) {
         ) : (
           <Text size={15} className="mt-2.5 text-muted">
             {percent !== null ? (
-              <Text
-                size={15}
-                weight="semibold"
-                style={{
-                  color: trend.status === 'over' ? undefined : huePalette(category.hue).foreground,
-                }}
-                className={trend.status === 'over' ? 'text-danger-text' : undefined}>
-                {`${percent} %`}
-              </Text>
+              <>
+                <Text
+                  size={15}
+                  weight="semibold"
+                  style={{
+                    color:
+                      trend.status === 'over' ? undefined : huePalette(category.hue).foreground,
+                  }}
+                  className={trend.status === 'over' ? 'text-danger-text' : undefined}>
+                  {`${percent} %`}
+                </Text>
+                {` ${t('budgets.ofLimit', { limit: money(limit!) })} · `}
+              </>
             ) : null}
-            {percent !== null ? ` ${t('budgets.ofLimit', { limit: money(limit!) })} · ` : ''}
             {daysLeft}
           </Text>
         )}

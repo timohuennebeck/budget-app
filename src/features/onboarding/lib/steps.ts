@@ -1,5 +1,5 @@
 // Progress shown in the onboarding header ("3 von 11"). The capture sub-steps
-// (camera, voice, processing, saved) and the paywall sit outside the count.
+// (camera, voice, processing, review, saved) and the paywall sit outside it.
 export const ONBOARDING_STEPS = {
   name: 1,
   currency: 2,

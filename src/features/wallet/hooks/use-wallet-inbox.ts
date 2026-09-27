@@ -1,4 +1,4 @@
-import { router, usePathname } from 'expo-router';
+import { router } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
 
@@ -19,21 +19,20 @@ import { paymentDrafts } from '../lib/wallet-payment';
 export function useWalletInbox() {
   const categories = useCaptureCategories('app');
   const { data: recent, isSuccess } = useRecentEntries();
-  const pathname = usePathname();
-  const latest = useRef({ categories, recent, pathname });
+  const latest = useRef({ categories, recent });
   const ready = isSuccess && categories.length > 0;
 
   useEffect(() => {
-    latest.current = { categories, recent, pathname };
+    latest.current = { categories, recent };
   });
 
   useEffect(() => {
     if (!ready) return;
     let busy = false;
     const check = async () => {
-      const { categories, recent = [], pathname } = latest.current;
-      // Never interrupt a capture that's already open.
-      if (busy || pathname.startsWith('/capture')) return;
+      const { categories, recent = [] } = latest.current;
+      // Never interrupt a capture that's open, even under /limit.
+      if (busy || useCaptureStore.getState().open) return;
       busy = true;
       try {
         const payments = await readPayments();

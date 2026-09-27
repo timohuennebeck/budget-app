@@ -19,6 +19,8 @@ interface CaptureState {
   recording: VoiceRecording | null;
   /** "Weitere hinzufügen": new drafts are added to the current ones */
   appending: boolean;
+  /** The capture flow is on screen, possibly under /limit or another modal */
+  open: boolean;
   start: (text?: string) => void;
   appendMore: () => void;
   addDrafts: (drafts: DraftEntry[]) => void;
@@ -37,6 +39,7 @@ export const useCaptureStore = create<CaptureState>((set) => ({
   photoUri: null,
   recording: null,
   appending: false,
+  open: false,
   start: (text = '') =>
     set({ text, drafts: [], photoUri: null, recording: null, appending: false }),
   appendMore: () => set({ text: '', photoUri: null, recording: null, appending: true }),

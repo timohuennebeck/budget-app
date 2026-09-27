@@ -67,3 +67,9 @@ export function accuracyPercent(checkIn: Pick<CheckIn, 'guess' | 'actual'>) {
   const accuracy = checkInAccuracy(checkIn);
   return accuracy === null ? null : Math.round(accuracy * 100);
 }
+
+/** "93 %", or "–" when the check-in was skipped. */
+export function formatAccuracy(checkIn: Pick<CheckIn, 'guess' | 'actual'>) {
+  const percent = accuracyPercent(checkIn);
+  return percent === null ? '–' : `${percent} %`;
+}

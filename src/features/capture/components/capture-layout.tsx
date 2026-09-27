@@ -6,15 +6,19 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { useCaptureStore } from '../data/capture-store';
 
-// Stack for the capture flow (/capture and /first-entry). Clears the session
-// when the flow closes: camera and voice can be opened directly (skipping the
-// text screen that calls `start`), so leftover drafts or a pending "Weitere
-// hinzufügen" must not leak into the next one.
-// In the app the flow is a native full-screen modal, which needs its own
-// gesture root, safe area and sheet host, since bottom sheets hosted at the
-// root would open behind the modal.
+// Stack for the capture flow (/capture and /first-entry). Closing it clears
+// the session, since camera and voice open directly (skipping the text
+// screen's `start`), so old drafts or "Weitere hinzufügen" can't leak.
+// As a native full-screen modal it needs its own gesture root, safe area and
+// sheet host; sheets hosted at the root would open behind it.
 export function CaptureLayout() {
-  useEffect(() => () => useCaptureStore.getState().start(), []);
+  useEffect(() => {
+    useCaptureStore.setState({ open: true });
+    return () => {
+      useCaptureStore.getState().start();
+      useCaptureStore.setState({ open: false });
+    };
+  }, []);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>

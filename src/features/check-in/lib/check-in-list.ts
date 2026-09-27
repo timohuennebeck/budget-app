@@ -1,10 +1,13 @@
+import { t } from 'i18next';
+
 import { addDays, type DateRange, fromISODate } from '@/shared/lib/dates';
+import { formatMoney } from '@/shared/lib/money';
 
 import type { CheckIn } from '../data/check-ins-api';
 import { checkInAccuracy } from './check-in-window';
 
 /** Filter on Check-ins: everything, the last 3 months, one year (chips) or
- * a from–till range (period pill). */
+ * a month (month pill). */
 export type CheckInPeriod = 'all' | 'recent' | number | DateRange;
 
 export interface CheckInMonth {
@@ -58,4 +61,14 @@ export function groupByMonth(checkIns: CheckIn[]): CheckInMonth[] {
     else groups.push({ key, date: sunday, checkIns: [checkIn] });
   }
   return groups;
+}
+
+/** "290 € geschätzt · 312,40 € echt", or "Übersprungen". */
+export function checkInDetail(checkIn: CheckIn, currency: string) {
+  if (checkIn.guess === null) return t('checkIn.skipped');
+  const money = (value: number) => formatMoney(value, { currency, compact: true });
+  return t('checkIn.rowDetail', {
+    guess: money(Number(checkIn.guess)),
+    actual: money(Number(checkIn.actual ?? 0)),
+  });
 }

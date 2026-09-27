@@ -1,7 +1,7 @@
 import i18n from 'i18next';
 
 import { upsertLimits } from '@/features/categories/data/limits-api';
-import { categoryColumns } from '@/features/categories/lib/category-ref';
+import { draftRow } from '@/features/capture/lib/draft-row';
 import { hasEntries, insertEntries } from '@/features/entries/data/entries-api';
 import { acceptLegalDocuments } from '@/features/legal/data/legal-api';
 import { updateNotificationSettings } from '@/features/notifications/data/notifications-api';
@@ -39,24 +39,18 @@ export async function completeOnboarding(
 
   // Limits by preset id; re-running just overwrites them.
   if (draft.budgetMode === 'per_category') {
+    // The table only takes positive limits; 0 means no limit.
     const limits = Object.entries(draft.categoryLimits).filter(
-      (limit): limit is [string, number] => limit[1] !== null,
+      (limit): limit is [string, number] => limit[1] !== null && limit[1] > 0,
     );
     await upsertLimits(userId, limits);
   }
 
   if (draft.entries.length && !(await hasEntries())) {
     await insertEntries(
-      draft.entries.slice(0, freeEntries).map((entry) => ({
-        profile_id: userId,
-        title: entry.title,
-        amount: entry.amount,
-        kind: entry.kind,
-        source: entry.source,
-        occurred_at: entry.occurredAt,
-        capture_id: entry.captureId ?? null,
-        ...categoryColumns(entry.categoryId),
-      })),
+      draft.entries
+        .slice(0, freeEntries)
+        .map((entry) => ({ profile_id: userId, ...draftRow(entry) })),
     );
   }
 

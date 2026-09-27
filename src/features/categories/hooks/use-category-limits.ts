@@ -12,6 +12,9 @@ const listKey = limitQueries.list.queryKey;
 const byCategory = (rows: CategoryLimit[]) =>
   new Map(rows.map((row) => [categoryIdOf(row)!, Number(row.amount)]));
 
+// The table only takes positive limits; a limit stepped down to 0 means none.
+const positiveOrNull = (limit: number | null) => (limit !== null && limit > 0 ? limit : null);
+
 /** Monthly limits by category id (preset or own category). */
 export function useCategoryLimits(enabled = true) {
   return useQuery({ ...limitQueries.list, enabled, select: byCategory });
@@ -22,9 +25,10 @@ export function useSetCategoryLimit() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: ({ id, limit }: { id: string; limit: number | null }) =>
-      setLimit(userId, id, limit),
+      setLimit(userId, id, positiveOrNull(limit)),
     meta: { optimistic: true },
-    onMutate: async ({ id, limit }) => {
+    onMutate: async ({ id, limit: requested }) => {
+      const limit = positiveOrNull(requested);
       const saved = await snapshot(client, { queryKey: listKey });
       client.setQueryData<CategoryLimit[]>(listKey, (rows) => {
         if (!rows) return rows;

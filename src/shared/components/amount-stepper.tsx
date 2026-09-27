@@ -45,6 +45,9 @@ export function AmountStepper({
   const { t } = useTranslation();
   const input = useRef<TextInput>(null);
   const [draft, setDraft] = useState<string | null>(null);
+  // Typed digits apply right away (a footer button doesn't blur the field);
+  // leaving the field empty goes back to the amount it had before.
+  const before = useRef(value);
   const [rowWidth, setRowWidth] = useState(0);
   const shown = draft ?? String(value);
   // Long amounts shrink so the − and + buttons stay on screen: the number and
@@ -91,10 +94,17 @@ export function AmountStepper({
             ref={input}
             size={metrics.number}
             value={shown}
-            onChangeText={(text) => setDraft(text.replace(/\D/g, '').slice(0, 7))}
-            onFocus={() => setDraft(String(value))}
+            onChangeText={(text) => {
+              const digits = text.replace(/\D/g, '').slice(0, 7);
+              setDraft(digits);
+              if (digits !== '') onChange(clamp(Number(digits)));
+            }}
+            onFocus={() => {
+              before.current = value;
+              setDraft(String(value));
+            }}
             onBlur={() => {
-              if (draft !== null && draft !== '') onChange(clamp(Number(draft)));
+              if (draft === '') onChange(before.current);
               setDraft(null);
             }}
             keyboardType="number-pad"
