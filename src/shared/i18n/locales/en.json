@@ -340,7 +340,7 @@
     "trendNoLimit": "At this pace you'll end this month at <b>{{amount}}</b>.",
     "noEntriesYet": "No entries this month yet.",
     "untilDay": "Up to {{date}}",
-    "onDay": "<b>{{amount}}</b> that day"
+    "onDay": "{{amount}} that day"
   },
   "checkIn": {
     "accuracy": "{{percent}}% accurate",

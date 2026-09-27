@@ -348,7 +348,7 @@
     "trendNoLimit": "A este ritmo acabas o mês em <b>{{amount}}</b>.",
     "noEntriesYet": "Ainda sem movimentos este mês.",
     "untilDay": "Até {{date}}",
-    "onDay": "<b>{{amount}}</b> nesse dia"
+    "onDay": "{{amount}} nesse dia"
   },
   "checkIn": {
     "accuracy": "{{percent}} % de precisão",
