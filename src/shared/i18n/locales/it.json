@@ -446,9 +446,9 @@
   "wallet": {
     "title": "Paga come sempre,\nLooop prende nota",
     "subtitle": "Premi due volte il tasto laterale e paga con Apple Pay. La spesa arriva in Looop in automatico.",
-    "step1": "Apri Comandi rapidi › <b>Automazione</b>",
-    "step2": "Tocca <b>+</b> e scegli <b>Transazione</b> › <b>Esegui subito</b>",
-    "step3": "Scegli <b>Looop: Registra pagamento</b> con <b>Importo</b> ed <b>Esercente</b>",
+    "step1": "Apri Comandi rapidi › <b>Automazione</b> › <b>+</b>",
+    "step2": "Scegli <b>Wallet</b>, le tue carte ed <b>Esegui subito</b>",
+    "step3": "<b>Nuova automazione vuota</b> › <b>Looop: Registra pagamento</b>, poi tocca <b>Importo</b> ed <b>Esercente</b> e scegli i valori della transazione",
     "openShortcuts": "Apri Comandi rapidi",
     "reopen": "Riapri Comandi rapidi",
     "active": "Funziona: l’ultimo pagamento Apple Pay è arrivato il {{date}}.",

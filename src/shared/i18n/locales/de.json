@@ -436,9 +436,9 @@
   "wallet": {
     "title": "Bezahlen wie immer,\nLooop schreibt mit",
     "subtitle": "Zweimal die Seitentaste drücken, mit Apple Pay zahlen. Die Ausgabe landet automatisch in Looop.",
-    "step1": "Öffne Kurzbefehle › <b>Automation</b>",
-    "step2": "Tippe <b>+</b> und wähle <b>Transaktion</b> › <b>Sofort ausführen</b>",
-    "step3": "Wähle <b>Looop: Zahlung erfassen</b> mit <b>Betrag</b> und <b>Händler</b>",
+    "step1": "Öffne Kurzbefehle › <b>Automation</b> › <b>+</b>",
+    "step2": "Wähle <b>Wallet</b>, deine Karten und <b>Sofort ausführen</b>",
+    "step3": "<b>Neue leere Automation</b> › <b>Looop: Zahlung erfassen</b>, dann <b>Betrag</b> und <b>Händler</b> antippen und die Werte der Transaktion wählen",
     "openShortcuts": "Kurzbefehle öffnen",
     "reopen": "Kurzbefehle erneut öffnen",
     "active": "Läuft – die letzte Apple-Pay-Zahlung kam am {{date}} an.",

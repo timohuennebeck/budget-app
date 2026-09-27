@@ -436,9 +436,9 @@
   "wallet": {
     "title": "Pay as usual,\nLooop takes notes",
     "subtitle": "Double-press the side button and pay with Apple Pay. The expense lands in Looop automatically.",
-    "step1": "Open Shortcuts › <b>Automation</b>",
-    "step2": "Tap <b>+</b> and choose <b>Transaction</b> › <b>Run Immediately</b>",
-    "step3": "Choose <b>Looop: Log payment</b> with <b>Amount</b> and <b>Merchant</b>",
+    "step1": "Open Shortcuts › <b>Automation</b> › <b>+</b>",
+    "step2": "Choose <b>Wallet</b>, your cards and <b>Run Immediately</b>",
+    "step3": "<b>New Blank Automation</b> › <b>Looop: Log payment</b>, then tap <b>Amount</b> and <b>Merchant</b> and pick the transaction’s values",
     "openShortcuts": "Open Shortcuts",
     "reopen": "Open Shortcuts again",
     "active": "Working – the last Apple Pay payment arrived on {{date}}.",

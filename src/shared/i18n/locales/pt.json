@@ -446,9 +446,9 @@
   "wallet": {
     "title": "Paga como sempre,\no Looop toma nota",
     "subtitle": "Carrega duas vezes no botão lateral e paga com Apple Pay. A despesa chega ao Looop automaticamente.",
-    "step1": "Abre Atalhos › <b>Automatização</b>",
-    "step2": "Toca em <b>+</b> e escolhe <b>Transação</b> › <b>Executar imediatamente</b>",
-    "step3": "Escolhe <b>Looop: Registar pagamento</b> com <b>Montante</b> e <b>Comerciante</b>",
+    "step1": "Abre Atalhos › <b>Automatização</b> › <b>+</b>",
+    "step2": "Escolhe <b>Wallet</b>, os teus cartões e <b>Executar imediatamente</b>",
+    "step3": "<b>Nova automatização em branco</b> › <b>Looop: Registar pagamento</b>, depois toca em <b>Montante</b> e <b>Comerciante</b> e escolhe os valores da transação",
     "openShortcuts": "Abrir Atalhos",
     "reopen": "Abrir Atalhos de novo",
     "active": "Está a funcionar: o último pagamento Apple Pay chegou a {{date}}.",

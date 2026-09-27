@@ -20,7 +20,7 @@ interface WalletSetupScreenProps {
 const STEPS = ['wallet.step1', 'wallet.step2', 'wallet.step3'] as const;
 
 // Logging Apple Pay payments automatically: a personal automation in the
-// Shortcuts app (Transaction trigger, iOS 17+) that runs "Zahlung erfassen"
+// Shortcuts app ("Wallet" trigger, iOS 17+) that runs "Zahlung erfassen"
 // (2p5-b, also Profil › Apple Pay). Apps can't create automations or see
 // whether one exists; the first payment that arrives is the real proof, and
 // with showStatus the screen says when the last one came in.
