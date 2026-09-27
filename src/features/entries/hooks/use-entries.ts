@@ -75,6 +75,7 @@ export function useCreateEntries() {
         source: 'manual',
         occurred_at: now,
         ...row,
+        capture_id: row.capture_id ?? null,
         profile_id: userId,
         created_at: now,
         updated_at: now,

@@ -9,12 +9,14 @@ interface CaptureState {
   drafts: DraftEntry[];
   /** Local URI of the last receipt photo */
   photoUri: string | null;
+  /** Capture row a voice session created (transcribe-session) */
+  captureId: string | null;
   /** "Weitere hinzufügen": new drafts are added to the current ones */
   appending: boolean;
   start: (text?: string) => void;
   appendMore: () => void;
   addDrafts: (drafts: DraftEntry[]) => void;
-  setText: (text: string) => void;
+  setText: (text: string, captureId?: string | null) => void;
   setPhoto: (uri: string | null) => void;
   updateDraft: (id: string, patch: Partial<DraftEntry>) => void;
   removeDraft: (id: string) => void;
@@ -26,15 +28,17 @@ export const useCaptureStore = create<CaptureState>((set) => ({
   text: '',
   drafts: [],
   photoUri: null,
+  captureId: null,
   appending: false,
-  start: (text = '') => set({ text, drafts: [], photoUri: null, appending: false }),
-  appendMore: () => set({ text: '', photoUri: null, appending: true }),
+  start: (text = '') =>
+    set({ text, drafts: [], photoUri: null, captureId: null, appending: false }),
+  appendMore: () => set({ text: '', photoUri: null, captureId: null, appending: true }),
   addDrafts: (drafts) =>
     set((state) => ({
       drafts: state.appending ? [...state.drafts, ...drafts] : drafts,
       appending: false,
     })),
-  setText: (text) => set({ text }),
+  setText: (text, captureId = null) => set({ text, captureId }),
   setPhoto: (photoUri) => set({ photoUri }),
   updateDraft: (id, patch) =>
     set((state) => ({

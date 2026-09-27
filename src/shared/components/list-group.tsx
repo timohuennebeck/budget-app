@@ -1,7 +1,8 @@
 import { Children, Fragment, type ReactNode } from 'react';
-import { View } from 'react-native';
+import { Switch, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
+import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { Pressable } from '@/shared/ui/pressable';
@@ -69,5 +70,40 @@ export function ListRow({ title, subtitle, value, accessory, onPress, destructiv
       {accessory}
       {destructive ? null : <Icon name="caret-right" size={11} color={colors.chevron} />}
     </Pressable>
+  );
+}
+
+interface ListSwitchRowProps {
+  title: string;
+  subtitle?: string;
+  value: boolean;
+  onValueChange: (value: boolean) => void;
+}
+
+export function ListSwitchRow({ title, subtitle, value, onValueChange }: ListSwitchRowProps) {
+  return (
+    <View className="flex-row items-center gap-3 px-[18px] py-[13px]">
+      <View className="min-w-0 flex-1">
+        <Text size={16} weight="medium">
+          {title}
+        </Text>
+        {subtitle ? (
+          <Text size={13.5} className="mt-0.5 text-subtle">
+            {subtitle}
+          </Text>
+        ) : null}
+      </View>
+      <Switch
+        value={value}
+        onValueChange={(next) => {
+          haptics.select();
+          onValueChange(next);
+        }}
+        accessibilityLabel={title}
+        trackColor={{ true: colors.primary, false: colors.grabber }}
+        thumbColor={colors.white}
+        ios_backgroundColor={colors.grabber}
+      />
+    </View>
   );
 }

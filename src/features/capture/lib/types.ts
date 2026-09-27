@@ -7,12 +7,14 @@ export interface DraftEntry {
   /** The user's share */
   amount: number;
   kind: Enums<'entry_kind'>;
-  /** Category id in the app, catalog key during onboarding */
+  /** Category id in the app, preset key during onboarding */
   categoryId: string | null;
   source: Enums<'entry_source'>;
   occurredAt: string;
   /** Pip wasn't sure about the category; the review step asks to confirm */
   uncertain: boolean;
+  /** The AI capture it came from, saved as entries.capture_id */
+  captureId?: string;
 }
 
 /** What the parser needs to know about a category to match it. */

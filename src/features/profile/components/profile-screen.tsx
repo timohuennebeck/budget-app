@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useAuth } from '@/features/auth/lib/auth-provider';
 import { useActiveCategories } from '@/features/categories/hooks/use-categories';
+import { useNotificationSettings } from '@/features/notifications/hooks/use-notification-settings';
 import { useEntriesAllowance } from '@/features/paywall/hooks/use-entries-allowance';
 import { ListGroup, ListRow } from '@/shared/components/list-group';
 import { Screen } from '@/shared/components/screen';
@@ -27,6 +28,8 @@ export function ProfileScreen() {
   const { data: categories = [] } = useActiveCategories();
   const updateProfile = useUpdateProfile();
   const allowance = useEntriesAllowance();
+  const { data: settings } = useNotificationSettings();
+  const reminder = settings?.find((row) => row.kind === 'daily_reminder');
   const { supportEmail } = useAppConfig();
   const monthStart = useSheet();
 
@@ -83,12 +86,12 @@ export function ProfileScreen() {
         <ListRow
           title={t('profile.reminder')}
           subtitle={
-            profile.reminder_enabled
+            reminder?.enabled && reminder.time
               ? t(
-                  profile.reminder_repeat === 'daily'
-                    ? 'profile.reminderDaily'
-                    : 'profile.reminderWeekdays',
-                  { time: profile.reminder_time.slice(0, 5) },
+                  reminder.repeat === 'weekdays'
+                    ? 'profile.reminderWeekdays'
+                    : 'profile.reminderDaily',
+                  { time: reminder.time.slice(0, 5) },
                 )
               : t('profile.reminderOff')
           }

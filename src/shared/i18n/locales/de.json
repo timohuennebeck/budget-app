@@ -10,6 +10,7 @@
     "edit": "Bearbeiten",
     "increase": "Mehr",
     "later": "Später",
+    "openSettings": "Einstellungen öffnen",
     "save": "Speichern",
     "saveFailedMessage": "Deine Änderung wurde zurückgesetzt. Prüf deine Verbindung und versuch es noch mal.",
     "saveFailedTitle": "Nicht gespeichert",
@@ -27,15 +28,7 @@
     "groceries": "Lebensmittel",
     "dining": "Essen gehen",
     "cafe": "Café",
-    "shopping": "Shopping",
     "transport": "Mobilität",
-    "drugstore": "Drogerie",
-    "housing": "Wohnen",
-    "health": "Gesundheit",
-    "leisure": "Freizeit",
-    "kids": "Kinder",
-    "fitness": "Fitness",
-    "travel": "Reisen",
     "add": "Kategorie hinzufügen",
     "apply": "{{name}} übernehmen",
     "category": "Kategorie",
@@ -48,7 +41,8 @@
     "newSubtitle": "Gib ihr einen Namen, ein Icon und eine Farbe.",
     "newTitle": "Neue Kategorie",
     "preview": "{{from}} → {{to}} in 30 Tagen",
-    "search": "Kategorie suchen"
+    "search": "Kategorie suchen",
+    "suggestions": "Vorschläge"
   },
   "currencies": {
     "EUR": "Euro",
@@ -191,6 +185,7 @@
     "addMore": "Weitere hinzufügen",
     "allowCamera": "Kamera erlauben",
     "camera": "Beleg fotografieren",
+    "connecting": "Verbinde …",
     "cameraHint": "Fotografiere Beleg oder Kassenbon",
     "cameraPermission": "Pip braucht Zugriff auf die Kamera, um deinen Kassenbon zu lesen.",
     "confirm": "Passt",
@@ -202,6 +197,10 @@
     "errorTipLight": "Mehr Licht, keine Spiegelungen",
     "errorTipSteady": "iPhone ruhig halten",
     "errorTitle": "Das hat nicht geklappt.",
+    "accountSubtitle": "Pip liest Belege, sobald dein Konto steht. Tipp deinen ersten Eintrag erstmal ein.",
+    "accountTitle": "Belege kommen gleich.",
+    "limitSubtitle": "Deine Beleg-Scans für heute sind aufgebraucht. Tipp es ein, Pip sortiert trotzdem.",
+    "limitTitle": "Pip braucht eine Pause.",
     "flip": "Kamera wechseln",
     "guess": "{{name}}?",
     "incomeSaved": "Einnahme\ngespeichert",
@@ -252,8 +251,25 @@
     "total": "Gesamt",
     "typeInstead": "Von Hand eingeben",
     "voice": "Sprechen",
-    "voiceSample": "40€ Lebensmittel, 12€ Uber, Mittagessen 18€, und dreiundzwanzig bei dm",
-    "whichCategory": "Welche Kategorie?"
+    "whichCategory": "Welche Kategorie?",
+    "voiceErrors": {
+      "account": {
+        "title": "Sprechen kommt gleich.",
+        "subtitle": "Pip hört zu, sobald dein Konto steht. Tipp deinen ersten Eintrag erstmal ein."
+      },
+      "permission": {
+        "title": "Pip hört dich nicht.",
+        "subtitle": "Erlaube Looop das Mikrofon in den Einstellungen oder tipp es ein."
+      },
+      "limit": {
+        "title": "Pip braucht eine Pause.",
+        "subtitle": "Deine Sprach-Einträge für heute sind aufgebraucht. Tipp es ein, Pip sortiert trotzdem."
+      },
+      "unavailable": {
+        "title": "Pip kann gerade nicht zuhören.",
+        "subtitle": "Prüf deine Verbindung oder tipp es ein."
+      }
+    }
   },
   "entries": {
     "all": "Alle",
@@ -380,10 +396,16 @@
   },
   "reminders": {
     "apply": "{{time}} übernehmen",
+    "budgetWarnings": "Budget-Warnungen",
+    "budgetWarningsHint": "Bei 80 % und 100 % eines Budgets",
+    "checkIn": "Wochen-Check-in",
+    "checkInHint": "Sonntagabend, wenn deine Woche bereit ist",
     "daily": "Täglich",
-    "notificationBody": "Sag's Pip in 5 Sekunden. Kaffee, Einkauf, alles.",
-    "notificationTitle": "Heute schon was ausgegeben?",
+    "dailyReminder": "Tägliche Erinnerung",
+    "notifications": "Benachrichtigungen",
     "onboardingTitle": "{{name}}, wann\npasst es dir?",
+    "permissionMessage": "Erlaube Mitteilungen für Looop in den Einstellungen, damit Pip dich erreicht.",
+    "permissionTitle": "Mitteilungen sind aus",
     "repeat": "Wiederholen",
     "subtitle": "Eine Erinnerung am Tag, wann immer du willst.",
     "title": "Wann soll Pip\ndich erinnern?",

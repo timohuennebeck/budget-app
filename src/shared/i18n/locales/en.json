@@ -10,6 +10,7 @@
     "edit": "Edit",
     "increase": "More",
     "later": "Later",
+    "openSettings": "Open Settings",
     "save": "Save",
     "saveFailedMessage": "Your change was undone. Check your connection and try again.",
     "saveFailedTitle": "Couldn't save",
@@ -27,15 +28,7 @@
     "groceries": "Groceries",
     "dining": "Eating out",
     "cafe": "Café",
-    "shopping": "Shopping",
     "transport": "Transport",
-    "drugstore": "Drugstore",
-    "housing": "Housing",
-    "health": "Health",
-    "leisure": "Leisure",
-    "kids": "Kids",
-    "fitness": "Fitness",
-    "travel": "Travel",
     "add": "Add category",
     "apply": "Use {{name}}",
     "category": "Category",
@@ -48,7 +41,8 @@
     "newSubtitle": "Give it a name, an icon and a color.",
     "newTitle": "New category",
     "preview": "{{from}} → {{to}} in 30 days",
-    "search": "Search categories"
+    "search": "Search categories",
+    "suggestions": "Suggestions"
   },
   "currencies": {
     "EUR": "Euro",
@@ -191,6 +185,7 @@
     "addMore": "Add more",
     "allowCamera": "Allow camera",
     "camera": "Snap a receipt",
+    "connecting": "Connecting …",
     "cameraHint": "Take a photo of a receipt or bill",
     "cameraPermission": "Pip needs camera access to read your receipt.",
     "confirm": "Looks good",
@@ -202,6 +197,10 @@
     "errorTipLight": "More light, no glare",
     "errorTipSteady": "Hold your iPhone steady",
     "errorTitle": "That didn't work.",
+    "accountSubtitle": "Pip reads receipts once your account is set up. Type your first entry for now.",
+    "accountTitle": "Receipts come a bit later.",
+    "limitSubtitle": "You've used today's receipt scans. Type it in instead, Pip still sorts it.",
+    "limitTitle": "Pip needs a break.",
     "flip": "Switch camera",
     "guess": "{{name}}?",
     "incomeSaved": "Income\nsaved",
@@ -252,8 +251,25 @@
     "total": "Total",
     "typeInstead": "Enter manually",
     "voice": "Speak",
-    "voiceSample": "€40 groceries, €12 Uber, lunch €18, and twenty-three at dm",
-    "whichCategory": "Which category?"
+    "whichCategory": "Which category?",
+    "voiceErrors": {
+      "account": {
+        "title": "Voice comes a bit later.",
+        "subtitle": "Pip listens once your account is set up. Type your first entry for now."
+      },
+      "permission": {
+        "title": "Pip can't hear you.",
+        "subtitle": "Allow the microphone for Looop in Settings, or type it in instead."
+      },
+      "limit": {
+        "title": "Pip needs a break.",
+        "subtitle": "You've used today's voice captures. Type it in instead, Pip still sorts it."
+      },
+      "unavailable": {
+        "title": "Pip can't listen right now.",
+        "subtitle": "Check your connection, or type it in instead."
+      }
+    }
   },
   "entries": {
     "all": "All",
@@ -380,10 +396,16 @@
   },
   "reminders": {
     "apply": "Use {{time}}",
+    "budgetWarnings": "Budget warnings",
+    "budgetWarningsHint": "At 80 % and 100 % of a budget",
+    "checkIn": "Weekly check-in",
+    "checkInHint": "Sunday evening, when your week is ready",
     "daily": "Daily",
-    "notificationBody": "Tell Pip in 5 seconds. Coffee, groceries, anything.",
-    "notificationTitle": "Spent anything today?",
+    "dailyReminder": "Daily reminder",
+    "notifications": "Notifications",
     "onboardingTitle": "{{name}}, when\nsuits you?",
+    "permissionMessage": "Allow notifications for Looop in Settings so Pip can reach you.",
+    "permissionTitle": "Notifications are off",
     "repeat": "Repeat",
     "subtitle": "One reminder a day, whenever you like.",
     "title": "When should Pip\nremind you?",

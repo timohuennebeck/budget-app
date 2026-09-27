@@ -10,6 +10,7 @@
     "edit": "Editar",
     "increase": "Mais",
     "later": "Mais tarde",
+    "openSettings": "Abrir Ajustes",
     "save": "Salvar",
     "saveFailedMessage": "Sua alteração foi desfeita. Verifique sua conexão e tente de novo.",
     "saveFailedTitle": "Não foi possível salvar",
@@ -27,15 +28,7 @@
     "groceries": "Mercado",
     "dining": "Restaurantes",
     "cafe": "Café",
-    "shopping": "Compras",
     "transport": "Transporte",
-    "drugstore": "Farmácia",
-    "housing": "Moradia",
-    "health": "Saúde",
-    "leisure": "Lazer",
-    "kids": "Filhos",
-    "fitness": "Academia",
-    "travel": "Viagens",
     "add": "Adicionar categoria",
     "apply": "Usar {{name}}",
     "category": "Categoria",
@@ -48,7 +41,8 @@
     "newSubtitle": "Dê a ela um nome, um ícone e uma cor.",
     "newTitle": "Nova categoria",
     "preview": "{{from}} → {{to}} em 30 dias",
-    "search": "Buscar categoria"
+    "search": "Buscar categoria",
+    "suggestions": "Sugestões"
   },
   "currencies": {
     "EUR": "Euro",
@@ -193,6 +187,7 @@
     "addMore": "Adicionar mais",
     "allowCamera": "Permitir câmera",
     "camera": "Fotografar recibo",
+    "connecting": "Conectando …",
     "cameraHint": "Fotografe o recibo ou cupom fiscal",
     "cameraPermission": "O Pip precisa de acesso à câmera para ler seu recibo.",
     "confirm": "Tudo certo",
@@ -205,6 +200,10 @@
     "errorTipLight": "Mais luz, sem reflexos",
     "errorTipSteady": "Segure o iPhone firme",
     "errorTitle": "Não deu certo.",
+    "accountSubtitle": "O Pip lê notas quando sua conta estiver pronta. Por enquanto, digite sua primeira entrada.",
+    "accountTitle": "As notas ficam para daqui a pouco.",
+    "limitSubtitle": "Você já usou as leituras de notas de hoje. Digite e o Pip organiza mesmo assim.",
+    "limitTitle": "O Pip precisa de uma pausa.",
     "flip": "Trocar câmera",
     "guess": "{{name}}?",
     "incomeSaved": "Receita\nsalva",
@@ -258,8 +257,25 @@
     "total": "Total",
     "typeInstead": "Digitar manualmente",
     "voice": "Falar",
-    "voiceSample": "40€ mercado, 12€ Uber, almoço 18€, e vinte e três na dm",
-    "whichCategory": "Qual categoria?"
+    "whichCategory": "Qual categoria?",
+    "voiceErrors": {
+      "account": {
+        "title": "A voz fica para daqui a pouco.",
+        "subtitle": "O Pip te ouve quando sua conta estiver pronta. Por enquanto, digite sua primeira entrada."
+      },
+      "permission": {
+        "title": "O Pip não te ouve.",
+        "subtitle": "Permita o microfone para o Looop nos Ajustes ou digite."
+      },
+      "limit": {
+        "title": "O Pip precisa de uma pausa.",
+        "subtitle": "Você já usou as entradas por voz de hoje. Digite e o Pip organiza mesmo assim."
+      },
+      "unavailable": {
+        "title": "O Pip não pode ouvir agora.",
+        "subtitle": "Verifique sua conexão ou digite."
+      }
+    }
   },
   "entries": {
     "all": "Todos",
@@ -390,10 +406,16 @@
   },
   "reminders": {
     "apply": "Usar {{time}}",
+    "budgetWarnings": "Alertas de orçamento",
+    "budgetWarningsHint": "Aos 80 % e 100 % de um orçamento",
+    "checkIn": "Check-in semanal",
+    "checkInHint": "Domingo à noite, quando sua semana estiver pronta",
     "daily": "Todo dia",
-    "notificationBody": "Conte ao Pip em 5 segundos. Café, compras, tudo.",
-    "notificationTitle": "Já gastou algo hoje?",
+    "dailyReminder": "Lembrete diário",
+    "notifications": "Notificações",
     "onboardingTitle": "{{name}}, qual horário\né melhor para você?",
+    "permissionMessage": "Permita as notificações do Looop nos Ajustes para o Pip poder te avisar.",
+    "permissionTitle": "As notificações estão desativadas",
     "repeat": "Repetir",
     "subtitle": "Um lembrete por dia, na hora que você quiser.",
     "title": "Quando o Pip deve\nte lembrar?",

@@ -28,7 +28,7 @@ export function MonthlyBudgetScreen({
   onSubmit,
 }: MonthlyBudgetScreenProps) {
   const { t } = useTranslation();
-  const { peerAverages } = useAppConfig();
+  const { peerMonthlyAverage } = useAppConfig();
   const [amount, setAmount] = useState(initial);
   const money = (value: number) => formatMoney(value, { currency, compact: true });
 
@@ -42,7 +42,7 @@ export function MonthlyBudgetScreen({
           onChange={setAmount}
           currency={currency}
           step={50}
-          hint={t('budgets.peerAverage', { amount: money(peerAverages.monthly) })}
+          hint={t('budgets.peerAverage', { amount: money(peerMonthlyAverage) })}
         />
       </Card>
       <QuickAmounts

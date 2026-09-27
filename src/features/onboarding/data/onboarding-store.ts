@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { categoryCatalog } from '@/features/categories/data/category-catalog';
 import type { DraftEntry } from '@/features/capture/lib/types';
 import type { Enums } from '@/shared/lib/database.types';
 import { persistStorage } from '@/shared/lib/storage';
@@ -17,8 +16,9 @@ export interface CustomCategoryDraft {
 export interface OnboardingDraft {
   firstName: string;
   currency: string;
-  /** Selected catalog keys and custom category ids, in display order */
-  categoryIds: string[];
+  /** Selected preset keys and custom category ids, in display order; null
+   * until the user changes it, meaning the suggested presets */
+  categoryIds: string[] | null;
   customCategories: CustomCategoryDraft[];
   budgetMode: Enums<'budget_mode'>;
   monthlyBudget: number;
@@ -35,8 +35,9 @@ export interface OnboardingDraft {
 
 interface OnboardingState extends OnboardingDraft {
   update: (patch: Partial<OnboardingDraft>) => void;
-  toggleCategory: (id: string) => void;
-  addCustomCategory: (category: Omit<CustomCategoryDraft, 'id'>) => void;
+  /** `selected` is the current selection from useSelectedCategoryIds */
+  toggleCategory: (id: string, selected: string[]) => void;
+  addCustomCategory: (category: Omit<CustomCategoryDraft, 'id'>, selected: string[]) => void;
   addEntries: (entries: DraftEntry[]) => void;
   reset: () => void;
 }
@@ -44,9 +45,7 @@ interface OnboardingState extends OnboardingDraft {
 const initialDraft: OnboardingDraft = {
   firstName: '',
   currency: 'EUR',
-  categoryIds: categoryCatalog
-    .filter((category) => category.suggested)
-    .map((category) => category.key),
+  categoryIds: null,
   customCategories: [],
   budgetMode: 'per_category',
   monthlyBudget: 800,
@@ -68,18 +67,18 @@ export const useOnboardingStore = create<OnboardingState>()(
     (set) => ({
       ...initialDraft,
       update: (patch) => set(patch),
-      toggleCategory: (id) =>
-        set((state) => ({
-          categoryIds: state.categoryIds.includes(id)
-            ? state.categoryIds.filter((current) => current !== id)
-            : [...state.categoryIds, id],
-        })),
-      addCustomCategory: (category) =>
+      toggleCategory: (id, selected) =>
+        set({
+          categoryIds: selected.includes(id)
+            ? selected.filter((current) => current !== id)
+            : [...selected, id],
+        }),
+      addCustomCategory: (category, selected) =>
         set((state) => {
           const id = `custom-${Date.now().toString(36)}`;
           return {
             customCategories: [...state.customCategories, { ...category, id }],
-            categoryIds: [...state.categoryIds, id],
+            categoryIds: [...selected, id],
           };
         }),
       addEntries: (entries) => set((state) => ({ entries: [...state.entries, ...entries] })),

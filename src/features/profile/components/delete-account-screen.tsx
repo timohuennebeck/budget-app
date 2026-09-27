@@ -7,7 +7,6 @@ import { useCategories } from '@/features/categories/hooks/use-categories';
 import { useEntryStats } from '@/features/entries/hooks/use-entries';
 import { streakDays } from '@/features/entries/lib/entry-stats';
 import { hasPlus } from '@/features/paywall/lib/plus';
-import { cancelReminders } from '@/features/reminders/lib/reminders';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { StatusHero } from '@/shared/components/status-hero';
@@ -28,10 +27,7 @@ export function DeleteAccountScreen() {
 
   const confirm = () =>
     deleteAccount.mutate(undefined, {
-      onSuccess: () => {
-        haptics.success();
-        cancelReminders();
-      },
+      onSuccess: () => haptics.success(),
       onError: () => haptics.error(),
     });
 

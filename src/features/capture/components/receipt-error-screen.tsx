@@ -24,48 +24,62 @@ const TIPS: {
   { icon: 'hand', key: 'capture.errorTipSteady' },
 ];
 
+// Codes where another photo won't help: the daily AI limit and no account yet.
+const COPY = {
+  '401': { title: 'capture.accountTitle', subtitle: 'capture.accountSubtitle' },
+  '429': { title: 'capture.limitTitle', subtitle: 'capture.limitSubtitle' },
+} as const;
+
 /** Unreadable receipt (2z2) with photo tips and the error code. */
 export function ReceiptErrorScreen({ mode }: { mode: CaptureMode }) {
   const { t } = useTranslation();
   const { code = '422' } = useLocalSearchParams<{ code?: string }>();
+  const copy = COPY[code as keyof typeof COPY];
   const now = new Date();
+  const typeInstead = () => router.dismissTo(captureHref(mode, 'index'));
 
   return (
     <Screen
       footer={
-        <View>
-          <Button
-            label={t('capture.retakePhoto')}
-            onPress={() => router.replace(captureHref(mode, 'camera'))}
-          />
-          <Button
-            variant="ghost"
-            className="mt-2.5"
-            label={t('capture.typeInstead')}
-            onPress={() => router.dismissTo(captureHref(mode, 'index'))}
-          />
-        </View>
+        copy ? (
+          <Button label={t('capture.typeInstead')} onPress={typeInstead} />
+        ) : (
+          <View>
+            <Button
+              label={t('capture.retakePhoto')}
+              onPress={() => router.replace(captureHref(mode, 'camera'))}
+            />
+            <Button
+              variant="ghost"
+              className="mt-2.5"
+              label={t('capture.typeInstead')}
+              onPress={typeInstead}
+            />
+          </View>
+        )
       }>
       <ScreenHeader leading="close" title={t('capture.receipt')} />
       <View className="flex-1 items-center justify-center gap-[22px]">
         <StatusHero
           pose="dizzy"
           pipSize={150}
-          title={t('capture.errorTitle')}
-          subtitle={t('capture.errorSubtitle')}
+          title={t(copy?.title ?? 'capture.errorTitle')}
+          subtitle={t(copy?.subtitle ?? 'capture.errorSubtitle')}
         />
-        <Card className="gap-2.5 self-stretch px-[18px] py-4">
-          {TIPS.map((tip) => (
-            <View key={tip.key} className="flex-row items-center gap-3">
-              <View className="size-[30px] items-center justify-center rounded-full bg-primary-soft">
-                <Icon name={tip.icon} size={15} color={colors.primary} />
+        {copy ? null : (
+          <Card className="gap-2.5 self-stretch px-[18px] py-4">
+            {TIPS.map((tip) => (
+              <View key={tip.key} className="flex-row items-center gap-3">
+                <View className="size-[30px] items-center justify-center rounded-full bg-primary-soft">
+                  <Icon name={tip.icon} size={15} color={colors.primary} />
+                </View>
+                <Text size={15} className="text-ink-soft">
+                  {t(tip.key)}
+                </Text>
               </View>
-              <Text size={15} className="text-ink-soft">
-                {t(tip.key)}
-              </Text>
-            </View>
-          ))}
-        </Card>
+            ))}
+          </Card>
+        )}
         <View className="flex-row items-center gap-2 rounded-full bg-field px-3.5 py-2">
           <Text size={13.5} className="text-muted">
             {t('capture.errorCode', { code })}

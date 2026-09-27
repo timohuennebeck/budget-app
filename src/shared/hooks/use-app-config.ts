@@ -8,7 +8,8 @@ export interface AppConfig {
   checkInMinEntries: number;
   checkInCloseRatio: number;
   plusPricing: { monthly: number; yearly: number; trialDays: number };
-  peerAverages: { monthly: number; categories: Record<string, number> };
+  /** Average monthly spend of people the same age */
+  peerMonthlyAverage: number;
   supportEmail: string;
 }
 
@@ -18,7 +19,7 @@ const defaultAppConfig: AppConfig = {
   checkInMinEntries: 3,
   checkInCloseRatio: 0.85,
   plusPricing: { monthly: 6.99, yearly: 59.88, trialDays: 7 },
-  peerAverages: { monthly: 1150, categories: {} },
+  peerMonthlyAverage: 1150,
   supportEmail: 'hilfe@looop.app',
 };
 
@@ -37,7 +38,7 @@ async function fetchAppConfig(): Promise<AppConfig> {
       yearly: Number(pricing.yearly ?? defaultAppConfig.plusPricing.yearly),
       trialDays: Number(pricing.trial_days ?? defaultAppConfig.plusPricing.trialDays),
     },
-    peerAverages: values.peer_averages ?? defaultAppConfig.peerAverages,
+    peerMonthlyAverage: Number(values.peer_monthly_average ?? defaultAppConfig.peerMonthlyAverage),
     supportEmail: String(values.support_email ?? defaultAppConfig.supportEmail),
   };
 }

@@ -10,6 +10,7 @@
     "edit": "Modifier",
     "increase": "Plus",
     "later": "Plus tard",
+    "openSettings": "Ouvrir les Réglages",
     "save": "Enregistrer",
     "saveFailedMessage": "Ta modification a été annulée. Vérifie ta connexion et réessaie.",
     "saveFailedTitle": "Échec de l'enregistrement",
@@ -27,15 +28,7 @@
     "groceries": "Courses",
     "dining": "Restaurants",
     "cafe": "Café",
-    "shopping": "Shopping",
     "transport": "Transports",
-    "drugstore": "Parapharmacie",
-    "housing": "Logement",
-    "health": "Santé",
-    "leisure": "Loisirs",
-    "kids": "Enfants",
-    "fitness": "Fitness",
-    "travel": "Voyages",
     "add": "Ajouter une catégorie",
     "apply": "Choisir {{name}}",
     "category": "Catégorie",
@@ -48,7 +41,8 @@
     "newSubtitle": "Donne-lui un nom, une icône et une couleur.",
     "newTitle": "Nouvelle catégorie",
     "preview": "{{from}} → {{to}} en 30 jours",
-    "search": "Chercher une catégorie"
+    "search": "Chercher une catégorie",
+    "suggestions": "Suggestions"
   },
   "currencies": {
     "EUR": "Euro",
@@ -193,6 +187,7 @@
     "addMore": "En ajouter d'autres",
     "allowCamera": "Autoriser l'appareil photo",
     "camera": "Photographier un reçu",
+    "connecting": "Connexion …",
     "cameraHint": "Photographie un reçu ou un ticket de caisse",
     "cameraPermission": "Pip a besoin de l'appareil photo pour lire ton ticket de caisse.",
     "confirm": "C'est bon",
@@ -205,6 +200,10 @@
     "errorTipLight": "Plus de lumière, pas de reflets",
     "errorTipSteady": "Tiens ton iPhone bien droit",
     "errorTitle": "Ça n'a pas marché.",
+    "accountSubtitle": "Pip lit les tickets dès que ton compte est prêt. Tape ta première entrée pour l'instant.",
+    "accountTitle": "Les tickets, c'est pour bientôt.",
+    "limitSubtitle": "Tu as utilisé tes scans de tickets du jour. Tape-le, Pip le classe quand même.",
+    "limitTitle": "Pip fait une pause.",
     "flip": "Changer de caméra",
     "guess": "{{name}} ?",
     "incomeSaved": "Revenu\nenregistré",
@@ -258,8 +257,25 @@
     "total": "Total",
     "typeInstead": "Saisir à la main",
     "voice": "Parler",
-    "voiceSample": "40€ courses, 12€ Uber, déjeuner 18€, et vingt-trois chez dm",
-    "whichCategory": "Quelle catégorie ?"
+    "whichCategory": "Quelle catégorie ?",
+    "voiceErrors": {
+      "account": {
+        "title": "La voix, c'est pour bientôt.",
+        "subtitle": "Pip t'écoute dès que ton compte est prêt. Tape ta première entrée pour l'instant."
+      },
+      "permission": {
+        "title": "Pip ne t'entend pas.",
+        "subtitle": "Autorise le micro pour Looop dans les Réglages, ou tape-le."
+      },
+      "limit": {
+        "title": "Pip fait une pause.",
+        "subtitle": "Tu as utilisé tes entrées vocales du jour. Tape-le, Pip le classe quand même."
+      },
+      "unavailable": {
+        "title": "Pip ne peut pas écouter pour l'instant.",
+        "subtitle": "Vérifie ta connexion, ou tape-le."
+      }
+    }
   },
   "entries": {
     "all": "Tout",
@@ -390,10 +406,16 @@
   },
   "reminders": {
     "apply": "Choisir {{time}}",
+    "budgetWarnings": "Alertes budget",
+    "budgetWarningsHint": "À 80 % et 100 % d’un budget",
+    "checkIn": "Bilan de la semaine",
+    "checkInHint": "Le dimanche soir, quand ta semaine est prête",
     "daily": "Tous les jours",
-    "notificationBody": "Dis-le à Pip en 5 secondes. Café, courses, tout.",
-    "notificationTitle": "Déjà dépensé quelque chose aujourd'hui ?",
+    "dailyReminder": "Rappel quotidien",
+    "notifications": "Notifications",
     "onboardingTitle": "{{name}}, quand\nça t'arrange ?",
+    "permissionMessage": "Autorise les notifications de Looop dans les Réglages pour que Pip puisse te prévenir.",
+    "permissionTitle": "Les notifications sont désactivées",
     "repeat": "Répéter",
     "subtitle": "Un rappel par jour, quand tu veux.",
     "title": "Quand Pip doit-il\nte faire un rappel ?",

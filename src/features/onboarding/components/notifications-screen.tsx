@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { requestNotificationPermission } from '@/features/reminders/lib/reminders';
+import { requestNotificationPermission } from '@/features/notifications/lib/push';
 import { GradientPanel } from '@/shared/components/gradient-panel';
 import { Screen } from '@/shared/components/screen';
 import { Button } from '@/shared/ui/button';

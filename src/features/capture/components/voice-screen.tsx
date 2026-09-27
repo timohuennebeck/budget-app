@@ -1,11 +1,16 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { useEffect } from 'react';
+import { Linking, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { useUserId } from '@/features/auth/lib/auth-provider';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
+import { StatusHero } from '@/shared/components/status-hero';
+import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
+import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { Pip } from '@/shared/ui/pip';
 import { Pressable } from '@/shared/ui/pressable';
@@ -13,27 +18,51 @@ import { Text } from '@/shared/ui/text';
 
 import { type CaptureMode, useCaptureStore } from '../data/capture-store';
 import { useCaptureContext } from '../hooks/use-capture-context';
+import { useLiveTranscription, type VoiceError } from '../hooks/use-live-transcription';
 import { useParsePreview } from '../hooks/use-parse-preview';
-import { useVoiceTranscript } from '../hooks/use-voice-transcript';
 import { captureHref } from '../lib/capture-routes';
 import { RecognizedBadge } from './recognized-badge';
 import { VoiceTranscript } from './voice-transcript';
 
-// Voice capture (2i). Speech recognition is simulated for now (see
-// useVoiceTranscript); stopping hands the transcript to the parser.
+/** Shows the seconds left once the session cap is this close. */
+const COUNTDOWN_FROM = 10;
+
+// Voice capture (2i). Words appear live while the user speaks (OpenAI
+// Realtime, see useLiveTranscription); stopping hands the transcript to
+// parse-capture. Every failure falls back to typing.
 export function VoiceScreen({ mode }: { mode: CaptureMode }) {
   const { t } = useTranslation();
+  const signedIn = !!useUserId() && mode === 'app';
   const { currency } = useCaptureContext(mode);
   const setText = useCaptureStore((state) => state.setText);
-  const { transcript, stop } = useVoiceTranscript(t('capture.voiceSample'));
-  const preview = useParsePreview(transcript, mode);
+  const voice = useLiveTranscription(signedIn);
+  const preview = useParsePreview(voice.transcript, mode);
+  const typeInstead = () => router.dismissTo(captureHref(mode, 'index'));
 
-  const finish = () => {
-    stop();
-    setText(transcript);
-    if (preview.count) router.replace(captureHref(mode, 'processing', { source: 'voice' }));
-    else router.dismissTo(captureHref(mode, 'index'));
+  const finish = async () => {
+    if (voice.status === 'stopping') return;
+    if (voice.status !== 'listening') return typeInstead();
+    const { text, captureId } = await voice.stop();
+    setText(text, captureId);
+    if (text.trim()) router.replace(captureHref(mode, 'processing', { source: 'voice' }));
+    else typeInstead();
   };
+
+  // The session cap stops the recording like the stop button would.
+  const timeUp = voice.secondsLeft === 0;
+  useEffect(() => {
+    if (timeUp) finish();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeUp]);
+
+  useEffect(() => {
+    if (voice.error) haptics.warning();
+  }, [voice.error]);
+
+  if (voice.error) return <VoiceErrorView error={voice.error} onType={typeInstead} />;
+
+  const countdown =
+    voice.secondsLeft !== null && voice.secondsLeft <= COUNTDOWN_FROM ? voice.secondsLeft : null;
 
   return (
     <Screen>
@@ -46,15 +75,21 @@ export function VoiceScreen({ mode }: { mode: CaptureMode }) {
         leading="close"
         trailing={
           <View className="flex-row items-center gap-2">
-            <View className="size-2 rounded-full bg-primary" />
+            <View
+              className={
+                voice.status === 'connecting'
+                  ? 'size-2 rounded-full bg-faint'
+                  : 'size-2 rounded-full bg-primary'
+              }
+            />
             <Text size={15} weight="medium" className="text-primary">
-              {t('capture.listening')}
+              {voice.status === 'connecting' ? t('capture.connecting') : t('capture.listening')}
             </Text>
           </View>
         }
       />
       <View className="mt-10">
-        <VoiceTranscript transcript={transcript} pending={preview.unrecognized.at(-1)} />
+        <VoiceTranscript transcript={voice.transcript} pending={preview.unrecognized.at(-1)} />
       </View>
       <RecognizedBadge
         className="mt-6"
@@ -69,6 +104,7 @@ export function VoiceScreen({ mode }: { mode: CaptureMode }) {
         <Pressable
           haptic="press"
           onPress={finish}
+          disabled={voice.status === 'stopping'}
           accessibilityLabel={t('capture.stop')}
           className="size-[84px] items-center justify-center rounded-full bg-primary"
           style={{
@@ -77,8 +113,43 @@ export function VoiceScreen({ mode }: { mode: CaptureMode }) {
           <Icon name="stop" weight="fill" size={28} color={colors.white} />
         </Pressable>
         <Text size={15} className="mt-3.5 text-muted-soft">
-          {t('capture.stopHint')}
+          {countdown !== null
+            ? t('capture.secondsLeft', { count: countdown })
+            : t('capture.stopHint')}
         </Text>
+      </View>
+    </Screen>
+  );
+}
+
+function VoiceErrorView({ error, onType }: { error: VoiceError; onType: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <Screen
+      footer={
+        <View>
+          {error === 'permission' ? (
+            <Button
+              className="mb-2.5"
+              label={t('common.openSettings')}
+              onPress={() => Linking.openSettings()}
+            />
+          ) : null}
+          <Button
+            variant={error === 'permission' ? 'ghost' : 'primary'}
+            label={t('capture.typeInstead')}
+            onPress={onType}
+          />
+        </View>
+      }>
+      <ScreenHeader leading="close" />
+      <View className="flex-1 items-center justify-center">
+        <StatusHero
+          pose="dizzy"
+          pipSize={150}
+          title={t(`capture.voiceErrors.${error}.title`)}
+          subtitle={t(`capture.voiceErrors.${error}.subtitle`)}
+        />
       </View>
     </Screen>
   );

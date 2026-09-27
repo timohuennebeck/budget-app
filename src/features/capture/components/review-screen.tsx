@@ -57,6 +57,7 @@ export function ReviewScreen() {
         kind: draft.kind,
         category_id: draft.categoryId,
         source: draft.source,
+        capture_id: draft.captureId ?? null,
         occurred_at: draft.occurredAt,
       })),
     );

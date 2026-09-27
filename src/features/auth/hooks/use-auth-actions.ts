@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { cancelReminders } from '@/features/reminders/lib/reminders';
+import { deletePushToken } from '@/features/notifications/data/notifications-api';
+import { savedPushToken } from '@/features/notifications/lib/push';
 import { supabase } from '@/shared/lib/supabase';
 
 export interface Credentials {
@@ -39,10 +40,12 @@ export function useSignUp() {
 export function useSignOut() {
   return useMutation({
     mutationFn: async () => {
+      // Stop pushes to this device while the session can still delete the token.
+      const token = savedPushToken.get();
+      if (token) await deletePushToken(token).catch(() => {});
+      savedPushToken.clear();
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      // Reminders are local notifications, so they'd outlive the session.
-      await cancelReminders();
     },
   });
 }
@@ -52,6 +55,7 @@ export function useDeleteAccount() {
     mutationFn: async () => {
       const { error } = await supabase.rpc('delete_own_account');
       if (error) throw error;
+      savedPushToken.clear();
       await supabase.auth.signOut({ scope: 'local' });
     },
   });

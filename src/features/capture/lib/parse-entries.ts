@@ -2,10 +2,9 @@ import { parseAmount, roundMoney } from '@/shared/lib/money';
 
 import type { CategoryOption, DraftEntry } from './types';
 
-// On-device stand-in for the AI parser: turns "40€ Lebensmittel, 12€ Uber,
-// Mittagessen 18€" into draft entries. It keeps the same
-// signature an Edge Function / LLM backed parser would have, so swapping it
-// later only touches this file.
+// On-device parser: turns "40€ Lebensmittel, 12€ Uber, Mittagessen 18€" into
+// draft entries. Used before sign-up and whenever the parse-capture edge
+// function can't be reached (offline, daily AI limit, errors).
 
 const SEPARATORS = /\s*(?:,|;|\n|\s+und\s+|\s+and\s+|\s+y\s+|\s+et\s+|\s+e\s+)\s*/i;
 const AMOUNT =
@@ -26,7 +25,7 @@ interface ParseOptions {
 }
 
 let counter = 0;
-const nextId = () => `draft-${Date.now().toString(36)}-${(counter++).toString(36)}`;
+export const newDraftId = () => `draft-${Date.now().toString(36)}-${(counter++).toString(36)}`;
 
 function matchCategory(text: string, categories: CategoryOption[]) {
   const haystack = ` ${text.toLowerCase()} `;
@@ -79,7 +78,7 @@ export function parseEntries(
     const title = cleanTitle(segment, match[0]);
 
     entries.push({
-      id: nextId(),
+      id: newDraftId(),
       title: title || category?.name || '',
       amount: value,
       kind: isIncome ? 'income' : 'expense',

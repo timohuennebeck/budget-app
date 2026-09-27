@@ -3,34 +3,41 @@ import { useEffect, useRef, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { useUserId } from '@/features/auth/lib/auth-provider';
 import { useCategories } from '@/features/categories/hooks/use-categories';
+import { usePresets } from '@/features/categories/hooks/use-presets';
 import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store';
+import { resolveCategoryIds } from '@/features/onboarding/hooks/use-selected-category-ids';
 import { Screen } from '@/shared/components/screen';
 import { haptics } from '@/shared/lib/haptics';
 import { Pip } from '@/shared/ui/pip';
 import { Text } from '@/shared/ui/text';
 
+import { CaptureError } from '../data/capture-api';
 import { type CaptureMode, useCaptureStore } from '../data/capture-store';
 import { useCaptureCategories } from '../hooks/use-capture-categories';
+import { captureDrafts } from '../lib/capture-drafts';
 import { captureHref } from '../lib/capture-routes';
-import { parseEntries } from '../lib/parse-entries';
-import { recognizeReceipt, ReceiptUnreadableError } from '../lib/receipt-recognizer';
 import type { DraftEntry } from '../lib/types';
 import { ProcessingSteps } from './processing-steps';
 import { ProgressRing } from './progress-ring';
 
 const DURATION_MS = 2400;
 const TICK_MS = 60;
+const WAITING_CEILING = 0.92;
 
 // "Pip sortiert deine Einträge" (2j). Parses the text or receipt while the
-// ring fills, then continues to review (app) or saved (onboarding).
+// ring fills (at least), then continues to review (app) or saved (onboarding).
 export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
   const { t } = useTranslation();
   const { source } = useLocalSearchParams<{ source?: DraftEntry['source'] }>();
+  const userId = useUserId();
   const categories = useCaptureCategories(mode);
-  // Wait for the user's categories to load, but not for them to be non-empty:
-  // an account without categories would otherwise spin here forever.
-  const categoriesPending = useCategories(mode === 'app').isPending && mode === 'app';
+  const { data: presets, isPending: presetsPending } = usePresets();
+  // Wait for the categories to load, but not for them to be non-empty: an
+  // account without categories would otherwise spin here forever.
+  const appPending = useCategories(mode === 'app').isPending && mode === 'app';
+  const categoriesPending = appPending || presetsPending;
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<DraftEntry[] | null>(null);
   const started = useRef(false);
@@ -38,27 +45,34 @@ export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
   useEffect(() => {
     if (started.current || categoriesPending) return;
     started.current = true;
-    const { text, photoUri } = useCaptureStore.getState();
+    const { text, photoUri, captureId } = useCaptureStore.getState();
 
-    const work =
-      source === 'camera'
-        ? recognizeReceipt(photoUri, categories)
-        : Promise.resolve(parseEntries(text, categories, { source: source ?? 'text' }).entries);
+    captureDrafts({
+      mode,
+      source: source ?? 'text',
+      userId,
+      text,
+      photoUri,
+      captureId,
+      categories,
+    })
+      .then(setResult)
+      .catch((error) => {
+        haptics.error();
+        const code = error instanceof CaptureError && error.status ? error.status : 500;
+        router.replace(captureHref(mode, 'receipt-error', { code: String(code) }));
+      });
+  }, [categories, categoriesPending, mode, source, userId]);
 
-    work.then(setResult).catch((error) => {
-      haptics.error();
-      const code = error instanceof ReceiptUnreadableError ? String(error.code) : '500';
-      router.replace(captureHref(mode, 'receipt-error', { code }));
-    });
-  }, [categories, categoriesPending, mode, source]);
-
+  // The ring stops short of 100 % until the server has answered.
+  const ceiling = result ? 1 : WAITING_CEILING;
   useEffect(() => {
     const timer = setInterval(
-      () => setProgress((value) => Math.min(1, value + TICK_MS / DURATION_MS)),
+      () => setProgress((value) => Math.min(ceiling, value + TICK_MS / DURATION_MS)),
       TICK_MS,
     );
     return () => clearInterval(timer);
-  }, []);
+  }, [ceiling]);
 
   useEffect(() => {
     if (progress < 1 || !result) return;
@@ -75,10 +89,11 @@ export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
       onboarding.addEntries(result);
       // Categories Pip used for the first entries start out selected.
       const used = result.map((draft) => draft.categoryId).filter((id): id is string => !!id);
-      onboarding.update({ categoryIds: [...new Set([...onboarding.categoryIds, ...used])] });
+      const selected = resolveCategoryIds(onboarding.categoryIds, presets);
+      onboarding.update({ categoryIds: [...new Set([...selected, ...used])] });
     }
     router.replace(captureHref(mode, mode === 'onboarding' ? 'saved' : 'review'));
-  }, [progress, result, mode, t]);
+  }, [progress, result, mode, presets, t]);
 
   const found = result?.length ?? 0;
   const stepState = (threshold: number, next: number) =>

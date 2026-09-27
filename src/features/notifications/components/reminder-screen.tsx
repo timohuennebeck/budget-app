@@ -26,6 +26,8 @@ interface ReminderScreenProps {
   onSubmit: (values: ReminderValues) => void;
   /** Onboarding shows Pip with a clock above the picker */
   illustrated?: boolean;
+  /** Extra settings below the repeat choice (Profil › Erinnerung) */
+  children?: ReactNode;
 }
 
 /** Daily reminder time and repeat (2p1 in onboarding, 3h in Profil). */
@@ -36,6 +38,7 @@ export function ReminderScreen({
   submitLabel,
   onSubmit,
   illustrated,
+  children,
 }: ReminderScreenProps) {
   const { t } = useTranslation();
   const [time, setTime] = useState(parseTime(initial.time));
@@ -44,6 +47,7 @@ export function ReminderScreen({
 
   return (
     <Screen
+      scroll={!!children}
       footer={
         <Button
           label={submitLabel(formatted)}
@@ -78,6 +82,7 @@ export function ReminderScreen({
           onPress={() => setRepeat('weekdays')}
         />
       </View>
+      {children}
     </Screen>
   );
 }

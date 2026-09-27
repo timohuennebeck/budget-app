@@ -1,83 +1,98 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useSelectedCategoryIds } from '@/features/onboarding/hooks/use-selected-category-ids';
 import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store';
 
-import { categoryCatalog, findCatalogCategory } from '../data/category-catalog';
-import { categoryName } from '../lib/category-name';
+import type { CategoryPreset } from '../data/presets-api';
+import { categoryName, presetKeywords, presetName } from '../lib/category-name';
 import { useCategories } from './use-categories';
+import { usePresets } from './use-presets';
 
 /** Minimal shape every category list/row/picker renders. */
 export interface CategoryDisplay {
   id: string;
-  key: string | null;
+  presetKey: string | null;
   name: string;
   icon: string;
   hue: number;
   keywords: string[];
+  /** Average monthly spend of people the same age, from the preset */
+  peerAverage: number | null;
+}
+
+function usePresetMap() {
+  const { data } = usePresets();
+  return useMemo(() => new Map((data ?? []).map((preset) => [preset.key, preset])), [data]);
+}
+
+function presetDisplay(preset: CategoryPreset): CategoryDisplay {
+  return {
+    id: preset.key,
+    presetKey: preset.key,
+    name: presetName(preset),
+    icon: preset.icon,
+    hue: preset.hue,
+    keywords: presetKeywords(preset),
+    peerAverage: preset.peer_average,
+  };
 }
 
 /** The signed-in user's categories, translated and with parser keywords. Archived
  * ones are left out unless `includeArchived` (old entries still show them). */
 export function useAppCategoryDisplays(enabled = true, includeArchived = false): CategoryDisplay[] {
   const { data } = useCategories(enabled);
+  const presets = usePresetMap();
   const { i18n } = useTranslation();
   return useMemo(
     () =>
       (data ?? [])
         .filter((category) => includeArchived || !category.archived_at)
-        .map((category) => ({
-          id: category.id,
-          key: category.key,
-          name: categoryName(category),
-          icon: category.icon,
-          hue: category.hue,
-          keywords: findCatalogCategory(category.key)?.keywords ?? [],
-        })),
+        .map((category) => {
+          const preset = category.preset_key ? presets.get(category.preset_key) : undefined;
+          return {
+            id: category.id,
+            presetKey: category.preset_key,
+            name: categoryName(category, preset),
+            icon: category.icon,
+            hue: category.hue,
+            keywords: preset ? presetKeywords(preset) : [],
+            peerAverage: preset?.peer_average ?? null,
+          };
+        }),
     // Re-translate when the language changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data, includeArchived, i18n.language],
+    [data, presets, includeArchived, i18n.language],
   );
 }
 
-function catalogDisplay(key: string): CategoryDisplay | null {
-  const catalog = findCatalogCategory(key);
-  if (!catalog) return null;
-  return {
-    id: key,
-    key,
-    name: categoryName({ key, name: key }),
-    icon: catalog.icon,
-    hue: catalog.hue,
-    keywords: catalog.keywords,
-  };
-}
-
-/** Every built-in category, e.g. for parsing before the user picked any. */
-export function useCatalogDisplays(): CategoryDisplay[] {
+/** Every preset, e.g. for parsing before the user picked any. */
+export function usePresetDisplays(): CategoryDisplay[] {
+  const { data } = usePresets();
   const { i18n } = useTranslation();
   return useMemo(
-    () => categoryCatalog.map((category) => catalogDisplay(category.key)!),
+    () => (data ?? []).map(presetDisplay),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [i18n.language],
+    [data, i18n.language],
   );
 }
 
-/** Onboarding selection (catalog keys + custom drafts) in the same shape. */
+/** Onboarding selection (preset keys + custom drafts) in the same shape. */
 export function useOnboardingCategoryDisplays(): CategoryDisplay[] {
-  const categoryIds = useOnboardingStore((state) => state.categoryIds);
+  const categoryIds = useSelectedCategoryIds();
   const customCategories = useOnboardingStore((state) => state.customCategories);
+  const presets = usePresetMap();
   const { i18n } = useTranslation();
 
   return useMemo(
     () =>
       categoryIds.flatMap((id): CategoryDisplay[] => {
-        const catalog = catalogDisplay(id);
-        if (catalog) return [catalog];
+        const preset = presets.get(id);
+        if (preset) return [presetDisplay(preset)];
         const custom = customCategories.find((category) => category.id === id);
-        return custom ? [{ ...custom, key: null, keywords: [] }] : [];
+        return custom ? [{ ...custom, presetKey: null, keywords: [], peerAverage: null }] : [];
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [categoryIds, customCategories, i18n.language],
+    [categoryIds, customCategories, presets, i18n.language],
   );
 }

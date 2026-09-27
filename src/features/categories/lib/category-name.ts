@@ -1,17 +1,19 @@
-import { t } from 'i18next';
+import i18n from 'i18next';
 
-import { findCatalogCategory } from '../data/category-catalog';
+import type { CategoryPreset } from '../data/presets-api';
 
-interface NamedCategory {
-  key: string | null;
-  name: string;
+/** The preset's name in the app language, e.g. pt-BR → pt → en. */
+export function presetName(preset: Pick<CategoryPreset, 'names'>, language = i18n.language) {
+  return preset.names[language] ?? preset.names[language.split('-')[0]] ?? preset.names.en;
 }
 
-// Built-in categories are translated by key so switching the app language
-// renames them; custom categories keep the name the user typed.
-export function categoryName(category: NamedCategory) {
-  if (category.key && findCatalogCategory(category.key)) {
-    return t(`categories.${category.key}` as 'categories.groceries');
-  }
-  return category.name;
+/** Every keyword of a preset across all languages, for the local parser. */
+export function presetKeywords(preset: Pick<CategoryPreset, 'keywords'>) {
+  return [...new Set(Object.values(preset.keywords).flat())];
+}
+
+// Preset categories are named in the app language so switching it renames
+// them; custom categories keep the name the user typed.
+export function categoryName(category: { name: string }, preset?: CategoryPreset) {
+  return preset ? presetName(preset) : category.name;
 }

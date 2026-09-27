@@ -2,8 +2,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { categoryCatalog } from '@/features/categories/data/category-catalog';
-import { categoryName } from '@/features/categories/lib/category-name';
+import { usePresetDisplays } from '@/features/categories/hooks/use-category-display';
 import { Screen } from '@/shared/components/screen';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
@@ -12,6 +11,7 @@ import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 
 import { useOnboardingStore } from '../data/onboarding-store';
+import { useSelectedCategoryIds } from '../hooks/use-selected-category-ids';
 import { ONBOARDING_STEPS } from '../lib/steps';
 import { OnboardingHeader } from './onboarding-header';
 import { StepIntro } from './step-intro';
@@ -20,16 +20,15 @@ const MIN_CATEGORIES = 3;
 
 export function CategoriesScreen() {
   const { t } = useTranslation();
-  const selectedIds = useOnboardingStore((state) => state.categoryIds);
+  const selectedIds = useSelectedCategoryIds();
+  const presets = usePresetDisplays();
   const customCategories = useOnboardingStore((state) => state.customCategories);
-  const toggle = useOnboardingStore((state) => state.toggleCategory);
+  const toggleCategory = useOnboardingStore((state) => state.toggleCategory);
+  const toggle = (id: string) => toggleCategory(id, selectedIds);
 
   const options = [
-    ...categoryCatalog.map((category) => ({
-      id: category.key,
-      name: categoryName({ key: category.key, name: '' }),
-    })),
-    ...customCategories.map((category) => ({ id: category.id, name: category.name })),
+    ...presets.map(({ id, name }) => ({ id, name })),
+    ...customCategories.map(({ id, name }) => ({ id, name })),
   ];
   const selected = selectedIds.flatMap((id) => options.filter((option) => option.id === id));
   const available = options.filter((option) => !selectedIds.includes(option.id));
