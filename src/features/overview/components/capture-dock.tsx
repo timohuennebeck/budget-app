@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 
 import { useEntriesAllowance } from '@/features/paywall/hooks/use-entries-allowance';
 import { colors, shadows } from '@/shared/lib/theme';
+import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
-import { PipAvatar } from '@/shared/ui/pip';
 import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 
@@ -32,7 +32,9 @@ export function CaptureDock({ firstName }: { firstName: string }) {
           accessibilityLabel={t('capture.title', { name: firstName })}
           className="h-[60px] min-w-0 flex-1 flex-row items-center gap-2.5 rounded-full border border-line-strong bg-surface px-2"
           style={shadows.floating}>
-          <PipAvatar size={44} />
+          <View className="size-11 items-center justify-center rounded-full bg-primary">
+            <Icon name="plus" size={22} color="#FFFFFF" weight="bold" />
+          </View>
           <Text size={16} weight="medium" className="flex-1 text-subtle" numberOfLines={1}>
             {t('capture.titleInline', { name: firstName })}
           </Text>
