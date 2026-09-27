@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { View } from 'react-native';
 
 import { MoneyText } from '@/shared/components/money-text';
@@ -19,13 +20,23 @@ interface BalanceHeroProps {
 
 /** What's left this month, left-aligned with Pip beside it (2l-i). */
 export function BalanceHero({ label, amount, currency, over }: BalanceHeroProps) {
+  // The amount shrinks to the space left of Pip, so he always fits.
+  const [width, setWidth] = useState(0);
   return (
     <View className="mt-7 flex-row items-center justify-between gap-2 px-1">
-      <View className="min-w-0 flex-1">
+      <View
+        className="min-w-0 flex-1"
+        onLayout={(event) => setWidth(event.nativeEvent.layout.width)}>
         <Text size={15} weight="medium" className="text-muted">
           {label}
         </Text>
-        <MoneyText amount={amount} currency={currency} danger={over} className="mt-3.5" />
+        <MoneyText
+          amount={amount}
+          currency={currency}
+          danger={over}
+          maxWidth={width || undefined}
+          className="mt-3.5"
+        />
       </View>
       {/* A star and a coin drift around Pip, out of step with each other. */}
       <View>

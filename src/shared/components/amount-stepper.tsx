@@ -24,6 +24,9 @@ export interface AmountStepperProps {
 const MIN = 0;
 const MAX = 1_000_000;
 
+const BUTTON = 56;
+const GAP = 8;
+
 const sizes = {
   md: { number: 64, symbol: 36, caret: 52 },
   lg: { number: 72, symbol: 40, caret: 58 },
@@ -42,7 +45,19 @@ export function AmountStepper({
   const { t } = useTranslation();
   const input = useRef<TextInput>(null);
   const [draft, setDraft] = useState<string | null>(null);
-  const metrics = sizes[size];
+  const [rowWidth, setRowWidth] = useState(0);
+  const shown = draft ?? String(value);
+  // Long amounts shrink so the − and + buttons stay on screen: the number and
+  // € share what's left between them (tabular digits are ~0.64 em wide).
+  const base = sizes[size];
+  const room = rowWidth - 2 * BUTTON - 2 * GAP;
+  const needed = 0.64 * base.number * Math.max(1, shown.length) + 0.7 * base.symbol + 8;
+  const scale = rowWidth > 0 ? Math.min(1, room / needed) : 1;
+  const metrics = {
+    number: Math.round(base.number * scale),
+    symbol: Math.round(base.symbol * scale),
+    caret: Math.round(base.caret * scale),
+  };
 
   const clamp = (next: number) => Math.min(MAX, Math.max(MIN, next));
   const stepBy = (direction: 1 | -1) => {
@@ -53,10 +68,12 @@ export function AmountStepper({
 
   return (
     <View className="items-center gap-2.5 self-stretch">
-      <View className="flex-row items-center justify-between self-stretch">
+      <View
+        className="flex-row items-center justify-between self-stretch"
+        onLayout={(event) => setRowWidth(event.nativeEvent.layout.width)}>
         <IconButton
           icon="minus"
-          size={56}
+          size={BUTTON}
           iconSize={18}
           haptic="none"
           accessibilityLabel={t('common.decrease')}
@@ -70,7 +87,7 @@ export function AmountStepper({
           <FittedInput
             ref={input}
             size={metrics.number}
-            value={draft ?? String(value)}
+            value={shown}
             onChangeText={(text) => setDraft(text.replace(/\D/g, '').slice(0, 7))}
             onFocus={() => setDraft(String(value))}
             onBlur={() => {
@@ -96,7 +113,7 @@ export function AmountStepper({
         </Pressable>
         <IconButton
           icon="plus"
-          size={56}
+          size={BUTTON}
           iconSize={18}
           haptic="none"
           accessibilityLabel={t('common.increase')}
