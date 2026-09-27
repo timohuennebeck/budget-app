@@ -339,7 +339,10 @@
     "trendAhead": "You're slightly over plan. At this pace you'll end at <b>{{amount}}</b>.",
     "trendOver": "You're already <b>{{amount}}</b> over your limit.",
     "trendNoLimit": "At this pace you'll end this month at <b>{{amount}}</b>.",
-    "noEntriesYet": "No entries this month yet."
+    "noEntriesYet": "No entries this month yet.",
+    "untilDay": "Up to {{date}}",
+    "onDay": "{{amount}} that day",
+    "nothingOnDay": "Nothing spent that day"
   },
   "checkIn": {
     "accuracy": "{{percent}}% accurate",

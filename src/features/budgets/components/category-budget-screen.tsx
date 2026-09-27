@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -15,7 +15,13 @@ import { MoneyText } from '@/shared/components/money-text';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { huePalette } from '@/shared/lib/color';
-import { budgetCycle, formatDayLabel, formatMonth } from '@/shared/lib/dates';
+import {
+  addDays,
+  budgetCycle,
+  formatDayLabel,
+  formatLongDate,
+  formatMonth,
+} from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { Card } from '@/shared/ui/card';
 import { Pip } from '@/shared/ui/pip';
@@ -52,10 +58,13 @@ export function CategoryBudgetScreen({ id }: { id: string }) {
     [all, id],
   );
   const trend = categoryTrend(entries, cycle, limit);
+  // Day held on the chart; the header then shows that day instead.
+  const [scrub, setScrub] = useState<number | null>(null);
   const ticks = trendTicks(cycle, trend.days);
 
   if (!profile || !category) return null;
   const money = (value: number) => formatMoney(value, { currency, compact: true });
+  const dayAmount = (day: number) => trend.cumulative[day] - (trend.cumulative[day - 1] ?? 0);
   const month = formatMonth(cycle.start);
   const percent = limit ? Math.round((trend.spent / limit) * 100) : null;
   const daysLeft =
@@ -75,39 +84,47 @@ export function CategoryBudgetScreen({ id }: { id: string }) {
 
       <View className="mt-7 items-center">
         <Text size={15} weight="medium" className="text-muted">
-          {t('budgets.inMonth', { month })}
+          {scrub === null
+            ? t('budgets.inMonth', { month })
+            : t('budgets.untilDay', { date: formatLongDate(addDays(cycle.start, scrub)) })}
         </Text>
         <MoneyText
-          amount={trend.spent}
+          amount={scrub === null ? trend.spent : trend.cumulative[scrub]}
           currency={currency}
-          danger={trend.status === 'over'}
-          className="mt-2"
+          danger={scrub === null && trend.status === 'over'}
+          className="mt-3.5"
         />
-        <Text size={15} className="mt-2.5 text-muted">
-          {percent !== null ? (
-            <Text
-              size={15}
-              weight="semibold"
-              style={{
-                color: trend.status === 'over' ? undefined : huePalette(category.hue).foreground,
-              }}
-              className={trend.status === 'over' ? 'text-danger-text' : undefined}>
-              {`${percent} %`}
-            </Text>
-          ) : null}
-          {percent !== null ? ` ${t('budgets.ofLimit', { limit: money(limit!) })} · ` : ''}
-          {daysLeft}
-        </Text>
+        {scrub !== null ? (
+          <Text size={15} className="mt-2.5 text-muted">
+            {dayAmount(scrub) > 0
+              ? t('budgets.onDay', { amount: money(dayAmount(scrub)) })
+              : t('budgets.nothingOnDay')}
+          </Text>
+        ) : (
+          <Text size={15} className="mt-2.5 text-muted">
+            {percent !== null ? (
+              <Text
+                size={15}
+                weight="semibold"
+                style={{
+                  color: trend.status === 'over' ? undefined : huePalette(category.hue).foreground,
+                }}
+                className={trend.status === 'over' ? 'text-danger-text' : undefined}>
+                {`${percent} %`}
+              </Text>
+            ) : null}
+            {percent !== null ? ` ${t('budgets.ofLimit', { limit: money(limit!) })} · ` : ''}
+            {daysLeft}
+          </Text>
+        )}
       </View>
 
       <View className="mt-7">
-        <TrendChart trend={trend} hue={category.hue} ticks={ticks} />
+        <TrendChart trend={trend} hue={category.hue} ticks={ticks} onScrub={setScrub} />
       </View>
 
       <View className="mt-6 flex-row items-center gap-3 px-1">
-        <View className="size-12 items-center justify-center overflow-hidden rounded-full bg-primary-tint">
-          <Pip pose={trend.status === 'over' ? 'dizzy' : 'reading'} size={44} />
-        </View>
+        <Pip pose={trend.status === 'over' ? 'dizzy' : 'reading'} size={52} />
         <Text size={15} leading={1.4} className="flex-1 text-ink-soft">
           <Trans
             i18nKey={messages[trend.status]}
