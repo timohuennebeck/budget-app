@@ -5,7 +5,7 @@ import {
   useAudioRecorder,
   useAudioRecorderState,
 } from 'expo-audio';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 
 import type { VoiceRecording } from '../data/capture-store';
@@ -35,6 +35,9 @@ export function useVoiceRecording() {
   const state = useAudioRecorderState(recorder, 100);
   const [status, setStatus] = useState<VoiceStatus>('starting');
   const [error, setError] = useState<VoiceError | null>(null);
+  // Our own flag: once the screen unmounts, expo-audio has already released
+  // (and stopped) the native recorder, and reading its properties throws.
+  const active = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -52,23 +55,26 @@ export function useVoiceRecording() {
         await recorder.prepareToRecordAsync();
         if (cancelled) return;
         recorder.record();
+        active.current = true;
         setStatus('recording');
       } catch {
         fail('unavailable');
       }
     })();
 
-    // Closing the screen mid-sentence discards the recording.
+    // Closing the screen mid-sentence discards the recording; expo-audio
+    // releases the recorder itself, so only the audio mode is reset here.
     return () => {
       cancelled = true;
-      if (recorder.isRecording) recorder.stop().catch(() => {});
+      active.current = false;
       setAudioModeAsync({ allowsRecording: false }).catch(() => {});
     };
   }, [recorder]);
 
   /** Ends the recording and returns the file, or null if nothing was recorded. */
   const stop = async (): Promise<VoiceRecording | null> => {
-    if (!recorder.isRecording) return null;
+    if (!active.current) return null;
+    active.current = false;
     await recorder.stop();
     await setAudioModeAsync({ allowsRecording: false }).catch(() => {});
     if (!recorder.uri) return null;
