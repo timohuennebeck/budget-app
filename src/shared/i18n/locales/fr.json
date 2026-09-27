@@ -291,6 +291,7 @@
     "deleteMessage": "{{title}}, {{amount}} sera supprimé. Impossible d'annuler.",
     "deleteTitle": "Supprimer l'entrée ?",
     "entry": "Entrée",
+    "notFound": "Cette entrée n’existe plus.",
     "favorite": "Favori",
     "income": "Revenu",
     "noCategory": "Sans catégorie",

@@ -291,6 +291,7 @@
     "deleteMessage": "{{title}}, {{amount}} será removido. Esta ação não pode ser anulada.",
     "deleteTitle": "Eliminar registo?",
     "entry": "Registo",
+    "notFound": "Este registo já não existe.",
     "favorite": "Favorito",
     "income": "Receita",
     "noCategory": "Sem categoria",

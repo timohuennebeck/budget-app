@@ -35,6 +35,17 @@ function inRange(key: readonly unknown[], entry: Entry) {
   return at >= new Date(start).getTime() && at < new Date(end).getTime();
 }
 
+/** An entry from any cached list, with when that list was fetched. */
+export function findCachedEntry(client: QueryClient, id: string) {
+  for (const [key, list] of client.getQueriesData<Entry[]>({
+    queryKey: entryQueries.range._def,
+  })) {
+    const entry = list?.find((candidate) => candidate.id === id);
+    if (entry) return { entry, updatedAt: client.getQueryState(key)?.dataUpdatedAt };
+  }
+  return undefined;
+}
+
 /** Drops the given entries from every cached list, then re-adds `upserts` where they fit. */
 export function writeEntryLists(client: QueryClient, removeIds: string[], upserts: Entry[] = []) {
   const removed = new Set(removeIds);

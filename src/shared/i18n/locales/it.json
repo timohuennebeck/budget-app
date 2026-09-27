@@ -291,6 +291,7 @@
     "deleteMessage": "{{title}}, {{amount}} verrà rimosso. Non si può annullare.",
     "deleteTitle": "Eliminare il movimento?",
     "entry": "Movimento",
+    "notFound": "Questo movimento non esiste più.",
     "favorite": "Preferito",
     "income": "Entrata",
     "noCategory": "Senza categoria",

@@ -12,6 +12,7 @@ import { ScreenHeader } from '@/shared/components/screen-header';
 import { useSheet } from '@/shared/components/sheet';
 import { haptics } from '@/shared/lib/haptics';
 import { Button } from '@/shared/ui/button';
+import { Text } from '@/shared/ui/text';
 
 import type { Entry } from '../data/entries-api';
 import { useDeleteEntry, useEntry, useUpdateEntry } from '../hooks/use-entries';
@@ -20,8 +21,20 @@ import { type EditableEntry, EntryEditor } from './entry-editor';
 
 // Eintragsdetail (2y) with delete confirmation sheet (2y2).
 export function EntryDetailScreen({ id }: { id: string }) {
-  const { data: entry } = useEntry(id);
-  return entry ? <EntryDetailForm entry={entry} /> : null;
+  const { t } = useTranslation();
+  const { data: entry, isError } = useEntry(id);
+  if (entry) return <EntryDetailForm entry={entry} />;
+  // Still loading, or gone (deleted elsewhere): keep the header to get back.
+  return (
+    <Screen>
+      <ScreenHeader title={t('entries.entry')} />
+      {isError ? (
+        <Text variant="body" className="mt-10 text-center">
+          {t('entries.notFound')}
+        </Text>
+      ) : null}
+    </Screen>
+  );
 }
 
 function EntryDetailForm({ entry }: { entry: Entry }) {

@@ -291,6 +291,7 @@
     "deleteMessage": "Se eliminará {{title}}, {{amount}}. No se puede deshacer.",
     "deleteTitle": "¿Eliminar registro?",
     "entry": "Registro",
+    "notFound": "Este registro ya no existe.",
     "favorite": "Favorito",
     "income": "Ingreso",
     "noCategory": "Sin categoría",

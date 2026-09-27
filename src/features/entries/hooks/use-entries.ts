@@ -12,7 +12,7 @@ import {
   insertEntries,
   updateEntry,
 } from '../data/entries-api';
-import { entryQueries, writeEntryLists } from '../data/entries-queries';
+import { entryQueries, findCachedEntry, writeEntryLists } from '../data/entries-queries';
 
 export function useEntries(range: DateRange, enabled = true) {
   return useQuery({ ...entryQueries.range(range), enabled });
@@ -24,8 +24,16 @@ export function useRecentEntries(enabled = true) {
   return useEntries({ start: addDays(end, -30), end }, enabled);
 }
 
+// Opens at once with the entry from the list it was tapped in, then
+// refreshes; a failed refresh (offline, or a save still on its way) keeps it.
 export function useEntry(id: string) {
-  return useQuery({ ...entryQueries.detail(id), enabled: !!id });
+  const client = useQueryClient();
+  return useQuery({
+    ...entryQueries.detail(id),
+    enabled: !!id,
+    initialData: () => findCachedEntry(client, id)?.entry,
+    initialDataUpdatedAt: () => findCachedEntry(client, id)?.updatedAt,
+  });
 }
 
 /** Total entry count and recent dates, for streaks and the rating prompt. */
@@ -94,12 +102,7 @@ export function useUpdateEntry() {
     ({ id, patch }: { id: string; patch: EntryUpdate }) => updateEntry(id, patch),
     (client, { id, patch }) => {
       const detailKey = entryQueries.detail(id).queryKey;
-      const cached =
-        client.getQueryData<Entry>(detailKey) ??
-        client
-          .getQueriesData<Entry[]>({ queryKey: entryQueries.range._def })
-          .flatMap(([, list]) => list ?? [])
-          .find((entry) => entry.id === id);
+      const cached = client.getQueryData<Entry>(detailKey) ?? findCachedEntry(client, id)?.entry;
       if (!cached) return;
       const updated = { ...cached, ...patch } as Entry;
       client.setQueryData(detailKey, updated);

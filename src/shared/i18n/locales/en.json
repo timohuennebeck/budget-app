@@ -284,6 +284,7 @@
     "deleteMessage": "{{title}}, {{amount}} will be removed. This can't be undone.",
     "deleteTitle": "Delete entry?",
     "entry": "Entry",
+    "notFound": "This entry no longer exists.",
     "favorite": "Favorite",
     "income": "Income",
     "noCategory": "No category",

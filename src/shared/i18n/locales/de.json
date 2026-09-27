@@ -284,6 +284,7 @@
     "deleteMessage": "{{title}}, {{amount}} wird entfernt. Das kann nicht rückgängig gemacht werden.",
     "deleteTitle": "Eintrag löschen?",
     "entry": "Eintrag",
+    "notFound": "Diesen Eintrag gibt es nicht mehr.",
     "favorite": "Favorit",
     "income": "Einnahme",
     "noCategory": "Ohne Kategorie",
