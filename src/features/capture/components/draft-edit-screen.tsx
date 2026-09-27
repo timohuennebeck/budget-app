@@ -9,15 +9,15 @@ import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { Button } from '@/shared/ui/button';
 
-import { useCaptureStore } from '../data/capture-store';
+import { type CaptureMode, useCaptureStore } from '../data/capture-store';
 import { useCaptureCategories } from '../hooks/use-capture-categories';
 import { useCaptureContext } from '../hooks/use-capture-context';
 
 /** Corrects a parsed entry before it is saved (tap on a review row). */
-export function DraftEditScreen({ id }: { id: string }) {
+export function DraftEditScreen({ id, mode = 'app' }: { id: string; mode?: CaptureMode }) {
   const { t } = useTranslation();
-  const { currency } = useCaptureContext('app');
-  const categories = useCaptureCategories('app');
+  const { currency } = useCaptureContext(mode);
+  const categories = useCaptureCategories(mode);
   const stored = useCaptureStore((state) => state.drafts.find((draft) => draft.id === id));
   const updateDraft = useCaptureStore((state) => state.updateDraft);
   const removeDraft = useCaptureStore((state) => state.removeDraft);
@@ -64,7 +64,11 @@ export function DraftEditScreen({ id }: { id: string }) {
         currency={currency}
         onChange={(patch) => setDraft({ ...draft, ...patch })}
         onCategoryPress={() =>
-          router.push({ pathname: '/capture/select-category', params: { draftId: id } })
+          router.push({
+            pathname:
+              mode === 'onboarding' ? '/first-entry/select-category' : '/capture/select-category',
+            params: { draftId: id },
+          })
         }
       />
     </Screen>

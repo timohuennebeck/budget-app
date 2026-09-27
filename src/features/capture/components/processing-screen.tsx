@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 
 import { useCategories } from '@/features/categories/hooks/use-categories';
 import { usePresets } from '@/features/categories/hooks/use-presets';
-import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store';
 import { Screen } from '@/shared/components/screen';
 import { haptics } from '@/shared/lib/haptics';
 import { Pip } from '@/shared/ui/pip';
@@ -88,8 +87,8 @@ export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
     }
     haptics.success();
     useCaptureStore.getState().addDrafts(result);
-    if (mode === 'onboarding') useOnboardingStore.getState().addEntries(result);
-    router.replace(captureHref(mode, mode === 'onboarding' ? 'saved' : 'review'));
+    // Both flows check the entries on "Passt alles?" before they're saved.
+    router.replace(captureHref(mode, 'review'));
   }, [progress, result, mode, t]);
 
   const found = result?.length ?? 0;

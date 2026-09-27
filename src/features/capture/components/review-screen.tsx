@@ -8,6 +8,7 @@ import { EntryRow } from '@/features/entries/components/entry-row';
 import { useCreateEntries } from '@/features/entries/hooks/use-entries';
 import { entryAmount, entrySubtitle, entryVisual } from '@/features/entries/lib/entry-display';
 import { useEntriesAllowance } from '@/features/paywall/hooks/use-entries-allowance';
+import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store';
 import { removePayments } from '@/features/wallet/lib/wallet-inbox';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
@@ -19,7 +20,7 @@ import { Card } from '@/shared/ui/card';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
 
-import { useCaptureStore } from '../data/capture-store';
+import { type CaptureMode, useCaptureStore } from '../data/capture-store';
 import { useCaptureCategories } from '../hooks/use-capture-categories';
 import { useCaptureContext } from '../hooks/use-capture-context';
 import { captureHref } from '../lib/capture-routes';
@@ -29,24 +30,36 @@ import { TodayLabel } from './today-label';
 
 // "Passt alles?" (2xe2): parsed drafts before saving. Rows Pip wasn't sure
 // about are highlighted with a quick confirm / edit choice.
-export function ReviewScreen() {
+export function ReviewScreen({ mode = 'app' }: { mode?: CaptureMode }) {
   const { t } = useTranslation();
-  const { currency } = useCaptureContext('app');
+  const { currency } = useCaptureContext(mode);
   const drafts = useCaptureStore((state) => state.drafts);
   const updateDraft = useCaptureStore((state) => state.updateDraft);
   const appendMore = useCaptureStore((state) => state.appendMore);
-  const categories = useCaptureCategories('app');
+  const categories = useCaptureCategories(mode);
   const createEntries = useCreateEntries();
   const allowance = useEntriesAllowance();
 
   const categoryFor = (draft: DraftEntry) =>
     categories.find((category) => category.id === draft.categoryId);
   const edit = (draft: DraftEntry) =>
-    router.push({ pathname: '/capture/edit/[id]', params: { id: draft.id } });
+    router.push({
+      pathname: mode === 'onboarding' ? '/first-entry/edit/[id]' : '/capture/edit/[id]',
+      params: { id: draft.id },
+    });
   const pickCategory = (draft: DraftEntry) =>
-    router.push({ pathname: '/capture/select-category', params: { draftId: draft.id } });
+    router.push({
+      pathname: mode === 'onboarding' ? '/first-entry/select-category' : '/capture/select-category',
+      params: { draftId: draft.id },
+    });
 
   const save = () => {
+    // Onboarding keeps the entries until the account exists (saved at sign-up).
+    if (mode === 'onboarding') {
+      useOnboardingStore.getState().addEntries(drafts);
+      router.replace(captureHref(mode, 'saved'));
+      return;
+    }
     if (!allowance.canAdd(drafts.length)) {
       router.push('/limit');
       return;
@@ -90,7 +103,7 @@ export function ReviewScreen() {
               appendMore();
               // Back to the text screen below instead of stacking a second one
               // (whose × would then only reveal the first).
-              router.dismissTo(captureHref('app', 'index'));
+              router.dismissTo(captureHref(mode, 'index'));
             }}
           />
         </View>
