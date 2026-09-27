@@ -379,6 +379,7 @@
     "heroOpen_other": "Aperto · ancora {{count}} giorni",
     "heroOpenTitle": "Ultimi 7 giorni, quanto hai speso?",
     "heroLockedTitle": "Registra tutto fino a domenica",
+    "heroLockedTitleNextWeek": "Registra tutto fino a domenica prossima",
     "start": "Inizia",
     "rowDetail": "{{guess}} stimato · {{actual}} reale",
     "lastMonths": "Ultimi 3 mesi",

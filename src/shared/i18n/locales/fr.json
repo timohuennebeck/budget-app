@@ -379,6 +379,7 @@
     "heroOpen_other": "Ouvert · encore {{count}} jours",
     "heroOpenTitle": "7 derniers jours, combien ?",
     "heroLockedTitle": "Note tout jusqu’à dimanche",
+    "heroLockedTitleNextWeek": "Note tout jusqu’à dimanche prochain",
     "start": "Commencer",
     "rowDetail": "{{guess}} estimé · {{actual}} réel",
     "lastMonths": "3 derniers mois",

@@ -370,6 +370,7 @@
     "heroOpen_other": "Open · {{count}} days left",
     "heroOpenTitle": "Last 7 days, how much was it?",
     "heroLockedTitle": "Log everything until Sunday",
+    "heroLockedTitleNextWeek": "Log everything until next Sunday",
     "start": "Start",
     "rowDetail": "{{guess}} guessed · {{actual}} actual",
     "lastMonths": "Last 3 months",

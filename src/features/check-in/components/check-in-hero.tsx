@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { GradientPanel } from '@/shared/components/gradient-panel';
 import { useNow } from '@/shared/hooks/use-now';
-import { addDays, formatWeekRange } from '@/shared/lib/dates';
+import { addDays, formatWeekRange, isSameDay } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { colors, shadows } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
@@ -84,7 +84,12 @@ export function CheckInHero({ currency }: { currency: string }) {
           : {
               value: '???',
               eyebrow: t('checkIn.notOpenYet'),
-              title: t('checkIn.heroLockedTitle'),
+              // On a Sunday whose check-in isn't today's (a new user's first
+              // week), plain "Sunday" would read as today.
+              title:
+                now.getDay() === 0 && !isSameDay(window.opensAt, now)
+                  ? t('checkIn.heroLockedTitleNextWeek')
+                  : t('checkIn.heroLockedTitle'),
               button: t('checkIn.opensIn', { time: until(window.opensAt) }),
             };
 

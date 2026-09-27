@@ -168,16 +168,9 @@ export function CheckInsScreen() {
         ) : null}
       </View>
 
-      <ScrollView
-        // The gap sits outside the list, as on Einträge, so rows scroll
-        // out of view below the chips instead of right against them.
-        className={checkIns.length ? 'mt-3.5 flex-1' : 'flex-1'}
-        contentInsetAdjustmentBehavior={layout.contentInsetAdjustmentBehavior}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
-        showsVerticalScrollIndicator={false}>
-        {checkIns.length === 0 ? (
+      {checkIns.length === 0 ? (
+        // Nothing to scroll: the empty states stay put under the header.
+        <View className="flex-1 px-4">
           <Card className="mt-[18px] items-center rounded-[28px] px-5 pt-[22px] pb-6">
             <Pip pose="clock" size={120} />
             <Text variant="heading" className="mt-3">
@@ -190,29 +183,39 @@ export function CheckInsScreen() {
               {t('checkIn.historyEmptySubtitle')}
             </Text>
           </Card>
-        ) : (
+        </View>
+      ) : groups.length === 0 ? (
+        <View className="mt-3.5 flex-1 px-4">
+          <Text variant="body" className="px-1 pt-6 text-center">
+            {t('checkIn.noResults')}
+          </Text>
+        </View>
+      ) : (
+        <ScrollView
+          // The gap sits outside the list, as on Einträge, so rows scroll
+          // out of view below the chips instead of right against them.
+          className="mt-3.5 flex-1"
+          contentInsetAdjustmentBehavior={layout.contentInsetAdjustmentBehavior}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          showsVerticalScrollIndicator={false}>
           <View className="gap-3">
-            {groups.length ? (
-              groups.map((group) => (
-                <View key={group.key} className="gap-2">
-                  <Text size={13} weight="semibold" className="px-1.5 text-muted capitalize">
-                    {formatMonth(group.date, group.date.getFullYear() !== thisYear)}
-                  </Text>
-                  <Card className="py-1">
-                    {group.checkIns.map((checkIn) => (
-                      <CheckInRow key={checkIn.id} checkIn={checkIn} detail={detail(checkIn)} />
-                    ))}
-                  </Card>
-                </View>
-              ))
-            ) : (
-              <Text variant="body" className="px-1 pt-6 text-center">
-                {t('checkIn.noResults')}
-              </Text>
-            )}
+            {groups.map((group) => (
+              <View key={group.key} className="gap-2">
+                <Text size={13} weight="semibold" className="px-1.5 text-muted capitalize">
+                  {formatMonth(group.date, group.date.getFullYear() !== thisYear)}
+                </Text>
+                <Card className="py-1">
+                  {group.checkIns.map((checkIn) => (
+                    <CheckInRow key={checkIn.id} checkIn={checkIn} detail={detail(checkIn)} />
+                  ))}
+                </Card>
+              </View>
+            ))}
           </View>
-        )}
-      </ScrollView>
+        </ScrollView>
+      )}
       <MonthSheet
         {...monthSheet.controls}
         selected={typeof period === 'object' ? period.start : new Date()}
