@@ -32,7 +32,7 @@ import { IconButton } from '@/shared/ui/icon-button';
 import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 
-import { CaptureDock } from './capture-dock';
+import { CaptureActions } from './capture-actions';
 import { EmptyEntriesCard } from './empty-entries-card';
 
 const RECENT_DAYS = 2;
@@ -92,7 +92,7 @@ export function OverviewScreen() {
         contentContainerStyle={{
           paddingTop: insets.top + 4,
           paddingHorizontal: 16,
-          paddingBottom: 120,
+          paddingBottom: 32,
         }}
         showsVerticalScrollIndicator={false}>
         <View className="flex-row items-center justify-between px-1">
@@ -123,6 +123,7 @@ export function OverviewScreen() {
           highlight={pill.highlight}
           detail={pill.detail}
         />
+        <CaptureActions />
         <SpendBar
           segments={summary.segments}
           spent={summary.spent}
@@ -165,8 +166,6 @@ export function OverviewScreen() {
           <EmptyEntriesCard />
         )}
       </ScrollView>
-
-      <CaptureDock firstName={profile.first_name} />
 
       <BudgetSheet
         open={sheet.controls.open}

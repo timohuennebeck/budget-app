@@ -254,7 +254,6 @@
       "voiceTitle": "Solo dilo"
     },
     "title": "{{name}}, ¿qué has\ngastado?",
-    "titleInline": "{{name}}, ¿qué has gastado?",
     "torch": "Linterna",
     "total": "Total",
     "typeInstead": "Introducir a mano",
@@ -322,7 +321,10 @@
     "perDay": "{{amount}} al día",
     "showAll": "Ver todo",
     "spent": "gastado",
-    "spentThisMonth": "Gastado"
+    "spentThisMonth": "Gastado",
+    "actionEntry": "Gasto",
+    "actionPhoto": "Foto",
+    "actionVoice": "Voz"
   },
   "budgets": {
     "edit": "Editar {{name}}",

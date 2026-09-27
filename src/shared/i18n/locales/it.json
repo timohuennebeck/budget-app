@@ -254,7 +254,6 @@
       "voiceTitle": "Basta dirlo"
     },
     "title": "{{name}}, cosa hai\nspeso?",
-    "titleInline": "{{name}}, cosa hai speso?",
     "torch": "Torcia",
     "total": "Totale",
     "typeInstead": "Inserisci a mano",
@@ -322,7 +321,10 @@
     "perDay": "{{amount}} al giorno",
     "showAll": "Mostra tutti",
     "spent": "spesi",
-    "spentThisMonth": "Speso"
+    "spentThisMonth": "Speso",
+    "actionEntry": "Spesa",
+    "actionPhoto": "Foto",
+    "actionVoice": "Voce"
   },
   "budgets": {
     "edit": "Modifica {{name}}",

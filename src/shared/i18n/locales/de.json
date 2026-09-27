@@ -248,7 +248,6 @@
       "voiceTitle": "Einfach sagen"
     },
     "title": "{{name}}, was hast du\nausgegeben?",
-    "titleInline": "{{name}}, was hast du ausgegeben?",
     "torch": "Licht",
     "total": "Gesamt",
     "typeInstead": "Von Hand eingeben",
@@ -314,7 +313,10 @@
     "perDay": "{{amount}} pro Tag",
     "showAll": "Alle anzeigen",
     "spent": "ausgegeben",
-    "spentThisMonth": "Ausgegeben"
+    "spentThisMonth": "Ausgegeben",
+    "actionEntry": "Eintrag",
+    "actionPhoto": "Foto",
+    "actionVoice": "Sprache"
   },
   "budgets": {
     "edit": "{{name}} bearbeiten",

@@ -254,7 +254,6 @@
       "voiceTitle": "Dis-le, c'est tout"
     },
     "title": "{{name}}, qu'as-tu\ndépensé ?",
-    "titleInline": "{{name}}, qu'as-tu dépensé ?",
     "torch": "Lampe",
     "total": "Total",
     "typeInstead": "Saisir à la main",
@@ -322,7 +321,10 @@
     "perDay": "{{amount}} par jour",
     "showAll": "Tout afficher",
     "spent": "dépensé",
-    "spentThisMonth": "Dépensé"
+    "spentThisMonth": "Dépensé",
+    "actionEntry": "Dépense",
+    "actionPhoto": "Photo",
+    "actionVoice": "Voix"
   },
   "budgets": {
     "edit": "Modifier {{name}}",

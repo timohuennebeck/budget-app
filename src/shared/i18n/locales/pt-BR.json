@@ -254,7 +254,6 @@
       "voiceTitle": "É só falar"
     },
     "title": "{{name}}, o que\nvocê gastou?",
-    "titleInline": "{{name}}, o que você gastou?",
     "torch": "Lanterna",
     "total": "Total",
     "typeInstead": "Digitar manualmente",
@@ -322,7 +321,10 @@
     "perDay": "{{amount}} por dia",
     "showAll": "Ver tudo",
     "spent": "gastos",
-    "spentThisMonth": "Gastos"
+    "spentThisMonth": "Gastos",
+    "actionEntry": "Registro",
+    "actionPhoto": "Foto",
+    "actionVoice": "Voz"
   },
   "budgets": {
     "edit": "Editar {{name}}",

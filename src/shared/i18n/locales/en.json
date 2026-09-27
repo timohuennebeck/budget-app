@@ -248,7 +248,6 @@
       "voiceTitle": "Just say it"
     },
     "title": "{{name}}, what did\nyou spend?",
-    "titleInline": "{{name}}, what did you spend?",
     "torch": "Light",
     "total": "Total",
     "typeInstead": "Enter manually",
@@ -314,7 +313,10 @@
     "perDay": "{{amount}} per day",
     "showAll": "Show all",
     "spent": "spent",
-    "spentThisMonth": "Spent"
+    "spentThisMonth": "Spent",
+    "actionEntry": "Entry",
+    "actionPhoto": "Photo",
+    "actionVoice": "Voice"
   },
   "budgets": {
     "edit": "Edit {{name}}",
