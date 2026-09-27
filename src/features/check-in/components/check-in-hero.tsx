@@ -105,6 +105,8 @@ export function CheckInHero({ currency }: { currency: string }) {
         <Button
           className="mt-[18px]"
           label={content.button}
+          // The countdown ticks every second; fixed-width digits keep it still.
+          tabularNums
           disabled={status !== 'open'}
           onPress={() => router.push('/check-in')}
         />

@@ -19,6 +19,8 @@ export interface ButtonProps {
   disabled?: boolean;
   loading?: boolean;
   haptic?: HapticKind;
+  /** Equal-width digits, for labels that count (a countdown) */
+  tabularNums?: boolean;
   className?: string;
 }
 
@@ -55,6 +57,7 @@ export function Button({
   disabled,
   loading,
   haptic = variant === 'primary' || variant === 'danger' ? 'press' : 'tap',
+  tabularNums,
   className,
 }: ButtonProps) {
   const filled = variant === 'primary' || variant === 'danger';
@@ -86,7 +89,8 @@ export function Button({
           <Text
             size={textSize}
             weight={filled || variant === 'link' ? 'semibold' : 'medium'}
-            className={labelColor[variant]}>
+            className={labelColor[variant]}
+            style={tabularNums ? { fontVariant: ['tabular-nums'] } : undefined}>
             {label}
           </Text>
         </View>
