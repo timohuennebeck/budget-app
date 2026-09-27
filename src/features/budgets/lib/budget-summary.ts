@@ -72,8 +72,9 @@ export function summarizeBudget(
         limit: limits.get(category.id) ?? null,
       }))
       .sort((a, b) => b.amount - a.amount),
-    // The per-category cards only show in that mode; totals still use limits.
-    cards: (profile.budget_mode === 'per_category' ? limited : []).map((category) => {
+    // A card for every category with a limit, whatever the mode: the mode
+    // only decides the total above (monthly budget or the limits' sum).
+    cards: limited.map((category) => {
       const limit = limits.get(category.id)!;
       return { category, limit, remaining: roundMoney(limit - (byCategory.get(category.id) ?? 0)) };
     }),

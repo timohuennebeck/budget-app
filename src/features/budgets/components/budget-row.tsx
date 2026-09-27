@@ -34,12 +34,11 @@ export function BudgetRow({
   const { t } = useTranslation();
   const money = (value: number) => formatMoney(value, { currency, compact: true });
   const over = limit !== null && spent > limit;
-  const detail =
-    limit === null
-      ? t('budgets.noLimit')
-      : over
-        ? `${money(spent - limit)} ${t('budgets.over', { limit: money(limit) })}`
-        : `${money(limit - spent)} ${t('budgets.freeOf', { limit: money(limit) })}`;
+  const detail = over
+    ? `${money(spent - limit)} ${t('budgets.over', { limit: money(limit) })}`
+    : limit !== null
+      ? `${money(limit - spent)} ${t('budgets.freeOf', { limit: money(limit) })}`
+      : null;
 
   return (
     <Pressable
@@ -56,13 +55,16 @@ export function BudgetRow({
             {money(spent)}
           </Text>
         </View>
-        <Text
-          size={13.5}
-          weight={over ? 'semibold' : 'regular'}
-          numberOfLines={1}
-          className={over ? 'text-danger-text' : 'text-subtle'}>
-          {detail}
-        </Text>
+        {/* Rows without a limit sit under "Ohne Limit": nothing more to say. */}
+        {detail ? (
+          <Text
+            size={13.5}
+            weight={over ? 'semibold' : 'regular'}
+            numberOfLines={1}
+            className={over ? 'text-danger-text' : 'text-subtle'}>
+            {detail}
+          </Text>
+        ) : null}
         {limit !== null ? (
           <View className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-line-strong">
             <View

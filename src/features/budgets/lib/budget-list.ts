@@ -6,9 +6,12 @@ export interface BudgetListRow {
   limit: number | null;
 }
 
+const used = (row: BudgetListRow) => row.spent / row.limit!;
+
 /**
- * The Budgets tab: categories with spending or a limit this month, the most
- * spent first, then the ones without either (shown greyed to set a limit).
+ * The Budgets tab in three groups: categories with a limit (the most used
+ * first, so the tight ones lead), spending without a limit (the most spent
+ * first), and the rest, which have neither.
  */
 export function budgetList(
   categories: CategoryDisplay[],
@@ -21,9 +24,10 @@ export function budgetList(
     limit: limits.get(category.id) ?? null,
   }));
   return {
-    active: rows
-      .filter((row) => row.spent > 0 || row.limit !== null)
+    budgets: rows.filter((row) => row.limit !== null).sort((a, b) => used(b) - used(a)),
+    unlimited: rows
+      .filter((row) => row.limit === null && row.spent > 0)
       .sort((a, b) => b.spent - a.spent),
-    idle: rows.filter((row) => row.spent === 0 && row.limit === null),
+    idle: rows.filter((row) => row.limit === null && row.spent === 0),
   };
 }

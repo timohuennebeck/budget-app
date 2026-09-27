@@ -330,7 +330,7 @@
     "monthlyTitle": "Quanto queres gastar\npor mês?",
     "moreCategories": "Mais categorias",
     "noLimit": "Sem limite",
-    "noSpending": "Sem despesas este mês",
+    "withoutLimit": "Sem limite",
     "over": "acima · de {{limit}}",
     "peerAverage": "Ø {{amount}} em pessoas da tua idade",
     "showAll": "Mostrar mais {{count}} categorias",

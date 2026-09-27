@@ -18,12 +18,13 @@ import { useSheet } from '@/shared/components/sheet';
 import { MonthPill, TabTitle, TabTopBar } from '@/shared/components/tab-header';
 import { useToday } from '@/shared/hooks/use-today';
 import { budgetCycle, formatMonthLabel, toISODate } from '@/shared/lib/dates';
-import { formatMoney } from '@/shared/lib/money';
+import { formatMoney, roundMoney } from '@/shared/lib/money';
 import { tabListProps } from '@/shared/lib/tab-insets';
+import { Button } from '@/shared/ui/button';
 import { Card } from '@/shared/ui/card';
 import { Text } from '@/shared/ui/text';
 
-import { budgetList } from '../lib/budget-list';
+import { budgetList, type BudgetListRow } from '../lib/budget-list';
 import { summarizeBudget } from '../lib/budget-summary';
 import { BudgetRow } from './budget-row';
 import { BudgetSheet } from './budget-sheet';
@@ -63,7 +64,8 @@ export function BudgetsScreen() {
     () => categories.filter((category) => category.kind === 'expense'),
     [categories],
   );
-  const { active, idle } = budgetList(expenses, limits, spendByCategory(entries));
+  const { budgets, unlimited, idle } = budgetList(expenses, limits, spendByCategory(entries));
+  const [showIdle, setShowIdle] = useState(false);
   const summary = profile ? summarizeBudget(profile, expenses, limits, entries) : null;
   const recentTotals = spendByCategory(recent);
   const editing = expenses.find((category) => category.id === editingId);
@@ -78,19 +80,26 @@ export function BudgetsScreen() {
     setEditingId(id);
     limitSheet.present();
   };
-  const rows = (list: typeof active, faded = false) => (
-    <Card className="py-1">
-      {list.map((row) => (
-        <BudgetRow
-          key={row.category.id}
-          {...row}
-          currency={currency}
-          idle={faded}
-          onOpen={() => open(row.category.id)}
-          onEdit={() => edit(row.category.id)}
-        />
-      ))}
-    </Card>
+  const sum = (list: BudgetListRow[], pick: (row: BudgetListRow) => number) =>
+    roundMoney(list.reduce((total, row) => total + pick(row), 0));
+  const section = (title: string, list: BudgetListRow[], faded = false) => (
+    <View>
+      <Text size={13} weight="semibold" className="mb-2 px-1.5 text-muted">
+        {title}
+      </Text>
+      <Card className="py-1">
+        {list.map((row) => (
+          <BudgetRow
+            key={row.category.id}
+            {...row}
+            currency={currency}
+            idle={faded}
+            onOpen={() => open(row.category.id)}
+            onEdit={() => edit(row.category.id)}
+          />
+        ))}
+      </Card>
+    </View>
   );
 
   return (
@@ -119,17 +128,32 @@ export function BudgetsScreen() {
         contentInsetAdjustmentBehavior={layout.contentInsetAdjustmentBehavior}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
         showsVerticalScrollIndicator={false}>
-        {active.length ? rows(active) : null}
-        {idle.length ? (
-          <>
-            <Text
-              size={13}
-              weight="semibold"
-              className={active.length ? 'mt-6 mb-2 px-1.5 text-muted' : 'mb-2 px-1.5 text-muted'}>
-              {t('budgets.noSpending')}
-            </Text>
-            {rows(idle, true)}
-          </>
+        <View className="gap-6">
+          {budgets.length
+            ? section(
+                `${t('overview.budgets')} · ${money(sum(budgets, (row) => row.spent))} ${t(
+                  'budgets.ofLimit',
+                  { limit: money(sum(budgets, (row) => row.limit!)) },
+                )}`,
+                budgets,
+              )
+            : null}
+          {unlimited.length
+            ? section(
+                `${t('budgets.withoutLimit')} · ${money(sum(unlimited, (row) => row.spent))}`,
+                unlimited,
+              )
+            : null}
+          {/* Neither spending nor a limit: kept out of the way until asked for. */}
+          {idle.length && showIdle ? section(t('budgets.moreCategories'), idle, true) : null}
+        </View>
+        {idle.length && !showIdle ? (
+          <Button
+            variant="ghost"
+            className="mt-4"
+            label={t('budgets.showAll', { count: idle.length })}
+            onPress={() => setShowIdle(true)}
+          />
         ) : null}
       </ScrollView>
 
