@@ -28,6 +28,11 @@ export interface SheetProps extends SheetControls {
   title?: string;
   /** Fixed height in px; by default the sheet sizes to its content */
   height?: number;
+  /**
+   * Whether dragging the content moves the sheet. Off for sheets with
+   * scrolling wheels, which would otherwise pull the sheet instead.
+   */
+  panContent?: boolean;
 }
 
 function Backdrop(props: BottomSheetBackdropProps) {
@@ -47,7 +52,7 @@ const WINDOW_BOTTOM = initialWindowMetrics?.insets.bottom ?? 0;
 // Same gap below the sheet as beside it.
 const BOTTOM_INSET = Math.max(WINDOW_BOTTOM - 26, INSET);
 
-export function Sheet({ open, onClose, children, title, height }: SheetProps) {
+export function Sheet({ open, onClose, children, title, height, panContent = true }: SheetProps) {
   const { t } = useTranslation();
   const ref = useRef<BottomSheetModal>(null);
   const presented = useRef(false);
@@ -77,6 +82,7 @@ export function Sheet({ open, onClose, children, title, height }: SheetProps) {
       style={[{ marginHorizontal: INSET }, shadows.sheet]}
       snapPoints={height ? [height] : undefined}
       enableDynamicSizing={!height}
+      enableContentPanningGesture={panContent}
       keyboardBehavior="interactive"
       keyboardBlurBehavior="restore"
       backdropComponent={Backdrop}

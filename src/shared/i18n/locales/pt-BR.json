@@ -349,8 +349,7 @@
     "trendNoLimit": "Nesse ritmo, você fecha o mês em <b>{{amount}}</b>.",
     "noEntriesYet": "Ainda sem lançamentos este mês.",
     "untilDay": "Até {{date}}",
-    "onDay": "{{amount}} nesse dia",
-    "nothingOnDay": "Nada gasto nesse dia"
+    "onDay": "{{amount}} nesse dia"
   },
   "checkIn": {
     "accuracy": "{{percent}}% de precisão",

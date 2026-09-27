@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Trans, useTranslation } from 'react-i18next';
@@ -7,23 +6,16 @@ import { CategoryAvatar } from '@/features/categories/components/category-avatar
 import { useCategoryLimits } from '@/features/categories/hooks/use-category-limits';
 import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
 import { categoryIdOf } from '@/features/categories/lib/category-ref';
-import { EntryRow } from '@/features/entries/components/entry-row';
+import { EntryList } from '@/features/entries/components/entry-list';
 import { useEntries } from '@/features/entries/hooks/use-entries';
-import { entryAmount, entryVisual } from '@/features/entries/lib/entry-display';
+import { groupByDay } from '@/features/entries/lib/entry-stats';
 import { useCurrency, useProfile } from '@/features/profile/hooks/use-profile';
 import { MoneyText } from '@/shared/components/money-text';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { huePalette } from '@/shared/lib/color';
-import {
-  addDays,
-  budgetCycle,
-  formatDayLabel,
-  formatLongDate,
-  formatMonth,
-} from '@/shared/lib/dates';
+import { addDays, budgetCycle, formatLongDate, formatMonth } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
-import { Card } from '@/shared/ui/card';
 import { Pip } from '@/shared/ui/pip';
 import { Text } from '@/shared/ui/text';
 
@@ -95,10 +87,9 @@ export function CategoryBudgetScreen({ id }: { id: string }) {
           className="mt-3.5"
         />
         {scrub !== null ? (
+          // Empty on days without spending; the line keeps its height.
           <Text size={15} className="mt-2.5 text-muted">
-            {dayAmount(scrub) > 0
-              ? t('budgets.onDay', { amount: money(dayAmount(scrub)) })
-              : t('budgets.nothingOnDay')}
+            {dayAmount(scrub) > 0 ? t('budgets.onDay', { amount: money(dayAmount(scrub)) }) : ' '}
           </Text>
         ) : (
           <Text size={15} className="mt-2.5 text-muted">
@@ -136,27 +127,16 @@ export function CategoryBudgetScreen({ id }: { id: string }) {
         </Text>
       </View>
 
-      <Text size={20} weight="semibold" tracking={-0.02} className="mt-8 mb-2.5 px-1">
-        {t('budgets.inMonth', { month })}
-      </Text>
-      {entries.length ? (
-        <Card className="py-1">
-          {entries.map((entry) => (
-            <EntryRow
-              key={entry.id}
-              {...entryVisual(entry.kind, category)}
-              title={entry.title}
-              subtitle={formatDayLabel(new Date(entry.occurred_at))}
-              amount={entryAmount(entry, currency)}
-              onPress={() => router.push({ pathname: '/entry/[id]', params: { id: entry.id } })}
-            />
-          ))}
-        </Card>
-      ) : (
-        <Text variant="body" className="px-1 pt-2 text-center">
-          {t('budgets.noEntriesYet')}
-        </Text>
-      )}
+      {/* Grouped by day with the day's total, as on Einträge. */}
+      <View className="mt-8">
+        {entries.length ? (
+          <EntryList groups={groupByDay(entries)} categories={lookup} currency={currency} />
+        ) : (
+          <Text variant="body" className="px-1 pt-2 text-center">
+            {t('budgets.noEntriesYet')}
+          </Text>
+        )}
+      </View>
     </Screen>
   );
 }
