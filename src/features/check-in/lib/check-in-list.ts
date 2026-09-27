@@ -1,11 +1,11 @@
-import { addDays, fromISODate } from '@/shared/lib/dates';
+import { addDays, type DateRange, fromISODate } from '@/shared/lib/dates';
 
 import type { CheckIn } from '../data/check-ins-api';
 import { checkInAccuracy } from './check-in-window';
 
 /** Filter on Check-ins: everything, the last 3 months, one year (chips) or
- * one month (month pill; the 1st of that month). */
-export type CheckInPeriod = 'all' | 'recent' | number | Date;
+ * a from–till range (period pill). */
+export type CheckInPeriod = 'all' | 'recent' | number | DateRange;
 
 export interface CheckInMonth {
   key: string;
@@ -41,11 +41,8 @@ export function filterCheckIns(checkIns: CheckIn[], period: CheckInPeriod, now =
     const sunday = sundayOf(checkIn);
     if (period === 'recent' && sunday < since) return false;
     if (typeof period === 'number' && sunday.getFullYear() !== period) return false;
-    if (
-      period instanceof Date &&
-      (sunday.getFullYear() !== period.getFullYear() || sunday.getMonth() !== period.getMonth())
-    )
-      return false;
+    // A week is in a range when its Sunday is, as with the month groups.
+    if (typeof period === 'object' && (sunday < period.start || sunday >= period.end)) return false;
     return true;
   });
 }

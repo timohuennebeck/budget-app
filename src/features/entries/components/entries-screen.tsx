@@ -10,13 +10,12 @@ import { categoryIdOf } from '@/features/categories/lib/category-ref';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
 import { useSheet } from '@/shared/components/sheet';
-import { formatMonth, monthRange } from '@/shared/lib/dates';
+import { type DateRange, formatRangeLabel, monthRange } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { tabListProps } from '@/shared/lib/tab-insets';
 import { colors, shadows } from '@/shared/lib/theme';
 import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
-import { IconButton } from '@/shared/ui/icon-button';
 import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
@@ -25,10 +24,10 @@ import { useEntries } from '../hooks/use-entries';
 import { countByCategory, groupByDay, netTotal } from '../lib/entry-stats';
 import { EmptySearch } from './empty-search';
 import { EntryList } from './entry-list';
-import { MonthSheet } from './month-sheet';
+import { DateRangeSheet } from './date-range-sheet';
 
-// Einträge (2t): a month of entries grouped by day, with search, category
-// filter chips, a month switcher and a shortcut to the calendar.
+// Einträge (2t): entries of a period (this month by default) grouped by day,
+// with search, category filter chips and a from–till picker.
 export function EntriesScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
@@ -36,7 +35,7 @@ export function EntriesScreen() {
   const { search } = useLocalSearchParams<{ search?: string }>();
   const categories = useAppCategoryDisplays();
   const lookup = useCategoryLookup();
-  const monthSheet = useSheet();
+  const rangeSheet = useSheet();
   const searchInput = useRef<TextInput>(null);
 
   // "Suchen" on Start opens this tab with ?search=1; focus the field and
@@ -49,10 +48,10 @@ export function EntriesScreen() {
     }, [search]),
   );
 
-  const [month, setMonth] = useState(() => new Date());
+  const [range, setRange] = useState<DateRange>(() => monthRange(new Date()));
   const [query, setQuery] = useState('');
   const [categoryId, setCategoryId] = useState<string | null>(null);
-  const { data: entries = [] } = useEntries(monthRange(month));
+  const { data: entries = [] } = useEntries(range);
   const currency = useCurrency();
 
   const filtered = useMemo(() => {
@@ -69,7 +68,7 @@ export function EntriesScreen() {
   }, [entries, query, categoryId, lookup]);
 
   const groups = useMemo(() => groupByDay(filtered), [filtered]);
-  // Chips only for categories this month actually has, the most used first.
+  // Chips only for categories this period actually has, the most used first.
   const chips = useMemo(() => {
     const counts = countByCategory(entries);
     return categories
@@ -81,30 +80,20 @@ export function EntriesScreen() {
   return (
     <View className="flex-1 bg-canvas">
       <GradientBackground name="sky" height={420} />
-      {/* Month, title, search and chips stay put; only the list scrolls. */}
+      {/* Period, title, search and chips stay put; only the list scrolls. */}
       <View style={{ paddingTop: layout.headerPaddingTop, paddingHorizontal: 16 }}>
-        <View className="flex-row items-center justify-between px-1">
+        <View className="h-10 flex-row items-center px-1">
           <Pressable
-            onPress={monthSheet.present}
+            onPress={rangeSheet.present}
             haptic="none"
-            accessibilityLabel={t('entries.chooseMonth')}
+            accessibilityLabel={t('range.title')}
             className="flex-row items-center gap-2 rounded-full bg-surface px-3.5 py-[9px]"
             style={shadows.card}>
             <Text size={15} weight="semibold" tracking={-0.01} className="capitalize">
-              {formatMonth(month)}
+              {formatRangeLabel(range)}
             </Text>
             <Icon name="caret-down" size={11} color={colors.primary} />
           </Pressable>
-          <IconButton
-            icon="calendar-blank"
-            variant="surface"
-            size={40}
-            iconSize={18}
-            accessibilityLabel={t('calendar.title')}
-            onPress={() =>
-              router.push({ pathname: '/calendar', params: { month: month.toISOString() } })
-            }
-          />
         </View>
 
         <View className="mt-[22px] flex-row items-baseline justify-between px-1">
@@ -174,17 +163,17 @@ export function EntriesScreen() {
             <EntryList groups={groups} categories={lookup} currency={currency} />
           ) : (
             <Text variant="body" className="px-1 pt-6 text-center">
-              {t('entries.emptyMonth')}
+              {t('entries.emptyRange')}
             </Text>
           )}
         </ScrollView>
       )}
-      <MonthSheet
-        {...monthSheet.controls}
-        selected={month}
+      <DateRangeSheet
+        {...rangeSheet.controls}
+        value={range}
         onSelect={(next) => {
-          setMonth(next);
-          monthSheet.dismiss();
+          setRange(next);
+          rangeSheet.dismiss();
         }}
       />
     </View>

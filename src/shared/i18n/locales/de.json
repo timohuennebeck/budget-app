@@ -276,27 +276,20 @@
     "all": "Alle",
     "category": "Kategorie",
     "titlePlaceholder": "Wofür?",
-    "chooseMonth": "Monat wählen",
     "count_one": "{{count}} Eintrag",
     "count_other": "{{count}} Einträge",
     "date": "Datum",
     "delete": "Eintrag löschen",
     "deleteMessage": "{{title}}, {{amount}} wird entfernt. Das kann nicht rückgängig gemacht werden.",
     "deleteTitle": "Eintrag löschen?",
-    "emptyMonth": "In diesem Monat gibt es noch keine Einträge.",
     "entry": "Eintrag",
     "favorite": "Favorit",
     "income": "Einnahme",
     "noCategory": "Ohne Kategorie",
     "noResults": "Keine Einträge zu „{{query}}“. Probier einen anderen Begriff.",
     "noResultsTitle": "Keinen Eintrag\ngefunden",
-    "title": "Einträge"
-  },
-  "calendar": {
-    "expense": "Ausgabe",
-    "income": "Einnahme",
-    "selected": "{{date}} gewählt",
-    "title": "Kalender"
+    "title": "Einträge",
+    "emptyRange": "In diesem Zeitraum gibt es keine Einträge."
   },
   "overview": {
     "emptySubtitle": "Erfasse was du ausgegeben hast. Pip ordnet es der passenden Kategorie zu.",
@@ -478,5 +471,15 @@
     "title": "Was kam rein?",
     "subtitle": "Gehalt, Erstattung oder ein Verkauf. Trag ein, was du bekommen hast.",
     "save": "Einnahme speichern"
+  },
+  "range": {
+    "title": "Zeitraum wählen",
+    "from": "Von",
+    "till": "Bis",
+    "thisMonth": "Dieser Monat",
+    "lastMonth": "Letzter Monat",
+    "last30Days": "Letzte 30 Tage",
+    "previousMonth": "Vorheriger Monat",
+    "nextMonth": "Nächster Monat"
   }
 }

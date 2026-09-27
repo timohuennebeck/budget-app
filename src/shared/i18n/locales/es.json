@@ -282,7 +282,6 @@
     "all": "Todos",
     "category": "Categoría",
     "titlePlaceholder": "¿Para qué?",
-    "chooseMonth": "Elegir mes",
     "count_one": "{{count}} registro",
     "count_many": "{{count}} registros",
     "count_other": "{{count}} registros",
@@ -290,20 +289,14 @@
     "delete": "Eliminar registro",
     "deleteMessage": "Se eliminará {{title}}, {{amount}}. No se puede deshacer.",
     "deleteTitle": "¿Eliminar registro?",
-    "emptyMonth": "Todavía no hay registros este mes.",
     "entry": "Registro",
     "favorite": "Favorito",
     "income": "Ingreso",
     "noCategory": "Sin categoría",
     "noResults": "No hay registros para «{{query}}». Prueba con otro término.",
     "noResultsTitle": "No se ha encontrado\nningún registro",
-    "title": "Registros"
-  },
-  "calendar": {
-    "expense": "Gasto",
-    "income": "Ingreso",
-    "selected": "{{date}} seleccionado",
-    "title": "Calendario"
+    "title": "Registros",
+    "emptyRange": "No hay movimientos en este periodo."
   },
   "overview": {
     "daysLeft_many": "· {{count}} días",
@@ -488,5 +481,15 @@
     "title": "¿Qué has recibido?",
     "subtitle": "Nómina, un reembolso o algo que vendiste. Añade lo que te ha entrado.",
     "save": "Guardar ingreso"
+  },
+  "range": {
+    "title": "Elegir periodo",
+    "from": "Desde",
+    "till": "Hasta",
+    "thisMonth": "Este mes",
+    "lastMonth": "Mes pasado",
+    "last30Days": "Últimos 30 días",
+    "previousMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente"
   }
 }

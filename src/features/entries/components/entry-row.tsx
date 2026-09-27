@@ -23,7 +23,7 @@ export interface EntryRowProps {
 }
 
 // The one list row used for entries everywhere: Start, Einträge, review,
-// check-in, calendar sheet and saved screens.
+// check-in and saved screens.
 export function EntryRow({
   icon,
   hue,

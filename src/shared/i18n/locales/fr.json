@@ -282,7 +282,6 @@
     "all": "Tout",
     "category": "Catégorie",
     "titlePlaceholder": "Pour quoi ?",
-    "chooseMonth": "Choisir le mois",
     "count_one": "{{count}} entrée",
     "count_many": "{{count}} entrées",
     "count_other": "{{count}} entrées",
@@ -290,20 +289,14 @@
     "delete": "Supprimer l'entrée",
     "deleteMessage": "{{title}}, {{amount}} sera supprimé. Impossible d'annuler.",
     "deleteTitle": "Supprimer l'entrée ?",
-    "emptyMonth": "Aucune entrée pour ce mois pour l'instant.",
     "entry": "Entrée",
     "favorite": "Favori",
     "income": "Revenu",
     "noCategory": "Sans catégorie",
     "noResults": "Aucune entrée pour « {{query}} ». Essaie un autre mot.",
     "noResultsTitle": "Aucune entrée\ntrouvée",
-    "title": "Entrées"
-  },
-  "calendar": {
-    "expense": "Dépense",
-    "income": "Revenu",
-    "selected": "{{date}} sélectionné",
-    "title": "Calendrier"
+    "title": "Entrées",
+    "emptyRange": "Aucune dépense sur cette période."
   },
   "overview": {
     "daysLeft_many": "· {{count}} jours",
@@ -488,5 +481,15 @@
     "title": "Qu’est-ce qui est entré ?",
     "subtitle": "Salaire, remboursement ou une vente. Ajoute ce que tu as reçu.",
     "save": "Enregistrer le revenu"
+  },
+  "range": {
+    "title": "Choisir la période",
+    "from": "Du",
+    "till": "Au",
+    "thisMonth": "Ce mois-ci",
+    "lastMonth": "Mois dernier",
+    "last30Days": "30 derniers jours",
+    "previousMonth": "Mois précédent",
+    "nextMonth": "Mois suivant"
   }
 }

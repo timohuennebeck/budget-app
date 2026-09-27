@@ -129,6 +129,15 @@ export function formatWeekRange({ start, end }: DateRange) {
   return `${format.format(start)} – ${format.format(last)}`;
 }
 
+/** "September" for a whole month (with the year if it isn't this one), else "3.–15. Sept." */
+export function formatRangeLabel(range: DateRange, now = new Date()) {
+  const month = monthRange(range.start);
+  const wholeMonth =
+    month.start.getTime() === range.start.getTime() && month.end.getTime() === range.end.getTime();
+  if (wholeMonth) return formatMonth(range.start, range.start.getFullYear() !== now.getFullYear());
+  return formatWeekRange(range);
+}
+
 /** "Heute", "Gestern" or "24. September" */
 export function formatDayLabel(date: Date, now = new Date()) {
   const diff = daysBetween(date, now);

@@ -276,27 +276,20 @@
     "all": "All",
     "category": "Category",
     "titlePlaceholder": "What for?",
-    "chooseMonth": "Choose month",
     "count_one": "{{count}} entry",
     "count_other": "{{count}} entries",
     "date": "Date",
     "delete": "Delete entry",
     "deleteMessage": "{{title}}, {{amount}} will be removed. This can't be undone.",
     "deleteTitle": "Delete entry?",
-    "emptyMonth": "No entries this month yet.",
     "entry": "Entry",
     "favorite": "Favorite",
     "income": "Income",
     "noCategory": "No category",
     "noResults": "No entries for “{{query}}”. Try another term.",
     "noResultsTitle": "No entry\nfound",
-    "title": "Entries"
-  },
-  "calendar": {
-    "expense": "Expense",
-    "income": "Income",
-    "selected": "{{date}} selected",
-    "title": "Calendar"
+    "title": "Entries",
+    "emptyRange": "There are no entries in this period."
   },
   "overview": {
     "emptySubtitle": "Log what you spent. Pip files it under the right category.",
@@ -478,5 +471,15 @@
     "title": "What came in?",
     "subtitle": "Salary, a refund or something you sold. Add what you received.",
     "save": "Save income"
+  },
+  "range": {
+    "title": "Choose period",
+    "from": "From",
+    "till": "To",
+    "thisMonth": "This month",
+    "lastMonth": "Last month",
+    "last30Days": "Last 30 days",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month"
   }
 }

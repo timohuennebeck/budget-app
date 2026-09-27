@@ -282,7 +282,6 @@
     "all": "Tutti",
     "category": "Categoria",
     "titlePlaceholder": "Per cosa?",
-    "chooseMonth": "Scegli mese",
     "count_one": "{{count}} movimento",
     "count_many": "{{count}} movimenti",
     "count_other": "{{count}} movimenti",
@@ -290,20 +289,14 @@
     "delete": "Elimina movimento",
     "deleteMessage": "{{title}}, {{amount}} verrà rimosso. Non si può annullare.",
     "deleteTitle": "Eliminare il movimento?",
-    "emptyMonth": "Ancora nessun movimento questo mese.",
     "entry": "Movimento",
     "favorite": "Preferito",
     "income": "Entrata",
     "noCategory": "Senza categoria",
     "noResults": "Nessun movimento per “{{query}}”. Prova un'altra parola.",
     "noResultsTitle": "Nessun movimento\ntrovato",
-    "title": "Movimenti"
-  },
-  "calendar": {
-    "expense": "Spesa",
-    "income": "Entrata",
-    "selected": "{{date}} selezionato",
-    "title": "Calendario"
+    "title": "Movimenti",
+    "emptyRange": "Nessuna voce in questo periodo."
   },
   "overview": {
     "daysLeft_many": "· {{count}} giorni",
@@ -488,5 +481,15 @@
     "title": "Cosa è entrato?",
     "subtitle": "Stipendio, un rimborso o qualcosa che hai venduto. Aggiungi quello che hai ricevuto.",
     "save": "Salva entrata"
+  },
+  "range": {
+    "title": "Scegli periodo",
+    "from": "Dal",
+    "till": "Al",
+    "thisMonth": "Questo mese",
+    "lastMonth": "Mese scorso",
+    "last30Days": "Ultimi 30 giorni",
+    "previousMonth": "Mese precedente",
+    "nextMonth": "Mese successivo"
   }
 }

@@ -4,12 +4,12 @@ import { ScrollView, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { MonthSheet } from '@/features/entries/components/month-sheet';
+import { DateRangeSheet } from '@/features/entries/components/date-range-sheet';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
 import { useSheet } from '@/shared/components/sheet';
 import { useAppConfig } from '@/shared/hooks/use-app-config';
-import { formatMonth, formatWeekRange } from '@/shared/lib/dates';
+import { formatMonth, formatRangeLabel, formatWeekRange } from '@/shared/lib/dates';
 import { huePalette } from '@/shared/lib/color';
 import { formatMoney } from '@/shared/lib/money';
 import { tabListProps } from '@/shared/lib/tab-insets';
@@ -17,7 +17,6 @@ import { colors, shadows } from '@/shared/lib/theme';
 import { Card } from '@/shared/ui/card';
 import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
-import { IconButton } from '@/shared/ui/icon-button';
 import { Pip } from '@/shared/ui/pip';
 import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
@@ -90,7 +89,7 @@ export function CheckInsScreen() {
   const currency = useCurrency();
   const { data: checkIns = [] } = useCheckIns();
   const [period, setPeriod] = useState<CheckInPeriod>('all');
-  const monthSheet = useSheet();
+  const rangeSheet = useSheet();
 
   const money = (value: number) => formatMoney(value, { currency, compact: true });
   const detail = (checkIn: CheckIn) =>
@@ -106,7 +105,7 @@ export function CheckInsScreen() {
   const thisYear = new Date().getFullYear();
   const groups = groupByMonth(filterCheckIns(checkIns, period));
 
-  const periods: { value: Exclude<CheckInPeriod, Date>; label: string }[] = [
+  const periods: { value: Exclude<CheckInPeriod, object>; label: string }[] = [
     { value: 'all', label: t('entries.all') },
     { value: 'recent', label: t('checkIn.lastMonths') },
     ...years.map((year) => ({ value: year, label: String(year) })),
@@ -115,31 +114,21 @@ export function CheckInsScreen() {
   return (
     <View className="flex-1 bg-canvas">
       <GradientBackground name="sky" height={420} />
-      {/* Month, title, this week's card, search and chips stay put; only the
+      {/* Period, title, this week's card and chips stay put; only the
           history scrolls. */}
       <View style={{ paddingTop: layout.headerPaddingTop, paddingHorizontal: 16 }}>
-        <View className="flex-row items-center justify-between px-1">
+        <View className="h-10 flex-row items-center px-1">
           <Pressable
-            onPress={monthSheet.present}
+            onPress={rangeSheet.present}
             haptic="none"
-            accessibilityLabel={t('entries.chooseMonth')}
+            accessibilityLabel={t('range.title')}
             className="flex-row items-center gap-2 rounded-full bg-surface px-3.5 py-[9px]"
             style={shadows.card}>
             <Text size={15} weight="semibold" tracking={-0.01} className="capitalize">
-              {period instanceof Date
-                ? formatMonth(period, period.getFullYear() !== thisYear)
-                : t('checkIn.allMonths')}
+              {typeof period === 'object' ? formatRangeLabel(period) : t('checkIn.allMonths')}
             </Text>
             <Icon name="caret-down" size={11} color={colors.primary} />
           </Pressable>
-          <IconButton
-            icon="calendar-blank"
-            variant="surface"
-            size={40}
-            iconSize={18}
-            accessibilityLabel={t('calendar.title')}
-            onPress={() => router.push('/calendar')}
-          />
         </View>
 
         <View className="mt-[22px] flex-row items-baseline justify-between px-1">
@@ -224,12 +213,12 @@ export function CheckInsScreen() {
           </View>
         )}
       </ScrollView>
-      <MonthSheet
-        {...monthSheet.controls}
-        selected={period instanceof Date ? period : new Date()}
-        onSelect={(month) => {
-          setPeriod(month);
-          monthSheet.dismiss();
+      <DateRangeSheet
+        {...rangeSheet.controls}
+        value={typeof period === 'object' ? period : null}
+        onSelect={(range) => {
+          setPeriod(range);
+          rangeSheet.dismiss();
         }}
       />
     </View>
