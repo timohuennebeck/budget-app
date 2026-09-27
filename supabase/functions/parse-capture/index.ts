@@ -45,25 +45,26 @@ async function readReceipt(path: string) {
   return `data:${type};base64,${encodeBase64(new Uint8Array(await data.arrayBuffer()))}`;
 }
 
-// The user's categories; before sign-up (anonymous user, no categories yet)
-// every preset, with its key as id, which is what onboarding drafts use.
+// The user's categories plus the presets they haven't added (marked new, so
+// the model prefers the user's own). Before sign-up (anonymous user, no
+// categories yet) every preset, with its key as id as onboarding drafts use.
 async function readCategories(userId: string, locale: string): Promise<CategoryChoice[]> {
-  const { data, error } = await admin
-    .from('categories')
-    .select('id, name, preset:categories_presets(names, keywords)')
-    .eq('profile_id', userId)
-    .is('archived_at', null);
-  if (error) throw error;
-  if (data.length === 0) {
-    const presets = await admin.from('categories_presets').select('id, names, keywords');
-    if (presets.error) throw presets.error;
-    return presets.data.map((preset) => ({
-      id: preset.id,
-      name: preset.names[locale] ?? preset.names.en,
-      keywords: [...new Set(Object.values(preset.keywords as Record<string, string[]>).flat())],
-    }));
-  }
-  return data.map((category) => {
+  const [own, presets] = await Promise.all([
+    admin
+      .from('categories')
+      .select('id, name, preset_id, preset:categories_presets(names, keywords)')
+      .eq('profile_id', userId)
+      .is('archived_at', null),
+    admin.from('categories_presets').select('id, names, keywords').order('sort_order'),
+  ]);
+  if (own.error) throw own.error;
+  if (presets.error) throw presets.error;
+
+  const words = (keywords: Record<string, string[]>) => [
+    ...new Set(Object.values(keywords).flat()),
+  ];
+  const owned = new Set(own.data.map((category) => category.preset_id));
+  const choices: CategoryChoice[] = own.data.map((category) => {
     const preset = category.preset as unknown as {
       names: Record<string, string>;
       keywords: Record<string, string[]>;
@@ -71,9 +72,19 @@ async function readCategories(userId: string, locale: string): Promise<CategoryC
     return {
       id: category.id,
       name: preset?.names[locale] ?? category.name,
-      keywords: preset ? [...new Set(Object.values(preset.keywords).flat())] : [],
+      keywords: preset ? words(preset.keywords) : [],
     };
   });
+  for (const preset of presets.data) {
+    if (owned.has(preset.id)) continue;
+    choices.push({
+      id: preset.id,
+      name: preset.names[locale] ?? preset.names.en,
+      keywords: words(preset.keywords as Record<string, string[]>),
+      isNew: own.data.length > 0,
+    });
+  }
+  return choices;
 }
 
 /** Up to 60 recent merchants with the category the user filed them under. */
