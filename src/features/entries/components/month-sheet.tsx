@@ -21,9 +21,14 @@ function MonthWheels({ selected, onSelect }: Pick<MonthSheetProps, 'selected' | 
   const [year, setYear] = useState(selected.getFullYear());
   const [month, setMonth] = useState(selected.getMonth());
 
+  // Future months have no entries yet: in this year the wheel ends at this month.
+  const lastMonth = year === thisYear ? now.getMonth() : 11;
   const months = useMemo(
-    () => monthNames('long').map((label, index) => ({ label, value: index })),
-    [],
+    () =>
+      monthNames('long')
+        .slice(0, lastMonth + 1)
+        .map((label, index) => ({ label, value: index })),
+    [lastMonth],
   );
   const years = useMemo(
     () =>
@@ -33,7 +38,7 @@ function MonthWheels({ selected, onSelect }: Pick<MonthSheetProps, 'selected' | 
       }),
     [thisYear],
   );
-  // Future months have no entries yet: stop at this month.
+  // Switching to this year from a later month in an earlier one.
   const clamp = (nextYear: number, nextMonth: number) =>
     nextYear === thisYear ? Math.min(nextMonth, now.getMonth()) : nextMonth;
 
@@ -44,7 +49,7 @@ function MonthWheels({ selected, onSelect }: Pick<MonthSheetProps, 'selected' | 
           tone="date"
           items={months}
           value={month}
-          onChange={(next) => setMonth(clamp(year, next))}
+          onChange={setMonth}
           className="flex-[1.6]"
         />
         <WheelColumn
