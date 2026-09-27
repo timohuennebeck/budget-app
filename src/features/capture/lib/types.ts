@@ -15,6 +15,8 @@ export interface DraftEntry {
   uncertain: boolean;
   /** The AI capture it came from, saved as entries.capture_id */
   captureId?: string;
+  /** The Apple Pay payment it came from; cleared from the inbox once saved */
+  paymentId?: string;
 }
 
 /** What the parser needs to know about a category to match it. */

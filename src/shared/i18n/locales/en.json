@@ -367,6 +367,7 @@
   "profile": {
     "account": "Account",
     "actionButton": "Action Button",
+    "applePay": "Apple Pay",
     "app": "App",
     "categories": "Categories and budgets",
     "currency": "Currency",
@@ -429,5 +430,15 @@
     "subtitle": "A review on the App Store helps others keep track of their spending.",
     "title": "Enjoying Looop?",
     "yourReview": "Your review"
+  },
+  "wallet": {
+    "title": "Log Apple Pay\nautomatically",
+    "subtitle": "Every Apple Pay payment lands in Looop. You just confirm it with a tap.",
+    "step1": "Open <b>Shortcuts</b> › <b>Automation</b> › <b>+</b>",
+    "step2": "Choose <b>Transaction</b>, your cards and <b>Run Immediately</b>",
+    "step3": "Add the action <b>Looop: Log payment</b>",
+    "step4": "Set <b>Amount</b> and <b>Merchant</b> to the transaction’s values",
+    "openShortcuts": "Open Shortcuts",
+    "hint": "Looop notes payments in the background and sorts them when you open the app. Needs iOS 17 or later."
   }
 }

@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { EntryEditor } from '@/features/entries/components/entry-editor';
+import { removePayments } from '@/features/wallet/lib/wallet-inbox';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { Button } from '@/shared/ui/button';
@@ -49,6 +50,8 @@ export function DraftEditScreen({ id }: { id: string }) {
             haptic="warning"
             onPress={() => {
               removeDraft(id);
+              // A removed Apple Pay payment shouldn't come back next time.
+              if (stored?.paymentId) removePayments([stored.paymentId]);
               router.back();
             }}
           />

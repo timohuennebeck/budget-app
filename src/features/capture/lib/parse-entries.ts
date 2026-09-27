@@ -27,7 +27,8 @@ interface ParseOptions {
 let counter = 0;
 export const newDraftId = () => `draft-${Date.now().toString(36)}-${(counter++).toString(36)}`;
 
-function matchCategory(text: string, categories: CategoryOption[]) {
+/** The first category whose name or keywords appear in `text`. */
+export function matchCategory(text: string, categories: CategoryOption[]) {
   const haystack = ` ${text.toLowerCase()} `;
   for (const category of categories) {
     const words = [category.name.toLowerCase(), ...category.keywords];

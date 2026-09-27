@@ -680,7 +680,7 @@ export type Database = {
       budget_mode: "monthly" | "per_category" | "none"
       capture_status: "pending" | "processing" | "parsed" | "failed"
       entry_kind: "expense" | "income"
-      entry_source: "text" | "voice" | "camera" | "manual"
+      entry_source: "text" | "voice" | "camera" | "manual" | "wallet"
       legal_doc_kind: "terms" | "privacy"
       notification_kind:
         | "daily_reminder"
@@ -822,7 +822,7 @@ export const Constants = {
       budget_mode: ["monthly", "per_category", "none"],
       capture_status: ["pending", "processing", "parsed", "failed"],
       entry_kind: ["expense", "income"],
-      entry_source: ["text", "voice", "camera", "manual"],
+      entry_source: ["text", "voice", "camera", "manual", "wallet"],
       legal_doc_kind: ["terms", "privacy"],
       notification_kind: [
         "daily_reminder",

@@ -8,6 +8,7 @@ import { EntryRow } from '@/features/entries/components/entry-row';
 import { useCreateEntries } from '@/features/entries/hooks/use-entries';
 import { entryAmount, entrySubtitle, entryVisual } from '@/features/entries/lib/entry-display';
 import { useEntriesAllowance } from '@/features/paywall/hooks/use-entries-allowance';
+import { removePayments } from '@/features/wallet/lib/wallet-inbox';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { formatDayLabel } from '@/shared/lib/dates';
@@ -50,18 +51,23 @@ export function ReviewScreen() {
       router.push('/limit');
       return;
     }
-    createEntries.mutate(
-      drafts.map((draft) => ({
-        id: randomUUID(),
-        title: draft.title,
-        amount: draft.amount,
-        kind: draft.kind,
-        ...categoryColumns(draft.categoryId),
-        source: draft.source,
-        capture_id: draft.captureId ?? null,
-        occurred_at: draft.occurredAt,
-      })),
-    );
+    const paymentIds = drafts.flatMap((draft) => draft.paymentId ?? []);
+    createEntries
+      .mutateAsync(
+        drafts.map((draft) => ({
+          id: randomUUID(),
+          title: draft.title,
+          amount: draft.amount,
+          kind: draft.kind,
+          ...categoryColumns(draft.categoryId),
+          source: draft.source,
+          capture_id: draft.captureId ?? null,
+          occurred_at: draft.occurredAt,
+        })),
+      )
+      // Apple Pay payments leave the inbox only once they're really saved.
+      .then(() => removePayments(paymentIds))
+      .catch(() => {});
     router.replace(captureHref('app', 'saved'));
   };
 

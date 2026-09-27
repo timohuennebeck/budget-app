@@ -376,6 +376,7 @@
   "profile": {
     "account": "Conta",
     "actionButton": "Botão de Ação",
+    "applePay": "Apple Pay",
     "app": "App",
     "categories": "Categorias e orçamentos",
     "currency": "Moeda",
@@ -439,5 +440,15 @@
     "subtitle": "Uma avaliação na App Store ajuda outras pessoas a controlar os seus gastos.",
     "title": "Gostas do Looop?",
     "yourReview": "A tua avaliação"
+  },
+  "wallet": {
+    "title": "Registar Apple Pay\nautomaticamente",
+    "subtitle": "Cada pagamento Apple Pay chega ao Looop. Só tens de o confirmar com um toque.",
+    "step1": "Abre <b>Atalhos</b> › <b>Automatização</b> › <b>+</b>",
+    "step2": "Escolhe <b>Transação</b>, os teus cartões e <b>Executar imediatamente</b>",
+    "step3": "Adiciona a ação <b>Looop: Registar pagamento</b>",
+    "step4": "Define <b>Montante</b> e <b>Comerciante</b> com os valores da transação",
+    "openShortcuts": "Abrir Atalhos",
+    "hint": "O Looop guarda os pagamentos em segundo plano e organiza-os quando abres a app. Requer iOS 17 ou posterior."
   }
 }

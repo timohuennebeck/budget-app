@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Linking, View } from 'react-native';
+import { Linking, Platform, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useAuth } from '@/features/auth/lib/auth-provider';
@@ -101,6 +101,12 @@ export function ProfileScreen() {
           title={t('profile.actionButton')}
           onPress={() => router.push('/settings/action-button')}
         />
+        {Platform.OS === 'android' ? null : (
+          <ListRow
+            title={t('profile.applePay')}
+            onPress={() => router.push('/settings/apple-pay')}
+          />
+        )}
         <ListRow
           title={t('profile.language')}
           value={findLanguage(profile.locale).name}
