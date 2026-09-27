@@ -18,11 +18,12 @@ interface SetupGuideScreenProps<Key extends ParseKeys> {
   steps: readonly Key[];
   /** Small print below the steps */
   note?: string;
-  /** Primary button: open the iOS screen to set it up ("Einstellungen
-   * öffnen"), then "Erledigt"; or move on to the next page ("Weiter"). */
-  action:
-    | { kind: 'open'; label: string; reopenLabel: string; onOpen: () => void; onDone: () => void }
-    | { kind: 'next'; label: string; onNext: () => void };
+  /** Opens the iOS screen to set it up, e.g. "Einstellungen öffnen" */
+  openLabel: string;
+  reopenLabel: string;
+  onOpen: () => void;
+  /** "Erledigt", shown once back from the iOS screen */
+  onDone: () => void;
   /** Secondary button until then, e.g. "Später" or "Schließen" */
   laterLabel: string;
   onLater: () => void;
@@ -37,7 +38,10 @@ export function SetupGuideScreen<Key extends ParseKeys>({
   subtitle,
   steps,
   note,
-  action,
+  openLabel,
+  reopenLabel,
+  onOpen,
+  onDone,
   laterLabel,
   onLater,
 }: SetupGuideScreenProps<Key>) {
@@ -47,25 +51,24 @@ export function SetupGuideScreen<Key extends ParseKeys>({
   // opens it again.
   const [opened, setOpened] = useState(false);
   const open = () => {
-    if (action.kind !== 'open') return;
-    action.onOpen();
+    onOpen();
     setOpened(true);
   };
-  const buttons =
-    action.kind === 'next'
-      ? { primary: [action.label, action.onNext], secondary: [laterLabel, onLater] }
-      : opened
-        ? { primary: [t('common.doneSetUp'), action.onDone], secondary: [action.reopenLabel, open] }
-        : { primary: [action.label, open], secondary: [laterLabel, onLater] };
-  const [primaryLabel, onPrimary] = buttons.primary as [string, () => void];
-  const [secondaryLabel, onSecondary] = buttons.secondary as [string, () => void];
   return (
     <Screen
       scroll
       footer={
         <View>
-          <Button label={primaryLabel} onPress={onPrimary} />
-          <Button variant="ghost" className="mt-2.5" label={secondaryLabel} onPress={onSecondary} />
+          <Button
+            label={opened ? t('common.doneSetUp') : openLabel}
+            onPress={opened ? onDone : open}
+          />
+          <Button
+            variant="ghost"
+            className="mt-2.5"
+            label={opened ? reopenLabel : laterLabel}
+            onPress={opened ? open : onLater}
+          />
         </View>
       }>
       {header}

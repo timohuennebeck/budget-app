@@ -13,7 +13,7 @@ interface WalletLinkScreenProps {
   laterLabel: string;
 }
 
-const STEPS = ['wallet.link1', 'wallet.link2', 'wallet.link3', 'wallet.link4'] as const;
+const STEPS = ['wallet.link1', 'wallet.link2', 'wallet.link3'] as const;
 
 // Page 2 of 2: iOS doesn't fill the action's Betrag and Händler by itself,
 // they have to be linked to the payment (Kurzbefehleingabe) once.
@@ -26,13 +26,10 @@ export function WalletLinkScreen({ header, onDone, laterLabel }: WalletLinkScree
       title={t('wallet.linkTitle')}
       subtitle={t('wallet.linkSubtitle')}
       steps={STEPS}
-      action={{
-        kind: 'open',
-        label: t('wallet.openShortcuts'),
-        reopenLabel: t('wallet.reopen'),
-        onOpen: () => Linking.openURL('shortcuts://').catch(() => {}),
-        onDone,
-      }}
+      openLabel={t('wallet.openShortcuts')}
+      reopenLabel={t('wallet.reopen')}
+      onOpen={() => Linking.openURL('shortcuts://').catch(() => {})}
+      onDone={onDone}
       laterLabel={laterLabel}
       onLater={onDone}
     />
