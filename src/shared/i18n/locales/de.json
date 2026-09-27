@@ -104,16 +104,6 @@
       "subtitle": "Leg Looop auf die Aktionstaste deines iPhones. Gedrückt halten, sprechen, fertig.",
       "title": "Ein Druck,\nund schon erfasst"
     },
-    "applePay": {
-      "title": "Mit Apple Pay bezahlt,\nautomatisch erfasst.",
-      "subtitle": "Nach jeder Zahlung merkt sich Looop Betrag und Geschäft. Du bestätigst nur noch mit einem Tipp.",
-      "setUp": "Einrichten",
-      "later": "Vielleicht später",
-      "now": "jetzt",
-      "captured": "{{amount}} erfasst",
-      "guideTitle": "In einer Minute\neingerichtet",
-      "guideSubtitle": "Die Kurzbefehle-App gibt jede Apple-Pay-Zahlung an Looop weiter. Einmal einrichten, dann läuft es von selbst."
-    },
     "widget": {
       "add": "Widget hinzufügen",
       "later": "Vielleicht später",
@@ -442,15 +432,12 @@
     "yourReview": "Deine Bewertung"
   },
   "wallet": {
-    "title": "Apple Pay\nautomatisch erfassen",
-    "subtitle": "Jede Zahlung mit Apple Pay landet in Looop. Du bestätigst sie nur noch mit einem Tipp.",
-    "step1": "Öffne <b>Kurzbefehle</b> › <b>Automation</b> › <b>+</b>",
-    "step2": "Wähle <b>Transaktion</b>, deine Karten und <b>Sofort ausführen</b>",
-    "step3": "Füge die Aktion <b>Looop: Zahlung eintragen</b> hinzu",
-    "step4": "Setze <b>Betrag</b> und <b>Händler</b> auf die Werte der Transaktion",
+    "title": "Bezahlen wie immer,\nLooop schreibt mit",
+    "subtitle": "Zweimal die Seitentaste drücken, mit Apple Pay zahlen. Die Ausgabe landet automatisch in Looop.",
+    "step1": "Öffne Kurzbefehle › <b>Automation</b>",
+    "step2": "Tippe <b>+</b> und wähle <b>Transaktion</b> › <b>Sofort ausführen</b>",
+    "step3": "Wähle <b>Looop: Zahlung erfassen</b> mit <b>Betrag</b> und <b>Händler</b>",
     "openShortcuts": "Kurzbefehle öffnen",
-    "hint": "Looop merkt sich die Zahlungen im Hintergrund und sortiert sie, sobald du die App öffnest. Braucht iOS 17 oder neuer.",
-    "noted": "In Looop gemerkt",
     "done": "Erledigt",
     "reopen": "Kurzbefehle erneut öffnen",
     "active": "Läuft – die letzte Apple-Pay-Zahlung kam am {{date}} an.",

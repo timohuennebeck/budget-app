@@ -1,7 +1,7 @@
 import AppIntents
 import Foundation
 
-// "Looop: Zahlung eintragen" for the Shortcuts "Transaction" automation
+// "Looop: Zahlung erfassen" for the Shortcuts "Transaction" automation
 // (Wallet, iOS 17+): Amount and Merchant come from the Apple Pay payment.
 // Runs in the background without opening the app and only notes the payment
 // in Documents/wallet-payments.json; the app turns pending payments into

@@ -104,16 +104,6 @@
       "subtitle": "Metti Looop sul tasto Azione del tuo iPhone. Tieni premuto, parla, fatto.",
       "title": "Una pressione,\ned è registrato"
     },
-    "applePay": {
-      "title": "Pagato con Apple Pay,\nregistrato da solo.",
-      "subtitle": "Dopo ogni pagamento Looop salva importo e negozio. Ti basta confermare con un tocco.",
-      "setUp": "Configura",
-      "later": "Magari dopo",
-      "now": "ora",
-      "captured": "{{amount}} registrato",
-      "guideTitle": "Pronto\nin un minuto",
-      "guideSubtitle": "L’app Comandi rapidi passa ogni pagamento Apple Pay a Looop. Configuralo una volta e va da solo."
-    },
     "widget": {
       "add": "Aggiungi widget",
       "later": "Forse più tardi",
@@ -452,15 +442,12 @@
     "yourReview": "La tua recensione"
   },
   "wallet": {
-    "title": "Registra Apple Pay\nin automatico",
-    "subtitle": "Ogni pagamento Apple Pay arriva in Looop. Ti basta confermarlo con un tocco.",
-    "step1": "Apri <b>Comandi rapidi</b> › <b>Automazione</b> › <b>+</b>",
-    "step2": "Scegli <b>Transazione</b>, le tue carte ed <b>Esegui subito</b>",
-    "step3": "Aggiungi l’azione <b>Looop: Registra pagamento</b>",
-    "step4": "Imposta <b>Importo</b> ed <b>Esercente</b> sui valori della transazione",
+    "title": "Paga come sempre,\nLooop prende nota",
+    "subtitle": "Premi due volte il tasto laterale e paga con Apple Pay. La spesa arriva in Looop in automatico.",
+    "step1": "Apri Comandi rapidi › <b>Automazione</b>",
+    "step2": "Tocca <b>+</b> e scegli <b>Transazione</b> › <b>Esegui subito</b>",
+    "step3": "Scegli <b>Looop: Registra pagamento</b> con <b>Importo</b> ed <b>Esercente</b>",
     "openShortcuts": "Apri Comandi rapidi",
-    "hint": "Looop salva i pagamenti in background e li ordina quando apri l’app. Richiede iOS 17 o successivo.",
-    "noted": "Salvato in Looop",
     "done": "Fatto",
     "reopen": "Riapri Comandi rapidi",
     "active": "Funziona: l’ultimo pagamento Apple Pay è arrivato il {{date}}.",

@@ -9,8 +9,6 @@ export default function ApplePaySettings() {
   return (
     <WalletSetupScreen
       header={<ScreenHeader title="Apple Pay" />}
-      title={t('wallet.title')}
-      subtitle={t('wallet.subtitle')}
       laterLabel={t('common.close')}
       onDone={() => router.back()}
       showStatus

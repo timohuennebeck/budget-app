@@ -104,16 +104,6 @@
       "subtitle": "Mets Looop sur le bouton Action de ton iPhone. Maintiens, parle, c'est fait.",
       "title": "Une pression,\net c'est noté"
     },
-    "applePay": {
-      "title": "Payé avec Apple Pay,\nnoté automatiquement.",
-      "subtitle": "Après chaque paiement, Looop note le montant et le magasin. Tu confirmes d’un geste.",
-      "setUp": "Configurer",
-      "later": "Peut-être plus tard",
-      "now": "maintenant",
-      "captured": "{{amount}} noté",
-      "guideTitle": "Prêt\nen une minute",
-      "guideSubtitle": "L’app Raccourcis transmet chaque paiement Apple Pay à Looop. À configurer une fois, puis ça tourne tout seul."
-    },
     "widget": {
       "add": "Ajouter le widget",
       "later": "Peut-être plus tard",
@@ -452,15 +442,12 @@
     "yourReview": "Ton avis"
   },
   "wallet": {
-    "title": "Enregistrer Apple Pay\nautomatiquement",
-    "subtitle": "Chaque paiement Apple Pay arrive dans Looop. Tu le confirmes d’un geste.",
-    "step1": "Ouvre <b>Raccourcis</b> › <b>Automatisation</b> › <b>+</b>",
-    "step2": "Choisis <b>Transaction</b>, tes cartes et <b>Exécuter immédiatement</b>",
-    "step3": "Ajoute l’action <b>Looop : Noter un paiement</b>",
-    "step4": "Règle <b>Montant</b> et <b>Commerçant</b> sur les valeurs de la transaction",
+    "title": "Paie comme d’habitude,\nLooop prend note",
+    "subtitle": "Double-clique sur le bouton latéral et paie avec Apple Pay. La dépense arrive automatiquement dans Looop.",
+    "step1": "Ouvre Raccourcis › <b>Automatisation</b>",
+    "step2": "Touche <b>+</b> et choisis <b>Transaction</b> › <b>Exécuter immédiatement</b>",
+    "step3": "Choisis <b>Looop : Noter un paiement</b> avec <b>Montant</b> et <b>Commerçant</b>",
     "openShortcuts": "Ouvrir Raccourcis",
-    "hint": "Looop note les paiements en arrière-plan et les classe à l’ouverture de l’app. iOS 17 ou plus récent requis.",
-    "noted": "Noté dans Looop",
     "done": "C’est fait",
     "reopen": "Rouvrir Raccourcis",
     "active": "Ça marche : le dernier paiement Apple Pay est arrivé le {{date}}.",

@@ -11,27 +11,23 @@ import { ApplePayIllustration } from './apple-pay-illustration';
 
 interface WalletSetupScreenProps {
   header: ReactNode;
-  title: string;
-  subtitle: string;
   /** Secondary button before Shortcuts was opened, e.g. "Später" */
   laterLabel: string;
   onDone: () => void;
-  /** Signed in: show whether payments are already arriving */
+  /** Signed in: say when the last Apple Pay payment arrived */
   showStatus?: boolean;
 }
 
-const STEPS = ['wallet.step1', 'wallet.step2', 'wallet.step3', 'wallet.step4'] as const;
+const STEPS = ['wallet.step1', 'wallet.step2', 'wallet.step3'] as const;
 
-// How to log Apple Pay payments automatically: a personal automation in the
-// Shortcuts app (Transaction trigger, iOS 17+) that runs "Zahlung eintragen".
-// Apps can't create automations or see whether one exists, so opening
-// Shortcuts doesn't move on: back from it, the user confirms with
-// "Erledigt". The first payment that arrives is the real proof; with
-// showStatus the screen says when the last one came in.
+// Logging Apple Pay payments automatically: a personal automation in the
+// Shortcuts app (Transaction trigger, iOS 17+) that runs "Zahlung erfassen"
+// (2p5-b, also Profil › Apple Pay). Apps can't create automations or see
+// whether one exists, so opening Shortcuts doesn't move on: back from it,
+// the user confirms with "Erledigt". The first payment that arrives is the
+// real proof; with showStatus the screen says when the last one came in.
 export function WalletSetupScreen({
   header,
-  title,
-  subtitle,
   laterLabel,
   onDone,
   showStatus = false,
@@ -48,13 +44,13 @@ export function WalletSetupScreen({
     <SetupGuideScreen
       header={header}
       illustration={<ApplePayIllustration />}
-      title={title}
-      subtitle={subtitle}
+      title={t('wallet.title')}
+      subtitle={t('wallet.subtitle')}
       steps={STEPS}
       note={
         lastPayment
           ? t('wallet.active', { date: formatShortDate(new Date(lastPayment)) })
-          : t('wallet.hint')
+          : undefined
       }
       primaryLabel={opened ? t('wallet.done') : t('wallet.openShortcuts')}
       onPrimary={opened ? onDone : openShortcuts}

@@ -2,7 +2,7 @@ import { File, Paths } from 'expo-file-system';
 
 import { type WalletPayment, parsePayments } from './wallet-payment';
 
-// Apple Pay payments the "Zahlung eintragen" App Intent noted while the app
+// Apple Pay payments the "Zahlung erfassen" App Intent noted while the app
 // was closed (plugins/capture-intent/LogPaymentIntent.swift writes the file).
 const inbox = () => new File(Paths.document, 'wallet-payments.json');
 

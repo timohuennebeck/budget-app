@@ -104,16 +104,6 @@
       "subtitle": "Coloque o Looop no botão de Ação do seu iPhone. Segure, fale, pronto.",
       "title": "Um clique\ne já está registrado"
     },
-    "applePay": {
-      "title": "Pagou com Apple Pay,\nregistrado sozinho.",
-      "subtitle": "Depois de cada pagamento, o Looop guarda o valor e a loja. Você só confirma com um toque.",
-      "setUp": "Configurar",
-      "later": "Talvez depois",
-      "now": "agora",
-      "captured": "{{amount}} registrado",
-      "guideTitle": "Pronto\nem um minuto",
-      "guideSubtitle": "O app Atalhos passa cada pagamento com Apple Pay para o Looop. Configure uma vez e funciona sozinho."
-    },
     "widget": {
       "add": "Adicionar widget",
       "later": "Talvez mais tarde",
@@ -452,15 +442,12 @@
     "yourReview": "Sua avaliação"
   },
   "wallet": {
-    "title": "Registre o Apple Pay\nautomaticamente",
-    "subtitle": "Cada pagamento com Apple Pay chega ao Looop. Você só confirma com um toque.",
-    "step1": "Abra <b>Atalhos</b> › <b>Automação</b> › <b>+</b>",
-    "step2": "Escolha <b>Transação</b>, seus cartões e <b>Executar imediatamente</b>",
-    "step3": "Adicione a ação <b>Looop: Registrar pagamento</b>",
-    "step4": "Defina <b>Valor</b> e <b>Estabelecimento</b> com os valores da transação",
+    "title": "Pague como sempre,\no Looop anota",
+    "subtitle": "Aperte duas vezes o botão lateral e pague com Apple Pay. O gasto chega ao Looop automaticamente.",
+    "step1": "Abra Atalhos › <b>Automação</b>",
+    "step2": "Toque em <b>+</b> e escolha <b>Transação</b> › <b>Executar imediatamente</b>",
+    "step3": "Escolha <b>Looop: Registrar pagamento</b> com <b>Valor</b> e <b>Estabelecimento</b>",
     "openShortcuts": "Abrir Atalhos",
-    "hint": "O Looop guarda os pagamentos em segundo plano e organiza quando você abre o app. Requer iOS 17 ou posterior.",
-    "noted": "Guardado no Looop",
     "done": "Pronto",
     "reopen": "Abrir Atalhos de novo",
     "active": "Funcionando: o último pagamento com Apple Pay chegou em {{date}}.",
