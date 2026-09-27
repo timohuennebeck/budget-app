@@ -330,9 +330,11 @@
     "limitsTitle": "Onde você quer\num limite?",
     "monthlySubtitle": "Sem aluguel e contas fixas. O Pip desconta todos os gastos desse valor.",
     "monthlyTitle": "Quanto você quer\ngastar por mês?",
+    "moreCategories": "Mais categorias",
     "noLimit": "Sem limite",
     "over": "acima · de {{limit}}",
-    "peerAverage": "Ø {{amount}} entre pessoas da sua idade"
+    "peerAverage": "Ø {{amount}} entre pessoas da sua idade",
+    "showAll": "Mostrar mais {{count}} categorias"
   },
   "checkIn": {
     "accuracy": "{{percent}}% de precisão",

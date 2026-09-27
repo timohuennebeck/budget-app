@@ -330,9 +330,11 @@
     "limitsTitle": "Onde queres\num limite?",
     "monthlySubtitle": "Sem renda nem custos fixos. O Pip desconta todos os gastos deste valor.",
     "monthlyTitle": "Quanto queres gastar\npor mês?",
+    "moreCategories": "Mais categorias",
     "noLimit": "Sem limite",
     "over": "acima · de {{limit}}",
-    "peerAverage": "Ø {{amount}} em pessoas da tua idade"
+    "peerAverage": "Ø {{amount}} em pessoas da tua idade",
+    "showAll": "Mostrar mais {{count}} categorias"
   },
   "checkIn": {
     "accuracy": "{{percent}} % de precisão",

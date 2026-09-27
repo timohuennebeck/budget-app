@@ -18,6 +18,8 @@ export interface CategoryDisplay {
   keywords: string[];
   /** Average monthly spend of people the same age, from the preset */
   peerAverage: number | null;
+  /** One of the most common presets, shown first where space is short */
+  suggested: boolean;
 }
 
 function presetDisplay(preset: CategoryPreset): CategoryDisplay {
@@ -29,6 +31,7 @@ function presetDisplay(preset: CategoryPreset): CategoryDisplay {
     hue: preset.hue,
     keywords: presetKeywords(preset),
     peerAverage: preset.peer_average,
+    suggested: preset.suggested,
   };
 }
 
@@ -41,6 +44,7 @@ function ownDisplay(category: Category): CategoryDisplay {
     hue: category.hue,
     keywords: [],
     peerAverage: null,
+    suggested: false,
   };
 }
 

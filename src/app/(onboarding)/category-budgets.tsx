@@ -15,16 +15,23 @@ export default function OnboardingCategoryBudgets() {
   const limits = useOnboardingStore((state) => state.categoryLimits);
   const currency = useOnboardingStore((state) => state.currency);
   const update = useOnboardingStore((state) => state.update);
+  const entries = useOnboardingStore((state) => state.entries);
 
-  const items = categories.map((category) => {
-    const peer = category.peerAverage ?? 100;
-    return {
-      category,
-      limit: limits[category.id] ?? null,
-      reference: peer,
-      hint: t('budgets.peerAverage', { amount: formatMoney(peer, { currency, compact: true }) }),
-    };
-  });
+  // Up front: where the first entries landed, the most common categories
+  // and any limit already set; everything else behind "show all".
+  const used = new Set(entries.map((entry) => entry.categoryId));
+  const items = categories
+    .map((category) => {
+      const peer = category.peerAverage ?? 100;
+      return {
+        category,
+        limit: limits[category.id] ?? null,
+        reference: peer,
+        hint: t('budgets.peerAverage', { amount: formatMoney(peer, { currency, compact: true }) }),
+        featured: used.has(category.id) || category.suggested || limits[category.id] != null,
+      };
+    })
+    .sort((a, b) => Number(used.has(b.category.id)) - Number(used.has(a.category.id)));
 
   return (
     <CategoryBudgetsScreen

@@ -330,9 +330,11 @@
     "limitsTitle": "Dove vuoi\nun limite?",
     "monthlySubtitle": "Senza affitto e spese fisse. Pip conta tutte le spese su questo importo.",
     "monthlyTitle": "Quanto vuoi\nspendere al mese?",
+    "moreCategories": "Altre categorie",
     "noLimit": "Nessun limite",
     "over": "oltre · su {{limit}}",
-    "peerAverage": "Ø {{amount}} tra i tuoi coetanei"
+    "peerAverage": "Ø {{amount}} tra i tuoi coetanei",
+    "showAll": "Mostra altre {{count}} categorie"
   },
   "checkIn": {
     "accuracy": "Preciso al {{percent}}%",

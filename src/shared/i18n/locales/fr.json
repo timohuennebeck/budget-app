@@ -330,9 +330,11 @@
     "limitsTitle": "Où veux-tu\nune limite ?",
     "monthlySubtitle": "Hors loyer et charges fixes. Pip compte toutes tes dépenses sur ce montant.",
     "monthlyTitle": "Combien veux-tu\ndépenser par mois ?",
+    "moreCategories": "Autres catégories",
     "noLimit": "Sans limite",
     "over": "de trop · sur {{limit}}",
-    "peerAverage": "Ø {{amount}} chez les gens de ton âge"
+    "peerAverage": "Ø {{amount}} chez les gens de ton âge",
+    "showAll": "Afficher {{count}} autres catégories"
   },
   "checkIn": {
     "accuracy": "Précis à {{percent}} %",

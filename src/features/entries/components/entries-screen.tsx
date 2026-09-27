@@ -21,7 +21,7 @@ import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 
 import { useEntries } from '../hooks/use-entries';
-import { groupByDay, netTotal } from '../lib/entry-stats';
+import { countByCategory, groupByDay, netTotal } from '../lib/entry-stats';
 import { EmptySearch } from './empty-search';
 import { EntryList } from './entry-list';
 import { MonthSheet } from './month-sheet';
@@ -67,6 +67,13 @@ export function EntriesScreen() {
   }, [entries, query, categoryId, lookup]);
 
   const groups = useMemo(() => groupByDay(filtered), [filtered]);
+  // Chips only for categories this month actually has, the most used first.
+  const chips = useMemo(() => {
+    const counts = countByCategory(entries);
+    return categories
+      .filter((category) => counts.has(category.id) || category.id === categoryId)
+      .sort((a, b) => (counts.get(b.id) ?? 0) - (counts.get(a.id) ?? 0));
+  }, [categories, entries, categoryId]);
   const noResults = filtered.length === 0 && query.trim().length > 0;
 
   return (
@@ -142,7 +149,7 @@ export function EntriesScreen() {
             variant={categoryId === null ? 'dark' : 'outline'}
             onPress={() => setCategoryId(null)}
           />
-          {categories.map((category) => (
+          {chips.map((category) => (
             <Chip
               key={category.id}
               label={category.name}

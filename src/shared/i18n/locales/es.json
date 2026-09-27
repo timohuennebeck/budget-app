@@ -330,9 +330,11 @@
     "limitsTitle": "¿Dónde quieres\nun límite?",
     "monthlySubtitle": "Sin alquiler ni gastos fijos. Pip cuenta todos los gastos contra este importe.",
     "monthlyTitle": "¿Cuánto quieres\ngastar al mes?",
+    "moreCategories": "Más categorías",
     "noLimit": "Sin límite",
     "over": "de más · de {{limit}}",
-    "peerAverage": "Ø {{amount}} en gente de tu edad"
+    "peerAverage": "Ø {{amount}} en gente de tu edad",
+    "showAll": "Mostrar {{count}} categorías más"
   },
   "checkIn": {
     "accuracy": "{{percent}} % de acierto",
