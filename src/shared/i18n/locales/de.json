@@ -23,6 +23,7 @@
   "tabs": {
     "overview": "Übersicht",
     "entries": "Einträge",
+    "budgets": "Budgets",
     "checkIns": "Check-in",
     "profile": "Profil"
   },
@@ -321,6 +322,7 @@
     "monthlyTitle": "Wie viel willst du\nim Monat ausgeben?",
     "moreCategories": "Weitere Kategorien",
     "noLimit": "Kein Limit",
+    "noSpending": "Ohne Ausgaben in diesem Monat",
     "over": "drüber · von {{limit}}",
     "peerAverage": "Ø {{amount}} bei Gleichaltrigen",
     "showAll": "{{count}} weitere Kategorien anzeigen",

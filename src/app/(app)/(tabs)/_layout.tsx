@@ -24,6 +24,13 @@ export default function TabsLayout() {
           md={{ default: 'menu_book', selected: 'menu_book' }}
         />
       </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="budgets">
+        <NativeTabs.Trigger.Label>{t('tabs.budgets')}</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          sf={{ default: 'chart.pie', selected: 'chart.pie.fill' }}
+          md={{ default: 'pie_chart', selected: 'pie_chart' }}
+        />
+      </NativeTabs.Trigger>
       <NativeTabs.Trigger name="check-ins">
         <NativeTabs.Trigger.Label>{t('tabs.checkIns')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon

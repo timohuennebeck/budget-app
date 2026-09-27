@@ -23,6 +23,7 @@
   "tabs": {
     "overview": "Resumen",
     "entries": "Registros",
+    "budgets": "Presupuestos",
     "checkIns": "Check-in",
     "profile": "Perfil"
   },
@@ -329,6 +330,7 @@
     "monthlyTitle": "¿Cuánto quieres\ngastar al mes?",
     "moreCategories": "Más categorías",
     "noLimit": "Sin límite",
+    "noSpending": "Sin gastos este mes",
     "over": "de más · de {{limit}}",
     "peerAverage": "Ø {{amount}} en gente de tu edad",
     "showAll": "Mostrar {{count}} categorías más",

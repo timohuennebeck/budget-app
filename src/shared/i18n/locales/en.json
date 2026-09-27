@@ -23,6 +23,7 @@
   "tabs": {
     "overview": "Overview",
     "entries": "Entries",
+    "budgets": "Budgets",
     "checkIns": "Check-in",
     "profile": "Profile"
   },
@@ -321,6 +322,7 @@
     "monthlyTitle": "How much do you want\nto spend per month?",
     "moreCategories": "More categories",
     "noLimit": "No limit",
+    "noSpending": "No spending this month",
     "over": "over · of {{limit}}",
     "peerAverage": "Avg. {{amount}} for people your age",
     "showAll": "Show {{count}} more categories",

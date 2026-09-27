@@ -136,8 +136,11 @@ export function CheckInsScreen() {
       </View>
 
       {checkIns.length === 0 ? (
-        // Nothing to scroll: the empty states stay put under the header.
-        <View className="flex-1 px-4">
+        <ScrollView
+          className="flex-1"
+          contentInsetAdjustmentBehavior={layout.contentInsetAdjustmentBehavior}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+          showsVerticalScrollIndicator={false}>
           <Card className="mt-[18px] items-center rounded-[28px] px-5 pt-[22px] pb-6">
             <Pip pose="clock" size={120} />
             <Text variant="heading" className="mt-3">
@@ -150,7 +153,7 @@ export function CheckInsScreen() {
               {t('checkIn.historyEmptySubtitle')}
             </Text>
           </Card>
-        </View>
+        </ScrollView>
       ) : groups.length === 0 ? (
         <View className="mt-3.5 flex-1 px-4">
           <Text variant="body" className="px-1 pt-6 text-center">

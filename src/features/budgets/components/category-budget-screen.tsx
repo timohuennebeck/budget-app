@@ -13,6 +13,7 @@ import { useCurrency, useProfile } from '@/features/profile/hooks/use-profile';
 import { MoneyText } from '@/shared/components/money-text';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
+import { useToday } from '@/shared/hooks/use-today';
 import { huePalette } from '@/shared/lib/color';
 import { addDays, budgetCycle, formatLongDate, formatMonth } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
@@ -41,15 +42,18 @@ const messages = {
   noLimit: 'budgets.trendNoLimit',
 } as const;
 
-// One category this budget month (2w-e): what's spent, how it compares with
+// One category in a budget month (2w-e): what's spent, how it compares with
 // the limit, the running total as a chart, Pip's forecast and the entries.
-export function CategoryBudgetScreen({ id }: { id: string }) {
+// A past month (from the Budgets tab) has no days left or forecast.
+export function CategoryBudgetScreen({ id, month: shown }: { id: string; month?: Date }) {
   const { t } = useTranslation();
   const { data: profile } = useProfile();
   const currency = useCurrency();
   const lookup = useCategoryLookup();
   const { data: limits = NO_LIMITS } = useCategoryLimits();
-  const cycle = budgetCycle(new Date(), profile?.month_start_day ?? 1);
+  const today = useToday();
+  const cycle = budgetCycle(shown ?? today, profile?.month_start_day ?? 1);
+  const past = cycle.end <= today;
   const { data: all = [] } = useEntries(cycle);
 
   const category = lookup.get(id);
@@ -58,7 +62,7 @@ export function CategoryBudgetScreen({ id }: { id: string }) {
     () => all.filter((entry) => categoryIdOf(entry) === id && entry.kind === 'expense'),
     [all, id],
   );
-  const trend = categoryTrend(entries, cycle, limit);
+  const trend = categoryTrend(entries, cycle, limit, past ? addDays(cycle.end, -1) : undefined);
   // Day held on the chart; the header then shows that day instead.
   const [scrub, setScrub] = useState<number | null>(null);
   const ticks = trendTicks(cycle, trend.days);
@@ -115,10 +119,11 @@ export function CategoryBudgetScreen({ id }: { id: string }) {
                   className={trend.status === 'over' ? 'text-danger-text' : undefined}>
                   {`${percent} %`}
                 </Text>
-                {` ${t('budgets.ofLimit', { limit: money(limit!) })} · `}
+                {` ${t('budgets.ofLimit', { limit: money(limit!) })}`}
+                {past ? '' : ' · '}
               </>
             ) : null}
-            {daysLeft}
+            {past ? null : daysLeft}
           </Text>
         )}
       </View>
@@ -127,18 +132,20 @@ export function CategoryBudgetScreen({ id }: { id: string }) {
         <TrendChart trend={trend} hue={category.hue} ticks={ticks} onScrub={setScrub} />
       </View>
 
-      <View className="mt-6 flex-row items-center gap-3 px-1">
-        <Pip pose={pipPose[trend.status]} size={52} />
-        <Text size={15} leading={1.4} className="flex-1 text-ink-soft">
-          <Trans
-            i18nKey={messages[trend.status]}
-            values={{
-              amount: money(trend.status === 'over' ? trend.spent - limit! : trend.projected),
-            }}
-            components={{ b: <Text size={15} weight="semibold" /> }}
-          />
-        </Text>
-      </View>
+      {past ? null : (
+        <View className="mt-6 flex-row items-center gap-3 px-1">
+          <Pip pose={pipPose[trend.status]} size={52} />
+          <Text size={15} leading={1.4} className="flex-1 text-ink-soft">
+            <Trans
+              i18nKey={messages[trend.status]}
+              values={{
+                amount: money(trend.status === 'over' ? trend.spent - limit! : trend.projected),
+              }}
+              components={{ b: <Text size={15} weight="semibold" /> }}
+            />
+          </Text>
+        </View>
+      )}
 
       {/* Grouped by day with the day's total, as on Einträge. */}
       <View className="mt-8">
