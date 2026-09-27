@@ -5,8 +5,8 @@ import { type AudioPlayer, createAudioPlayer, setAudioModeAsync } from 'expo-aud
 
 const sources = {
   click: require('@/assets/sounds/click.wav'),
-  correct: require('@/assets/sounds/correct.wav'),
-  incorrect: require('@/assets/sounds/incorrect.wav'),
+  moneyIn: require('@/assets/sounds/money-in.wav'),
+  moneyOut: require('@/assets/sounds/money-out.wav'),
 };
 
 export type SoundName = keyof typeof sources;

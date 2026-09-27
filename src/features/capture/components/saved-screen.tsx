@@ -96,7 +96,7 @@ export function SavedScreen({ mode }: { mode: CaptureMode }) {
   const gained = income > spent;
   const hasDrafts = drafts.length > 0;
   useEffect(() => {
-    if (hasDrafts) playSound(gained ? 'correct' : 'incorrect');
+    if (hasDrafts) playSound(gained ? 'moneyIn' : 'moneyOut');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
