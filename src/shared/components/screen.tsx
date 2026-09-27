@@ -7,6 +7,9 @@ import { cn } from '@/shared/lib/cn';
 import { GradientBackground, type GradientName } from './gradient-background';
 
 const KEYBOARD_GAP = 24;
+// Inside a modal sheet there is no status bar inset; keep the header clear
+// of the sheet's top edge.
+const MIN_TOP = 14;
 
 export interface ScreenProps {
   children: ReactNode;
@@ -64,7 +67,9 @@ export function Screen({
   );
 
   return (
-    <View className={cn('flex-1 bg-canvas', className)} style={{ paddingTop: insets.top + 4 }}>
+    <View
+      className={cn('flex-1 bg-canvas', className)}
+      style={{ paddingTop: Math.max(insets.top + 4, MIN_TOP) }}>
       {gradient ? <GradientBackground name={gradient} height={gradientHeight} /> : null}
       {/* Android pans the window itself (softwareKeyboardLayoutMode). */}
       <KeyboardAvoidingView

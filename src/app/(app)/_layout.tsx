@@ -8,6 +8,9 @@ import { useWalletInbox } from '@/features/wallet/hooks/use-wallet-inbox';
 export const unstable_settings = { anchor: '(tabs)' };
 
 const fromBottom = { animation: 'slide_from_bottom' } as const;
+// Full-screen modals look like the slide from the bottom, but also appear
+// above the capture modal: screens pushed below a native modal stay hidden.
+const overModal = { presentation: 'fullScreenModal', animation: 'slide_from_bottom' } as const;
 
 export default function AppLayout() {
   useSyncTimeZone();
@@ -16,12 +19,12 @@ export default function AppLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />
-      {/* Eintrag, Foto and Sprache on Start open instantly, without sliding in. */}
-      <Stack.Screen name="capture" options={{ animation: 'none' }} />
+      {/* Eintrag, Foto, Sprache and Einnahme open as a modal sheet. */}
+      <Stack.Screen name="capture" options={{ presentation: 'modal' }} />
       <Stack.Screen name="check-in" options={fromBottom} />
-      <Stack.Screen name="paywall" options={fromBottom} />
-      <Stack.Screen name="limit" options={fromBottom} />
-      <Stack.Screen name="rating" options={fromBottom} />
+      <Stack.Screen name="paywall" options={overModal} />
+      <Stack.Screen name="limit" options={overModal} />
+      <Stack.Screen name="rating" options={overModal} />
     </Stack>
   );
 }

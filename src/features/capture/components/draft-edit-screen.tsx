@@ -64,7 +64,7 @@ export function DraftEditScreen({ id }: { id: string }) {
         currency={currency}
         onChange={(patch) => setDraft({ ...draft, ...patch })}
         onCategoryPress={() =>
-          router.push({ pathname: '/select-category', params: { draftId: id } })
+          router.push({ pathname: '/capture/select-category', params: { draftId: id } })
         }
       />
     </Screen>

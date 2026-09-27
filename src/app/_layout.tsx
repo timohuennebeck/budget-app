@@ -19,6 +19,7 @@ import { AuthProvider, useAuth } from '@/features/auth/lib/auth-provider';
 import { useProfile } from '@/features/profile/hooks/use-profile';
 import { useSyncLanguage } from '@/features/profile/hooks/use-sync-language';
 import { queryClient } from '@/shared/lib/query-client';
+import { preloadSounds } from '@/shared/lib/sounds';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -56,6 +57,7 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
 }
 
 export default function RootLayout() {
+  useEffect(preloadSounds, []);
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_500Medium,

@@ -1,7 +1,7 @@
 import { type AudioPlayer, createAudioPlayer, setAudioModeAsync } from 'expo-audio';
 
-// Short UI sounds. Players load lazily on first use and are reused; the mode
-// respects the silent switch and mixes with music instead of pausing it.
+// Short UI sounds, loaded once at start and reused. They respect the silent
+// switch and mix with music instead of pausing it.
 
 const sources = {
   click: require('@/assets/sounds/click.wav'),
@@ -12,23 +12,33 @@ const sources = {
 export type SoundName = keyof typeof sources;
 
 const players = new Map<SoundName, AudioPlayer>();
-let configured = false;
+
+function player(name: SoundName) {
+  let existing = players.get(name);
+  if (!existing) {
+    existing = createAudioPlayer(sources[name]);
+    players.set(name, existing);
+  }
+  return existing;
+}
+
+/** Sets the audio mode and loads every sound, so the first play isn't lost. */
+export function preloadSounds() {
+  try {
+    setAudioModeAsync({ playsInSilentMode: false, interruptionMode: 'mixWithOthers' }).catch(
+      () => {},
+    );
+    (Object.keys(sources) as SoundName[]).forEach(player);
+  } catch {
+    // Without the native module (an old build) the app just stays silent.
+  }
+}
 
 export function playSound(name: SoundName) {
   try {
-    if (!configured) {
-      configured = true;
-      setAudioModeAsync({ playsInSilentMode: false, interruptionMode: 'mixWithOthers' }).catch(
-        () => {},
-      );
-    }
-    let player = players.get(name);
-    if (!player) {
-      player = createAudioPlayer(sources[name]);
-      players.set(name, player);
-    }
-    player.seekTo(0).catch(() => {});
-    player.play();
+    const sound = player(name);
+    sound.seekTo(0).catch(() => {});
+    sound.play();
   } catch {
     // A missing sound never blocks the tap it belongs to.
   }

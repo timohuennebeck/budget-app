@@ -44,7 +44,7 @@ export function ReviewScreen() {
   const edit = (draft: DraftEntry) =>
     router.push({ pathname: '/capture/edit/[id]', params: { id: draft.id } });
   const pickCategory = (draft: DraftEntry) =>
-    router.push({ pathname: '/select-category', params: { draftId: draft.id } });
+    router.push({ pathname: '/capture/select-category', params: { draftId: draft.id } });
 
   const save = () => {
     if (!allowance.canAdd(drafts.length)) {

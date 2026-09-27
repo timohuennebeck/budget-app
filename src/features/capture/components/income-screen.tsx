@@ -97,7 +97,7 @@ export function IncomeScreen() {
         currency={currency}
         onChange={(patch) => updateDraft(draft.id, patch)}
         onCategoryPress={() =>
-          router.push({ pathname: '/select-category', params: { draftId: draft.id } })
+          router.push({ pathname: '/capture/select-category', params: { draftId: draft.id } })
         }
       />
     </Screen>
