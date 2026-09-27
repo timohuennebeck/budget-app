@@ -2,12 +2,17 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { CategoryBudgetsScreen } from '@/features/budgets/components/category-budgets-screen';
-import { usePresetDisplays } from '@/features/categories/hooks/use-category-display';
+import {
+  type CategoryDisplay,
+  usePresetDisplays,
+} from '@/features/categories/hooks/use-category-display';
 import { OnboardingHeader } from '@/features/onboarding/components/onboarding-header';
 import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store';
 import { ONBOARDING_STEPS } from '@/features/onboarding/lib/steps';
 import { formatMoney } from '@/shared/lib/money';
 import { Button } from '@/shared/ui/button';
+
+const FEATURED = 4;
 
 export default function OnboardingCategoryBudgets() {
   const { t } = useTranslation();
@@ -17,21 +22,24 @@ export default function OnboardingCategoryBudgets() {
   const update = useOnboardingStore((state) => state.update);
   const entries = useOnboardingStore((state) => state.entries);
 
-  // Up front: where the first entries landed, the most common categories
-  // and any limit already set; everything else behind "show all".
+  // Four up front: where the first entries landed, then the most common
+  // categories (plus any limit already set); the rest behind "show more".
   const used = new Set(entries.map((entry) => entry.categoryId));
-  const items = categories
-    .map((category) => {
+  const rank = (category: CategoryDisplay) =>
+    used.has(category.id) ? 0 : category.suggested ? 1 : 2;
+  const items = [...categories]
+    .sort((a, b) => rank(a) - rank(b))
+    .map((category, index) => {
       const peer = category.peerAverage ?? 100;
+      const limit = limits[category.id] ?? null;
       return {
         category,
-        limit: limits[category.id] ?? null,
+        limit,
         reference: peer,
         hint: t('budgets.peerAverage', { amount: formatMoney(peer, { currency, compact: true }) }),
-        featured: used.has(category.id) || category.suggested || limits[category.id] != null,
+        featured: index < FEATURED || limit !== null,
       };
-    })
-    .sort((a, b) => Number(used.has(b.category.id)) - Number(used.has(a.category.id)));
+    });
 
   return (
     <CategoryBudgetsScreen
