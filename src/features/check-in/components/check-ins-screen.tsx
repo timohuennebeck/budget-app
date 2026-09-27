@@ -12,7 +12,7 @@ import { useAppConfig } from '@/shared/hooks/use-app-config';
 import { formatMonth, formatWeekRange } from '@/shared/lib/dates';
 import { huePalette } from '@/shared/lib/color';
 import { formatMoney } from '@/shared/lib/money';
-import { tabScrollProps } from '@/shared/lib/tab-insets';
+import { tabListProps } from '@/shared/lib/tab-insets';
 import { colors, shadows } from '@/shared/lib/theme';
 import { Card } from '@/shared/ui/card';
 import { Chip } from '@/shared/ui/chip';
@@ -73,7 +73,7 @@ function CheckInRow({ checkIn, detail }: { checkIn: CheckIn; detail: string }) {
 export function CheckInsScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const scroll = tabScrollProps(insets.top, 4);
+  const layout = tabListProps(insets.top, 4);
   const currency = useCurrency();
   const { data: checkIns = [] } = useCheckIns();
   const [query, setQuery] = useState('');
@@ -110,15 +110,9 @@ export function CheckInsScreen() {
   return (
     <View className="flex-1 bg-canvas">
       <GradientBackground name="sky" height={420} />
-      <ScrollView
-        contentInsetAdjustmentBehavior={scroll.contentInsetAdjustmentBehavior}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{
-          paddingTop: scroll.paddingTop,
-          paddingHorizontal: 16,
-          paddingBottom: 32,
-        }}
-        showsVerticalScrollIndicator={false}>
+      {/* Month, title, this week's card, search and chips stay put; only the
+          history scrolls. */}
+      <View style={{ paddingTop: layout.headerPaddingTop, paddingHorizontal: 16 }}>
         <View className="flex-row items-center justify-between px-1">
           <Pressable
             onPress={monthSheet.present}
@@ -158,21 +152,7 @@ export function CheckInsScreen() {
         </View>
 
         <CheckInHero currency={currency} />
-
-        {checkIns.length === 0 ? (
-          <Card className="mt-[18px] items-center rounded-[28px] px-5 pt-[22px] pb-6">
-            <Pip pose="clock" size={120} />
-            <Text variant="heading" className="mt-3">
-              {t('checkIn.historyEmpty')}
-            </Text>
-            <Text
-              size={15}
-              leading={1.45}
-              className="mt-2 max-w-[280px] text-center text-muted-soft">
-              {t('checkIn.historyEmptySubtitle')}
-            </Text>
-          </Card>
-        ) : (
+        {checkIns.length ? (
           <>
             <TextField
               containerClassName="mt-[18px]"
@@ -200,28 +180,51 @@ export function CheckInsScreen() {
                 />
               ))}
             </ScrollView>
-
-            <View className="mt-3.5 gap-3">
-              {groups.length ? (
-                groups.map((group) => (
-                  <View key={group.key} className="gap-2">
-                    <Text size={13} weight="semibold" className="px-1.5 text-muted capitalize">
-                      {formatMonth(group.date, group.date.getFullYear() !== thisYear)}
-                    </Text>
-                    <Card className="py-1">
-                      {group.checkIns.map((checkIn) => (
-                        <CheckInRow key={checkIn.id} checkIn={checkIn} detail={detail(checkIn)} />
-                      ))}
-                    </Card>
-                  </View>
-                ))
-              ) : (
-                <Text variant="body" className="px-1 pt-6 text-center">
-                  {t('checkIn.noResults')}
-                </Text>
-              )}
-            </View>
           </>
+        ) : null}
+      </View>
+
+      <ScrollView
+        className="flex-1"
+        contentInsetAdjustmentBehavior={layout.contentInsetAdjustmentBehavior}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+        showsVerticalScrollIndicator={false}>
+        {checkIns.length === 0 ? (
+          <Card className="mt-[18px] items-center rounded-[28px] px-5 pt-[22px] pb-6">
+            <Pip pose="clock" size={120} />
+            <Text variant="heading" className="mt-3">
+              {t('checkIn.historyEmpty')}
+            </Text>
+            <Text
+              size={15}
+              leading={1.45}
+              className="mt-2 max-w-[280px] text-center text-muted-soft">
+              {t('checkIn.historyEmptySubtitle')}
+            </Text>
+          </Card>
+        ) : (
+          <View className="mt-3.5 gap-3">
+            {groups.length ? (
+              groups.map((group) => (
+                <View key={group.key} className="gap-2">
+                  <Text size={13} weight="semibold" className="px-1.5 text-muted capitalize">
+                    {formatMonth(group.date, group.date.getFullYear() !== thisYear)}
+                  </Text>
+                  <Card className="py-1">
+                    {group.checkIns.map((checkIn) => (
+                      <CheckInRow key={checkIn.id} checkIn={checkIn} detail={detail(checkIn)} />
+                    ))}
+                  </Card>
+                </View>
+              ))
+            ) : (
+              <Text variant="body" className="px-1 pt-6 text-center">
+                {t('checkIn.noResults')}
+              </Text>
+            )}
+          </View>
         )}
       </ScrollView>
       <MonthSheet

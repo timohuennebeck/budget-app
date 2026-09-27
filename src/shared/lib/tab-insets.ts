@@ -14,3 +14,15 @@ export function tabScrollProps(safeTop: number, extraTop = 0) {
     paddingTop: (Platform.OS === 'ios' ? 0 : safeTop) + extraTop,
   };
 }
+
+/**
+ * For tabs with a fixed header above a scrolling list: the header clears
+ * the status bar itself, and the list (not the first child any more) asks
+ * for automatic insets so it ends above the native tab bar.
+ */
+export function tabListProps(safeTop: number, extraTop = 0) {
+  return {
+    headerPaddingTop: safeTop + extraTop,
+    contentInsetAdjustmentBehavior: 'automatic' as const,
+  };
+}

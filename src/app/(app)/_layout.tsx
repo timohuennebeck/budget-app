@@ -19,8 +19,8 @@ export default function AppLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />
-      {/* Eintrag, Foto, Sprache and Einnahme open as a modal sheet. */}
-      <Stack.Screen name="capture" options={{ presentation: 'modal' }} />
+      {/* Eintrag, Foto, Sprache and Einnahme slide up full screen. */}
+      <Stack.Screen name="capture" options={{ presentation: 'fullScreenModal' }} />
       <Stack.Screen name="check-in" options={fromBottom} />
       <Stack.Screen name="paywall" options={overModal} />
       <Stack.Screen name="limit" options={overModal} />
