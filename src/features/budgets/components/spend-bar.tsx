@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -14,6 +13,9 @@ interface SpendBarProps {
   spent: number;
   total: number | null;
   currency: string;
+  /** The highlighted category, or null for the whole month */
+  selectedId: string | null;
+  onSelect: (categoryId: string | null) => void;
 }
 
 /**
@@ -21,9 +23,15 @@ interface SpendBarProps {
  * Tapping a segment picks that category: the others fade and the line
  * below shows what went there; tapping it again shows the total.
  */
-export function SpendBar({ segments, spent, total, currency }: SpendBarProps) {
+export function SpendBar({
+  segments,
+  spent,
+  total,
+  currency,
+  selectedId,
+  onSelect,
+}: SpendBarProps) {
   const { t } = useTranslation();
-  const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = segments.find((segment) => segment.categoryId === selectedId);
   const rest = total === null ? 0 : Math.max(0, total - spent);
   const money = (value: number) => formatMoney(value, { currency });
@@ -40,7 +48,7 @@ export function SpendBar({ segments, spent, total, currency }: SpendBarProps) {
             accessibilityState={{ selected: segment === selected }}
             // The bar is 8pt tall; the touch target reaches well beyond it.
             hitSlop={{ top: 16, bottom: 12 }}
-            onPress={() => setSelectedId(segment === selected ? null : segment.categoryId)}
+            onPress={() => onSelect(segment === selected ? null : segment.categoryId)}
             className="rounded-full"
             style={{
               flex: segment.amount,

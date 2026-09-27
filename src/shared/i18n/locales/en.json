@@ -301,17 +301,10 @@
     "title": "Calendar"
   },
   "overview": {
-    "available": "Available",
-    "averagePerDay": "Avg. {{amount}} per day",
-    "budgets": "Budgets",
-    "daysLeft_one": "· {{count}} day",
-    "daysLeft_other": "· {{count}} days",
     "emptySubtitle": "Log what you spent. Pip files it under the right category.",
     "emptyTitle": "No entries",
     "entries": "Entries",
-    "inMonth": "· in {{month}}",
     "of": "of {{amount}}",
-    "perDay": "{{amount}} per day",
     "showAll": "Show all",
     "spent": "spent",
     "spentThisMonth": "Spent",
@@ -319,7 +312,10 @@
     "actionPhoto": "Photo",
     "actionVoice": "Voice",
     "spentOn": "on {{category}}",
-    "share": "{{percent}} % of all"
+    "share": "{{percent}} % of all",
+    "leftIn": "Left in {{month}}",
+    "categoryLeft": "{{name}} · left",
+    "categoryOver": "{{name}} · over"
   },
   "budgets": {
     "edit": "Edit {{name}}",

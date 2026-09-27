@@ -308,18 +308,11 @@
     "title": "Calendrier"
   },
   "overview": {
-    "available": "Disponible",
-    "averagePerDay": "Ø {{amount}} par jour",
-    "budgets": "Budgets",
-    "daysLeft_one": "· {{count}} jour",
     "daysLeft_many": "· {{count}} jours",
-    "daysLeft_other": "· {{count}} jours",
     "emptySubtitle": "Note ce que tu as dépensé. Pip le range dans la bonne catégorie.",
     "emptyTitle": "Aucune entrée",
     "entries": "Entrées",
-    "inMonth": "· en {{month}}",
     "of": "sur {{amount}}",
-    "perDay": "{{amount}} par jour",
     "showAll": "Tout afficher",
     "spent": "dépensé",
     "spentThisMonth": "Dépensé",
@@ -327,7 +320,10 @@
     "actionPhoto": "Photo",
     "actionVoice": "Voix",
     "spentOn": "pour {{category}}",
-    "share": "{{percent}} % du total"
+    "share": "{{percent}} % du total",
+    "leftIn": "Reste en {{month}}",
+    "categoryLeft": "{{name}} · reste",
+    "categoryOver": "{{name}} · dépassé"
   },
   "budgets": {
     "edit": "Modifier {{name}}",

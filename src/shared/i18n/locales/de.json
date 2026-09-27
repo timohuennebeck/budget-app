@@ -301,17 +301,10 @@
     "title": "Kalender"
   },
   "overview": {
-    "available": "Frei verfügbar",
-    "averagePerDay": "Ø {{amount}} pro Tag",
-    "budgets": "Budgets",
-    "daysLeft_one": "· {{count}} Tag",
-    "daysLeft_other": "· {{count}} Tage",
     "emptySubtitle": "Erfasse was du ausgegeben hast. Pip ordnet es der passenden Kategorie zu.",
     "emptyTitle": "Keine Einträge",
     "entries": "Einträge",
-    "inMonth": "· im {{month}}",
     "of": "von {{amount}}",
-    "perDay": "{{amount}} pro Tag",
     "showAll": "Alle anzeigen",
     "spent": "ausgegeben",
     "spentThisMonth": "Ausgegeben",
@@ -319,7 +312,10 @@
     "actionPhoto": "Foto",
     "actionVoice": "Sprache",
     "spentOn": "für {{category}}",
-    "share": "{{percent}} % von allem"
+    "share": "{{percent}} % von allem",
+    "leftIn": "Übrig im {{month}}",
+    "categoryLeft": "{{name}} · noch übrig",
+    "categoryOver": "{{name}} · drüber"
   },
   "budgets": {
     "edit": "{{name}} bearbeiten",

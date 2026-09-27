@@ -308,18 +308,11 @@
     "title": "Calendário"
   },
   "overview": {
-    "available": "Disponível",
-    "averagePerDay": "Ø {{amount}} por dia",
-    "budgets": "Orçamentos",
-    "daysLeft_one": "· {{count}} dia",
     "daysLeft_many": "· {{count}} dias",
-    "daysLeft_other": "· {{count}} dias",
     "emptySubtitle": "Registre o que você gastou. O Pip coloca na categoria certa.",
     "emptyTitle": "Nenhum registro",
     "entries": "Registros",
-    "inMonth": "· em {{month}}",
     "of": "de {{amount}}",
-    "perDay": "{{amount}} por dia",
     "showAll": "Ver tudo",
     "spent": "gastos",
     "spentThisMonth": "Gastos",
@@ -327,7 +320,10 @@
     "actionPhoto": "Foto",
     "actionVoice": "Voz",
     "spentOn": "em {{category}}",
-    "share": "{{percent}} % do total"
+    "share": "{{percent}} % do total",
+    "leftIn": "Resta em {{month}}",
+    "categoryLeft": "{{name}} · resta",
+    "categoryOver": "{{name}} · estourado"
   },
   "budgets": {
     "edit": "Editar {{name}}",
