@@ -9,7 +9,8 @@ import { Text } from '@/shared/ui/text';
 /** × plus the week range pill shared by the check-in screens. */
 export function CheckInHeader({ week }: { week: DateRange }) {
   return (
-    <ScreenHeader leading="close" onLeadingPress={() => router.dismissAll()}>
+    // The empty trailing slot mirrors the × so the week pill sits centred.
+    <ScreenHeader leading="close" onLeadingPress={() => router.dismissAll()} trailing={<View />}>
       <View className="flex-1 items-center">
         <View className="rounded-full bg-surface px-3.5 py-2" style={shadows.card}>
           <Text size={14.5} weight="semibold" tracking={-0.01}>

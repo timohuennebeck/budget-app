@@ -86,7 +86,7 @@ export function ResultScreen() {
         </Text>
       </View>
 
-      <Card className="mt-[22px] gap-3.5 px-[18px] pt-[18px] pb-4">
+      <Card className="mt-[22px] gap-5 px-[18px] pt-[18px] pb-4">
         <View className="flex-row items-center gap-2">
           <View className="flex-1 gap-1">
             <Text size={13.5} className="text-muted-soft">
