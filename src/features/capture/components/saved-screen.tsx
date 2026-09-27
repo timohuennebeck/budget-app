@@ -111,7 +111,7 @@ export function SavedScreen({ mode }: { mode: CaptureMode }) {
   return (
     <Screen gradient="mist" scroll footer={<Button label={t('common.continue')} onPress={next} />}>
       <View className="min-h-[200px] flex-1 items-center justify-center">
-        <Pip pose="success" size={230} />
+        <Pip pose={onlyIncome ? 'money' : 'success'} size={230} />
       </View>
       <StatusHero
         subtitleClassName="max-w-none"

@@ -14,6 +14,7 @@ const sources = {
   'door-wave': require('@/assets/images/pip/pip-door-wave.png'),
   magnifier: require('@/assets/images/pip/pip-magnifier.png'),
   mic: require('@/assets/images/pip/pip-mic.png'),
+  money: require('@/assets/images/pip/pip-money.png'),
   reading: require('@/assets/images/pip/pip-reading.png'),
   success: require('@/assets/images/pip/pip-success.png'),
   'thumbs-up-stars': require('@/assets/images/pip/pip-thumbs-up-stars.png'),

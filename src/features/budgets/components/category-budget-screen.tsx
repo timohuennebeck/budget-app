@@ -24,6 +24,15 @@ import { TrendChart } from './trend-chart';
 
 const NO_LIMITS = new Map<string, number>();
 
+// Pip holds up money while the pace stays within the limit.
+const pipPose = {
+  under: 'money',
+  onTrack: 'money',
+  noLimit: 'money',
+  ahead: 'reading',
+  over: 'dizzy',
+} as const;
+
 const messages = {
   under: 'budgets.trendUnder',
   onTrack: 'budgets.trendOnTrack',
@@ -114,7 +123,7 @@ export function CategoryBudgetScreen({ id }: { id: string }) {
       </View>
 
       <View className="mt-6 flex-row items-center gap-3 px-1">
-        <Pip pose={trend.status === 'over' ? 'dizzy' : 'reading'} size={52} />
+        <Pip pose={pipPose[trend.status]} size={52} />
         <Text size={15} leading={1.4} className="flex-1 text-ink-soft">
           <Trans
             i18nKey={messages[trend.status]}
