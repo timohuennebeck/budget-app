@@ -113,9 +113,9 @@ export function WelcomeScreen() {
         />
         <FloatingEntryCard
           icon="coffee"
-          hue={75}
+          hue={55}
           title="Flat White"
-          subtitle={t('categories.cafe')}
+          subtitle={t('categories.restaurants')}
           amount="−3 €"
           tilt={1.5}
           duration={4400}
@@ -126,7 +126,7 @@ export function WelcomeScreen() {
           icon="fork-knife"
           hue={55}
           title={t('onboarding.welcome.lunch')}
-          subtitle={t('categories.dining')}
+          subtitle={t('categories.restaurants')}
           amount="−18 €"
           tilt={-1.5}
           duration={4800}

@@ -75,14 +75,18 @@ export function parseEntries(
     }
 
     const isIncome = INCOME.test(segment) || /^\+/.test(segment);
-    const category = isIncome ? null : matchCategory(segment, categories);
+    const kind = isIncome ? 'income' : 'expense';
+    const category = matchCategory(
+      segment,
+      categories.filter((option) => option.kind === kind),
+    );
     const title = cleanTitle(segment, match[0]);
 
     entries.push({
       id: newDraftId(),
       title: title || category?.name || '',
       amount: value,
-      kind: isIncome ? 'income' : 'expense',
+      kind,
       categoryId: category?.id ?? null,
       source,
       occurredAt: now.toISOString(),

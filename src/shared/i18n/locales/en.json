@@ -28,8 +28,6 @@
   },
   "categories": {
     "groceries": "Groceries",
-    "dining": "Eating out",
-    "cafe": "Café",
     "transport": "Transport",
     "add": "Add category",
     "apply": "Use {{name}}",
@@ -43,7 +41,8 @@
     "newSubtitle": "Give it a name, an icon and a color.",
     "newTitle": "New category",
     "preview": "{{from}} → {{to}} in 30 days",
-    "search": "Search categories"
+    "search": "Search categories",
+    "restaurants": "Restaurants"
   },
   "currencies": {
     "EUR": "Euro",

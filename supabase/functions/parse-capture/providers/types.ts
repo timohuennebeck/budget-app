@@ -4,6 +4,8 @@
 export interface CategoryChoice {
   id: string;
   name: string;
+  /** Expense categories fit expenses, income categories fit income */
+  kind: 'expense' | 'income';
   keywords: string[];
 }
 

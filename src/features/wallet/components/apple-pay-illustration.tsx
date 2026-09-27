@@ -55,7 +55,7 @@ export function ApplePayIllustration() {
         </Text>
       </View>
       <View className="absolute" style={{ left: 48, top: 188 }}>
-        <CategoryPill label={`4,80 € · ${t('categories.cafe')}`} hue={75} />
+        <CategoryPill label={`4,80 € · ${t('categories.restaurants')}`} hue={55} />
       </View>
     </GradientPanel>
   );

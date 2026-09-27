@@ -5,7 +5,7 @@ import type { ParsedEntry, ParseInput } from './types.ts';
 
 const input: ParseInput = {
   text: '40€ REWE, 12€ Uber',
-  categories: [{ id: 'cat-groceries', name: 'Lebensmittel', keywords: ['rewe'] }],
+  categories: [{ id: 'cat-groceries', name: 'Lebensmittel', kind: 'expense', keywords: ['rewe'] }],
   hints: [{ title: 'Uber', categoryId: 'cat-groceries' }],
   currency: 'EUR',
   locale: 'de',

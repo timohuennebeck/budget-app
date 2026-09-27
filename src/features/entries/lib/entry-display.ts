@@ -16,13 +16,13 @@ interface EntryLike {
   occurred_at?: string;
 }
 
-/** Icon and hue for a row: category colours, briefcase for income. */
+/** Icon and hue for a row: the category's, else a briefcase for income. */
 export function entryVisual(
   kind: Entry['kind'],
   category?: Pick<CategoryDisplay, 'icon' | 'hue'> | null,
 ) {
-  if (kind === 'income') return INCOME_VISUAL;
-  return category ? { icon: category.icon, hue: category.hue } : UNKNOWN_VISUAL;
+  if (category) return { icon: category.icon, hue: category.hue };
+  return kind === 'income' ? INCOME_VISUAL : UNKNOWN_VISUAL;
 }
 
 function subtitleDetail(entry: EntryLike) {
@@ -33,7 +33,7 @@ function subtitleDetail(entry: EntryLike) {
 /** "Café · Favorit" or "Mobilität · 09:12". */
 export function entrySubtitle(entry: EntryLike, categoryLabel: string | undefined) {
   const label =
-    entry.kind === 'income' ? t('entries.income') : (categoryLabel ?? t('entries.noCategory'));
+    categoryLabel ?? (entry.kind === 'income' ? t('entries.income') : t('entries.noCategory'));
   const detail = subtitleDetail(entry);
   return detail ? `${label} · ${detail}` : label;
 }

@@ -100,7 +100,7 @@ export function BudgetTypeScreen() {
         <ModeCard
           title={t('onboarding.budgetType.perCategory')}
           description={t('onboarding.budgetType.perCategoryDescription')}
-          tags={[t('categories.groceries'), t('categories.dining'), t('categories.transport')]}
+          tags={[t('categories.groceries'), t('categories.restaurants'), t('categories.transport')]}
           pose="write"
           selected={mode !== 'monthly'}
           onPress={() => update({ budgetMode: 'per_category' })}

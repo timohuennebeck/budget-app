@@ -27,7 +27,8 @@ export default function OnboardingCategoryBudgets() {
   const used = new Set(entries.map((entry) => entry.categoryId));
   const rank = (category: CategoryDisplay) =>
     used.has(category.id) ? 0 : category.suggested ? 1 : 2;
-  const items = [...categories]
+  const items = categories
+    .filter((category) => category.kind === 'expense')
     .sort((a, b) => rank(a) - rank(b))
     .map((category, index) => {
       const peer = category.peerAverage ?? 100;

@@ -49,7 +49,7 @@ async function readReceipt(path: string) {
 // the app stores the chosen id in entries.preset_id or entries.category_id.
 async function readCategories(userId: string, locale: string): Promise<CategoryChoice[]> {
   const [presets, own] = await Promise.all([
-    admin.from('categories_presets').select('id, names, keywords').order('sort_order'),
+    admin.from('categories_presets').select('id, names, keywords, kind').order('sort_order'),
     admin
       .from('categories')
       .select('id, name')
@@ -67,10 +67,16 @@ async function readCategories(userId: string, locale: string): Promise<CategoryC
       return {
         id: preset.id,
         name: names[locale] ?? names.en,
+        kind: preset.kind as CategoryChoice['kind'],
         keywords: [...new Set(Object.values(keywords).flat())],
       };
     }),
-    ...own.data.map((category) => ({ id: category.id, name: category.name, keywords: [] })),
+    ...own.data.map((category) => ({
+      id: category.id,
+      name: category.name,
+      kind: 'expense' as const,
+      keywords: [],
+    })),
   ];
 }
 
@@ -96,7 +102,7 @@ async function readHints(userId: string): Promise<MerchantHint[]> {
 }
 
 /** Drops anything the schema allows but the database would reject. */
-function clean(entries: ParsedEntry[], categoryIds: Set<string>) {
+function clean(entries: ParsedEntry[], categoryKinds: Map<string, CategoryChoice['kind']>) {
   const now = Date.now();
   return entries
     .filter(
@@ -104,18 +110,20 @@ function clean(entries: ParsedEntry[], categoryIds: Set<string>) {
     )
     .map((entry) => {
       const occurred = entry.occurred_at ? Date.parse(entry.occurred_at) : NaN;
+      const kind = entry.kind === 'income' ? 'income' : 'expense';
+      // Only a category of the entry's own kind (Gehalt for income, …).
       const categoryId =
-        entry.kind === 'expense' && entry.category_id && categoryIds.has(entry.category_id)
+        entry.category_id && categoryKinds.get(entry.category_id) === kind
           ? entry.category_id
           : null;
       return {
         title: (entry.title || '').trim().slice(0, 120) || '—',
         amount: Math.round(entry.amount * 100) / 100,
-        kind: entry.kind === 'income' ? 'income' : 'expense',
+        kind,
         category_id: categoryId,
         occurred_at:
           Number.isFinite(occurred) && occurred <= now ? new Date(occurred).toISOString() : null,
-        confident: entry.confident && (entry.kind === 'income' || categoryId !== null),
+        confident: entry.confident && categoryId !== null,
       };
     });
 }
@@ -172,7 +180,10 @@ serve(async (request) => {
       },
       String(config.ai_model),
     );
-    const entries = clean(result.entries, new Set(categories.map((category) => category.id)));
+    const entries = clean(
+      result.entries,
+      new Map(categories.map((category) => [category.id, category.kind])),
+    );
 
     await admin
       .from('captures')

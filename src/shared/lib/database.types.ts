@@ -196,6 +196,7 @@ export type Database = {
           icon: string
           id: string
           keywords: Json
+          kind: Database["public"]["Enums"]["entry_kind"]
           names: Json
           peer_average: number | null
           sort_order: number
@@ -207,6 +208,7 @@ export type Database = {
           icon: string
           id: string
           keywords?: Json
+          kind?: Database["public"]["Enums"]["entry_kind"]
           names: Json
           peer_average?: number | null
           sort_order?: number
@@ -218,6 +220,7 @@ export type Database = {
           icon?: string
           id?: string
           keywords?: Json
+          kind?: Database["public"]["Enums"]["entry_kind"]
           names?: Json
           peer_average?: number | null
           sort_order?: number

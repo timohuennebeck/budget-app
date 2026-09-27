@@ -1,4 +1,4 @@
-// Entries and limits point at a preset ('fuel') or at one of the user's own
+// Entries and limits point at a preset ('transport') or at one of the user's own
 // categories (a uuid). The app addresses both with a single category id.
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 

@@ -45,7 +45,12 @@ export function paymentDrafts(
   return payments.map((payment) => {
     const title = payment.merchant.trim() || 'Apple Pay';
     const categoryId =
-      known.get(title.toLowerCase()) ?? matchCategory(title, categories)?.id ?? null;
+      known.get(title.toLowerCase()) ??
+      matchCategory(
+        title,
+        categories.filter((option) => option.kind === 'expense'),
+      )?.id ??
+      null;
     return {
       id: newDraftId(),
       title,

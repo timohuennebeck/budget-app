@@ -130,17 +130,15 @@ export function EntryEditor({
       </View>
 
       <View className="mt-6">
-        {value.kind === 'expense' ? (
-          <DetailRow label={t('entries.category')} onPress={onCategoryPress}>
-            {category ? (
-              <CategoryPill label={category.name} hue={category.hue} />
-            ) : (
-              <Text size={15.5} className="text-subtle">
-                {t('categories.choose')}
-              </Text>
-            )}
-          </DetailRow>
-        ) : null}
+        <DetailRow label={t('entries.category')} onPress={onCategoryPress}>
+          {category ? (
+            <CategoryPill label={category.name} hue={category.hue} />
+          ) : (
+            <Text size={15.5} className="text-subtle">
+              {t('categories.choose')}
+            </Text>
+          )}
+        </DetailRow>
         <DetailRow label={t('entries.date')} onPress={dateSheet.present}>
           <Text size={15.5} weight="medium">
             {`${formatDayLabel(occurred)}, ${formatTime(occurred)}`}

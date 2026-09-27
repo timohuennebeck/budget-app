@@ -22,6 +22,8 @@ export interface DraftEntry {
 /** What the parser needs to know about a category to match it. */
 export interface CategoryOption {
   id: string;
+  /** Presets are for expenses or for income; own categories are expenses */
+  kind: Enums<'entry_kind'>;
   name: string;
   keywords: string[];
 }

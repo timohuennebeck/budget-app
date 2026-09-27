@@ -28,8 +28,6 @@
   },
   "categories": {
     "groceries": "Mercado",
-    "dining": "Restaurantes",
-    "cafe": "Café",
     "transport": "Transporte",
     "add": "Adicionar categoria",
     "apply": "Usar {{name}}",
@@ -43,7 +41,8 @@
     "newSubtitle": "Dê a ela um nome, um ícone e uma cor.",
     "newTitle": "Nova categoria",
     "preview": "{{from}} → {{to}} em 30 dias",
-    "search": "Buscar categoria"
+    "search": "Buscar categoria",
+    "restaurants": "Restaurantes"
   },
   "currencies": {
     "EUR": "Euro",

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { countByCategory, spendByCategory } from '@/features/entries/lib/entry-stats';
 import { useRecentEntries } from '@/features/entries/hooks/use-entries';
 import { Screen } from '@/shared/components/screen';
+import type { Enums } from '@/shared/lib/database.types';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { cn } from '@/shared/lib/cn';
 import { formatMoney, roundMoney } from '@/shared/lib/money';
@@ -23,6 +24,8 @@ interface CategoryPickerScreenProps {
   amount: number;
   currency: string;
   onConfirm: (categoryId: string) => void;
+  /** Only categories for this kind of entry */
+  kind: Enums<'entry_kind'>;
 }
 
 // Category choice with last-30-days context (2xd3). The selected row
@@ -30,12 +33,14 @@ interface CategoryPickerScreenProps {
 // own category is listed, the most used in the last 30 days first.
 export function CategoryPickerScreen({
   initialId,
+  kind,
   amount,
   currency,
   onConfirm,
 }: CategoryPickerScreenProps) {
   const { t } = useTranslation();
-  const categories = useAppCategoryDisplays();
+  const all = useAppCategoryDisplays();
+  const categories = useMemo(() => all.filter((category) => category.kind === kind), [all, kind]);
   const { data: recent = [] } = useRecentEntries();
   const [selectedId, setSelectedId] = useState(initialId);
   const [query, setQuery] = useState('');

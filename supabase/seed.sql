@@ -48,24 +48,23 @@ begin
 
   insert into public.categories_limits (profile_id, preset_id, amount) values
     (demo_id, 'groceries', 400),
-    (demo_id, 'dining', 200),
-    (demo_id, 'shopping', 150),
-    (demo_id, 'cafe', 40);
+    (demo_id, 'restaurants', 240),
+    (demo_id, 'shopping', 150);
 
   insert into public.entries (profile_id, preset_id, kind, title, amount, source, is_favorite, occurred_at) values
-    (demo_id, 'drugstore', 'expense', 'dm', 23, 'voice', false, today + interval '16 hours 10 minutes'),
-    (demo_id, 'dining', 'expense', 'Mittagessen', 18, 'voice', false, today + interval '13 hours 5 minutes'),
+    (demo_id, 'shopping', 'expense', 'dm', 23, 'voice', false, today + interval '16 hours 10 minutes'),
+    (demo_id, 'restaurants', 'expense', 'Mittagessen', 18, 'voice', false, today + interval '13 hours 5 minutes'),
     (demo_id, 'transport', 'expense', 'Uber', 12, 'text', false, today + interval '9 hours 12 minutes'),
     (demo_id, 'groceries', 'expense', 'REWE', 40, 'text', false, today + interval '8 hours 40 minutes'),
-    (demo_id, 'cafe', 'expense', 'Mein Kaffee', 1.2, 'manual', true, today - interval '1 day' + interval '8 hours'),
+    (demo_id, 'restaurants', 'expense', 'Mein Kaffee', 1.2, 'manual', true, today - interval '1 day' + interval '8 hours'),
     (demo_id, 'transport', 'expense', 'Deutschlandticket', 58, 'manual', true, today - interval '1 day' + interval '7 hours'),
     (demo_id, 'groceries', 'expense', 'Edeka', 54.4, 'camera', false, today - interval '2 days' + interval '18 hours 22 minutes'),
-    (demo_id, 'dining', 'expense', 'Freitagsmittag', 12, 'manual', true, today - interval '2 days' + interval '12 hours'),
-    (demo_id, 'dining', 'expense', 'Sushi mit Lena', 36, 'text', false, today - interval '4 days' + interval '20 hours'),
+    (demo_id, 'restaurants', 'expense', 'Freitagsmittag', 12, 'manual', true, today - interval '2 days' + interval '12 hours'),
+    (demo_id, 'restaurants', 'expense', 'Sushi mit Lena', 36, 'text', false, today - interval '4 days' + interval '20 hours'),
     (demo_id, 'shopping', 'expense', 'Zara', 54, 'camera', false, today - interval '5 days' + interval '15 hours'),
-    (demo_id, 'dining', 'expense', 'Pizza', 175, 'text', false, today - interval '6 days' + interval '19 hours'),
-    (demo_id, 'cafe', 'expense', 'Flat White', 3.5, 'voice', false, today - interval '7 days' + interval '9 hours'),
+    (demo_id, 'restaurants', 'expense', 'Pizza', 175, 'text', false, today - interval '6 days' + interval '19 hours'),
+    (demo_id, 'restaurants', 'expense', 'Flat White', 3.5, 'voice', false, today - interval '7 days' + interval '9 hours'),
     (demo_id, 'groceries', 'expense', 'Lidl', 25.6, 'text', false, today - interval '8 days' + interval '17 hours'),
-    (demo_id, null, 'income', 'Freelance-Projekt', 650, 'text', false, today - interval '9 days' + interval '10 hours');
+    (demo_id, 'side_income', 'income', 'Freelance-Projekt', 650, 'text', false, today - interval '9 days' + interval '10 hours');
 end;
 $$;

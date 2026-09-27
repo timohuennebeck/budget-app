@@ -25,6 +25,7 @@ export default function SelectCategoryRoute() {
   return (
     <CategoryPickerScreen
       initialId={initialId}
+      kind={entry?.kind ?? draft?.kind ?? 'expense'}
       amount={amount}
       currency={currency}
       onConfirm={(categoryId) => {

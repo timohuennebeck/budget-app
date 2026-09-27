@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import type { Enums } from '@/shared/lib/database.types';
+
 import type { Category } from '../data/categories-api';
 import type { CategoryPreset } from '../data/presets-api';
 import { presetKeywords, presetName } from '../lib/category-name';
@@ -9,8 +11,10 @@ import { usePresets } from './use-presets';
 
 /** Minimal shape every category list/row/picker renders. */
 export interface CategoryDisplay {
-  /** Preset id ('fuel') or the uuid of an own category */
+  /** Preset id ('transport') or the uuid of an own category */
   id: string;
+  /** Presets are for expenses or for income; own categories are expenses */
+  kind: Enums<'entry_kind'>;
   presetId: string | null;
   name: string;
   icon: string;
@@ -25,6 +29,7 @@ export interface CategoryDisplay {
 function presetDisplay(preset: CategoryPreset): CategoryDisplay {
   return {
     id: preset.id,
+    kind: preset.kind,
     presetId: preset.id,
     name: presetName(preset),
     icon: preset.icon,
@@ -38,6 +43,7 @@ function presetDisplay(preset: CategoryPreset): CategoryDisplay {
 function ownDisplay(category: Category): CategoryDisplay {
   return {
     id: category.id,
+    kind: 'expense',
     presetId: null,
     name: category.name,
     icon: category.icon,

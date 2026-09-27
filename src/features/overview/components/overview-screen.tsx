@@ -65,7 +65,15 @@ export function OverviewScreen() {
 
   const currency = useCurrency();
   const summary = useMemo(
-    () => (profile ? summarizeBudget(profile, categories, limits, entries) : null),
+    () =>
+      profile
+        ? summarizeBudget(
+            profile,
+            categories.filter((category) => category.kind === 'expense'),
+            limits,
+            entries,
+          )
+        : null,
     [profile, categories, limits, entries],
   );
   const recentTotals = useMemo(() => spendByCategory(recent), [recent]);

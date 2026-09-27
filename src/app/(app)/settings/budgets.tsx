@@ -40,6 +40,7 @@ export default function BudgetSettings() {
       limits?.has(category.id) || totals.has(category.id) || category.presetId === null;
     const anyRelevant = displays.some(relevant);
     return displays
+      .filter((category) => category.kind === 'expense')
       .map((category) => {
         const spent = totals.get(category.id) ?? 0;
         return {

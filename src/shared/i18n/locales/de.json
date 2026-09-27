@@ -28,9 +28,7 @@
   },
   "categories": {
     "groceries": "Lebensmittel",
-    "dining": "Essen gehen",
-    "cafe": "Café",
-    "transport": "Mobilität",
+    "transport": "Transport",
     "add": "Kategorie hinzufügen",
     "apply": "{{name}} übernehmen",
     "category": "Kategorie",
@@ -43,7 +41,8 @@
     "newSubtitle": "Gib ihr einen Namen, ein Icon und eine Farbe.",
     "newTitle": "Neue Kategorie",
     "preview": "{{from}} → {{to}} in 30 Tagen",
-    "search": "Kategorie suchen"
+    "search": "Kategorie suchen",
+    "restaurants": "Restaurants"
   },
   "currencies": {
     "EUR": "Euro",
