@@ -52,10 +52,7 @@
   },
   "currency": {
     "continueWith": "Continue with {{name}}",
-    "empty": "No currency matches “{{query}}”.",
-    "search": "Search currency",
     "subtitle": "We'll show all amounts and budgets in this currency.",
-    "suggestions": "Suggestions",
     "title": "Which currency\ndo you spend in?"
   },
   "onboarding": {

@@ -1,11 +1,13 @@
 import { forwardRef, useState } from 'react';
-import { TextInput, View, type TextInputProps } from 'react-native';
+import { type TextInput, type TextInputProps, View } from 'react-native';
 
 import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 
 import { Icon, type IconName } from './icon';
+import { useInputComponent } from './input-component';
 import { Pressable } from './pressable';
+import { SelectionRing } from './selection-ring';
 import { Text } from './text';
 
 export interface TextFieldProps extends TextInputProps {
@@ -40,6 +42,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
   },
   ref,
 ) {
+  const Input = useInputComponent();
   const [focused, setFocused] = useState(false);
   const [revealed, setRevealed] = useState(false);
 
@@ -56,10 +59,11 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
           size === 'lg' ? 'h-14 rounded-[18px]' : 'h-[46px] rounded-[18px]',
           variant === 'filled'
             ? 'h-[50px] rounded-2xl bg-field'
-            : cn('bg-surface', focused ? 'border-2 border-primary' : 'border border-line-strong'),
+            : 'border border-line-strong bg-surface',
         )}>
+        <SelectionRing visible={focused && variant !== 'filled'} className="rounded-[18px]" />
         {leadingIcon ? <Icon name={leadingIcon} size={17} color={colors.subtle} /> : null}
-        <TextInput
+        <Input
           ref={ref}
           value={value}
           onChangeText={onChangeText}
@@ -75,11 +79,10 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
             setFocused(false);
             onBlur?.(event);
           }}
-          className={cn(
-            'flex-1 font-inter text-ink',
-            size === 'lg' ? 'text-[17px]' : 'text-[16px]',
-            className,
-          )}
+          className={cn('h-full flex-1 font-inter text-ink', className)}
+          // Size without a line height: iOS clips input text and placeholders
+          // that get one.
+          style={{ fontSize: size === 'lg' ? 17 : 16, paddingVertical: 0 }}
           {...props}
         />
         {clearable && value ? (

@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -9,8 +9,6 @@ import { currencies } from '@/shared/data/currencies';
 import { currencySymbol } from '@/shared/lib/money';
 import { Button } from '@/shared/ui/button';
 import { Flag } from '@/shared/ui/flag';
-import { Text } from '@/shared/ui/text';
-import { TextField } from '@/shared/ui/text-field';
 
 interface CurrencyScreenProps {
   header: ReactNode;
@@ -24,48 +22,17 @@ interface CurrencyScreenProps {
 export function CurrencyScreen({ header, initial, submitLabel, onSubmit }: CurrencyScreenProps) {
   const { t } = useTranslation();
   const [selected, setSelected] = useState(initial);
-  const [query, setQuery] = useState('');
 
   const name = (code: string) => t(`currencies.${code}` as 'currencies.EUR');
-  const visible = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    if (!needle) return currencies;
-    return currencies.filter(
-      (currency) =>
-        currency.code.toLowerCase().includes(needle) ||
-        name(currency.code).toLowerCase().includes(needle),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
 
   return (
     <Screen
       scroll
-      footer={
-        <Button
-          label={submitLabel(name(selected))}
-
-          onPress={() => onSubmit(selected)}
-        />
-      }>
+      footer={<Button label={submitLabel(name(selected))} onPress={() => onSubmit(selected)} />}>
       {header}
       <StepIntro title={t('currency.title')} subtitle={t('currency.subtitle')} />
-      <TextField
-        containerClassName="mt-[22px]"
-        size="md"
-        variant="filled"
-        leadingIcon="magnifying-glass"
-        value={query}
-        onChangeText={setQuery}
-        clearable
-        placeholder={t('currency.search')}
-        autoCorrect={false}
-      />
-      <Text variant="overline" className="mt-[18px] px-1">
-        {t('currency.suggestions')}
-      </Text>
-      <View className="mt-2.5 gap-2">
-        {visible.map((currency) => (
+      <View className="mt-[22px] gap-2">
+        {currencies.map((currency) => (
           <OptionRow
             key={currency.code}
             title={name(currency.code)}
@@ -75,11 +42,6 @@ export function CurrencyScreen({ header, initial, submitLabel, onSubmit }: Curre
             onPress={() => setSelected(currency.code)}
           />
         ))}
-        {visible.length === 0 ? (
-          <Text variant="body" className="px-1 py-4">
-            {t('currency.empty', { query })}
-          </Text>
-        ) : null}
       </View>
     </Screen>
   );

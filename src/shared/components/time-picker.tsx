@@ -1,65 +1,55 @@
-import { useMemo } from 'react';
-import { View } from 'react-native';
+import DateTimePicker, {
+  DateTimePickerAndroid,
+  type DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
+import i18n from 'i18next';
+import { Platform } from 'react-native';
 
-import { Text } from '@/shared/ui/text';
+import { colors } from '@/shared/lib/theme';
+import { formatTimeValue, type TimeValue } from '@/shared/lib/time-value';
 
-import { WheelColumn, WheelFrame } from './wheel-picker';
-
-export interface TimeValue {
-  hour: number;
-  minute: number;
-}
+import { PickerField } from './picker-field';
 
 interface TimePickerProps {
   value: TimeValue;
   onChange: (value: TimeValue) => void;
-  minuteStep?: number;
+  minuteStep?: 1 | 5 | 10 | 15 | 30;
 }
 
-const pad = (value: number) => String(value).padStart(2, '0');
-
+// The system time picker: wheels on iOS, a dialog on Android (web has its own
+// wheels in time-picker.web.tsx).
 export function TimePicker({ value, onChange, minuteStep = 15 }: TimePickerProps) {
-  const hours = useMemo(
-    () => Array.from({ length: 24 }, (_, hour) => ({ label: pad(hour), value: hour })),
-    [],
-  );
-  const minutes = useMemo(
-    () =>
-      Array.from({ length: 60 / minuteStep }, (_, index) => ({
-        label: pad(index * minuteStep),
-        value: index * minuteStep,
-      })),
-    [minuteStep],
-  );
+  const date = new Date(2000, 0, 1, value.hour, value.minute);
+  const handle = (_event: DateTimePickerEvent, next?: Date) => {
+    if (next) onChange({ hour: next.getHours(), minute: next.getMinutes() });
+  };
 
+  if (Platform.OS === 'android') {
+    return (
+      <PickerField
+        label={formatTimeValue(value)}
+        onPress={() =>
+          DateTimePickerAndroid.open({
+            value: date,
+            mode: 'time',
+            is24Hour: true,
+            onChange: handle,
+          })
+        }
+      />
+    );
+  }
   return (
-    <WheelFrame tone="time">
-      <WheelColumn
-        tone="time"
-        align="end"
-        items={hours}
-        value={value.hour}
-        onChange={(hour) => onChange({ ...value, hour })}
-      />
-      <View className="w-3.5 items-center justify-center">
-        <Text size={27}>:</Text>
-      </View>
-      <WheelColumn
-        tone="time"
-        align="start"
-        items={minutes}
-        value={value.minute}
-        onChange={(minute) => onChange({ ...value, minute })}
-      />
-    </WheelFrame>
+    <DateTimePicker
+      value={date}
+      mode="time"
+      display="spinner"
+      minuteInterval={minuteStep}
+      locale={i18n.language}
+      themeVariant="light"
+      textColor={colors.ink}
+      onChange={handle}
+      style={{ alignSelf: 'stretch' }}
+    />
   );
-}
-
-export function parseTime(value: string): TimeValue {
-  const [hour, minute] = value.split(':').map(Number);
-  return { hour: hour || 0, minute: minute || 0 };
-}
-
-export function formatTimeValue({ hour, minute }: TimeValue) {
-  return `${pad(hour)}:${pad(minute)}`;
 }

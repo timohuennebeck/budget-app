@@ -82,7 +82,14 @@ export function AmountStepper({
             caretHidden
             selectTextOnFocus
           />
-          <View className="mx-1 w-[3px] rounded-sm bg-primary" style={{ height: metrics.caret }} />
+          {/* Caret while typing (the input's own caret is hidden). */}
+          <View
+            className={cn(
+              'mx-1 w-[3px] rounded-sm',
+              draft !== null ? 'bg-primary' : 'bg-transparent',
+            )}
+            style={{ height: metrics.caret }}
+          />
           <Text size={metrics.symbol} weight="bold" tracking={-0.05}>
             {currencySymbol(currency)}
           </Text>
@@ -130,7 +137,7 @@ export function QuickAmounts<T>({
   className,
 }: QuickAmountsProps<T>) {
   return (
-    <View className={cn('flex-row justify-center gap-2', className)}>
+    <View className={cn('flex-row flex-wrap justify-center gap-2', className)}>
       {options.map((option) => (
         <Chip
           key={String(option.value)}

@@ -53,7 +53,9 @@ export function ScreenHeader({
           ) : null}
         </View>
       )}
-      <View className="min-w-[34px] items-end">{trailing}</View>
+      {/* The empty slot only balances a centred title; custom content like
+          the onboarding progress bar runs to the edge. */}
+      {trailing || !children ? <View className="min-w-[34px] items-end">{trailing}</View> : null}
     </View>
   );
 }

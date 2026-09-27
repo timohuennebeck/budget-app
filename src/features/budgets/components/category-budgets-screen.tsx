@@ -47,7 +47,7 @@ export function CategoryBudgetsScreen({
     <Screen scroll footer={footer}>
       {header}
       <StepIntro title={t('budgets.limitsTitle')} subtitle={t('budgets.limitsSubtitle')} />
-      <View className="mt-[22px] gap-2.5">
+      <View className="mt-8 gap-2.5">
         {rows.map((row) => (
           <View key={row[0].category.id} className="flex-row gap-2.5">
             {row.map((item) => (

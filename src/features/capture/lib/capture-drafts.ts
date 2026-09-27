@@ -1,14 +1,13 @@
 import { randomUUID } from 'expo-crypto';
 
+import { ensureUser } from '@/features/auth/lib/anonymous-user';
+
 import { CaptureError, type ParsedEntry, parseCapture, uploadReceipt } from '../data/capture-api';
-import type { CaptureMode } from '../data/capture-store';
 import { newDraftId, parseEntries } from './parse-entries';
 import type { CategoryOption, DraftEntry } from './types';
 
 interface CaptureInput {
-  mode: CaptureMode;
   source: DraftEntry['source'];
-  userId: string;
   text: string;
   photoUri: string | null;
   /** Set by a voice session, which already counted against the AI limit */
@@ -32,17 +31,17 @@ function toDrafts(captureId: string, entries: ParsedEntry[], source: DraftEntry[
 }
 
 /**
- * Drafts for one capture. Signed in, the parse-capture edge function reads
- * text, voice and receipts; typed and spoken text fall back to the on-device
- * parser when it fails. Receipts have no fallback and throw a CaptureError.
+ * Drafts for one capture. The parse-capture edge function reads text, voice
+ * and receipts (during onboarding as an anonymous user); typed and spoken
+ * text fall back to the on-device parser when it fails. Receipts have no
+ * fallback and throw a CaptureError.
  */
 export async function captureDrafts(input: CaptureInput): Promise<DraftEntry[]> {
-  const { mode, source, userId, text, photoUri, captureId, categories } = input;
-  // No AI before sign-up (onboarding runs without an account).
-  const canUseAi = mode === 'app' && !!userId;
+  const { source, text, photoUri, captureId, categories } = input;
+  const userId = await ensureUser();
 
   if (source === 'camera') {
-    if (!canUseAi) throw new CaptureError('signed_out', 401);
+    if (!userId) throw new CaptureError('signed_out', 401);
     if (!photoUri) throw new CaptureError('no_photo', 400);
     const id = randomUUID();
     const path = await uploadReceipt(userId, id, photoUri);
@@ -51,7 +50,7 @@ export async function captureDrafts(input: CaptureInput): Promise<DraftEntry[]> 
   }
 
   const local = () => parseEntries(text, categories, { source }).entries;
-  if (!canUseAi) return local();
+  if (!userId) return local();
   try {
     const result = await parseCapture({
       source: source === 'voice' ? 'voice' : 'text',

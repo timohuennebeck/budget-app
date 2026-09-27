@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { useUserId } from '@/features/auth/lib/auth-provider';
 import { useCategories } from '@/features/categories/hooks/use-categories';
 import { usePresets } from '@/features/categories/hooks/use-presets';
 import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store';
@@ -31,7 +30,6 @@ const WAITING_CEILING = 0.92;
 export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
   const { t } = useTranslation();
   const { source } = useLocalSearchParams<{ source?: DraftEntry['source'] }>();
-  const userId = useUserId();
   const categories = useCaptureCategories(mode);
   const { data: presets, isPending: presetsPending } = usePresets();
   // Wait for the categories to load, but not for them to be non-empty: an
@@ -48,9 +46,7 @@ export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
     const { text, photoUri, captureId } = useCaptureStore.getState();
 
     captureDrafts({
-      mode,
       source: source ?? 'text',
-      userId,
       text,
       photoUri,
       captureId,
@@ -62,7 +58,7 @@ export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
         const code = error instanceof CaptureError && error.status ? error.status : 500;
         router.replace(captureHref(mode, 'receipt-error', { code: String(code) }));
       });
-  }, [categories, categoriesPending, mode, source, userId]);
+  }, [categories, categoriesPending, mode, source]);
 
   // The ring stops short of 100 % until the server has answered.
   const ceiling = result ? 1 : WAITING_CEILING;

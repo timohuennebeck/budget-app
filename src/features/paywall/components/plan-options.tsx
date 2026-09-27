@@ -2,10 +2,10 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useAppConfig } from '@/shared/hooks/use-app-config';
-import { cn } from '@/shared/lib/cn';
 import { formatMoney, roundMoney } from '@/shared/lib/money';
 import { CheckBadge } from '@/shared/ui/check-badge';
 import { Pressable } from '@/shared/ui/pressable';
+import { SelectionRing } from '@/shared/ui/selection-ring';
 import { Text } from '@/shared/ui/text';
 
 import { type PlanId, PLUS_CURRENCY } from '../lib/purchases';
@@ -28,10 +28,8 @@ function PlanCard({ title, price, note, badge, selected, onPress }: PlanCardProp
       accessibilityRole="radio"
       accessibilityState={{ selected }}
       accessibilityLabel={title}
-      className={cn(
-        'flex-1 gap-0.5 rounded-[22px] bg-surface p-4',
-        selected ? 'border-2 border-primary' : 'border border-line-card',
-      )}>
+      className="flex-1 gap-0.5 rounded-[22px] border border-line-card bg-surface p-4">
+      <SelectionRing visible={selected} className="rounded-[22px]" />
       {badge ? (
         <View className="absolute -top-[11px] left-3.5 h-[22px] justify-center rounded-full bg-primary px-2.5">
           <Text size={11.5} weight="semibold" className="text-white">

@@ -1,12 +1,5 @@
 import type { ReactNode } from 'react';
-import {
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { cn } from '@/shared/lib/cn';
@@ -52,22 +45,19 @@ export function Screen({
   const bottom = tabBar ? 16 : Math.max(insets.bottom, 16);
   const padding = { paddingHorizontal: inset };
 
-  const body = scroll ? (
+  // Non-scrolling screens use a fixed ScrollView too: it closes the keyboard
+  // on taps outside a field without taking gestures from the content.
+  const body = (
     <ScrollView
       className="flex-1"
+      scrollEnabled={scroll}
       contentContainerClassName="grow"
-      contentContainerStyle={[padding, { paddingBottom: footer ? 16 : bottom }]}
+      contentContainerStyle={[padding, { paddingBottom: footer ? (scroll ? 16 : 0) : bottom }]}
       keyboardShouldPersistTaps="handled"
-      keyboardDismissMode="interactive"
+      keyboardDismissMode={scroll ? 'interactive' : 'none'}
       showsVerticalScrollIndicator={false}>
       {children}
     </ScrollView>
-  ) : (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View className="flex-1" style={[padding, footer ? null : { paddingBottom: bottom }]}>
-        {children}
-      </View>
-    </TouchableWithoutFeedback>
   );
 
   return (

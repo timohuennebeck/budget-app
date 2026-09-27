@@ -90,6 +90,7 @@ export async function completeOnboarding(
         kind: entry.kind,
         source: entry.source,
         occurred_at: entry.occurredAt,
+        capture_id: entry.captureId ?? null,
         category_id: entry.categoryId ? (findSaved(entry.categoryId, saved)?.id ?? null) : null,
       })),
     );

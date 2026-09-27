@@ -16,7 +16,8 @@ interface BudgetLimitCardProps {
   onPress: () => void;
 }
 
-/** Grid tile to set a category's monthly limit (2e2). */
+/** Grid tile to set a category's monthly limit (2e2). Fixed height so every
+ * tile in the grid is the same size, whatever the name or hint length. */
 export function BudgetLimitCard({
   name,
   icon,
@@ -30,7 +31,7 @@ export function BudgetLimitCard({
     <Pressable
       onPress={onPress}
       accessibilityLabel={name}
-      className="flex-1 gap-3.5 rounded-[22px] border border-line-card bg-surface p-3.5">
+      className="h-[176px] flex-1 justify-between rounded-[22px] border border-line-card bg-surface p-3.5">
       <View className="flex-row items-start justify-between">
         <CategoryAvatar icon={icon} hue={hue} />
         <View className="size-8 items-center justify-center rounded-full bg-field">
@@ -41,11 +42,16 @@ export function BudgetLimitCard({
         <Text size={15.5} weight="semibold" tracking={-0.01} numberOfLines={1}>
           {name}
         </Text>
-        <Text size={22} weight="bold" tracking={-0.035}>
+        <Text
+          size={22}
+          weight="bold"
+          tracking={-0.035}
+          numberOfLines={1}
+          style={{ fontVariant: ['tabular-nums'] }}>
           {limitLabel ?? t('budgets.noLimit')}
         </Text>
         {hint ? (
-          <Text size={12.5} className="text-subtle">
+          <Text size={12.5} numberOfLines={2} className="text-subtle">
             {hint}
           </Text>
         ) : null}

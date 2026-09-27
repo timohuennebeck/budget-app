@@ -52,10 +52,7 @@
   },
   "currency": {
     "continueWith": "Continuar com {{name}}",
-    "empty": "Nenhuma moeda para «{{query}}».",
-    "search": "Pesquisar moeda",
     "subtitle": "Mostramos todos os valores e orçamentos nesta moeda.",
-    "suggestions": "Sugestões",
     "title": "Em que moeda\ngastas?"
   },
   "onboarding": {

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { ensureUser } from '@/features/auth/lib/anonymous-user';
+
 import { CaptureError, exchangeRealtimeSdp, startVoiceSession } from '../data/capture-api';
 import {
   applyTranscriptEvent,
@@ -25,12 +27,12 @@ interface Connection {
 /**
  * Live dictation through OpenAI Realtime: the edge function hands out a
  * short-lived secret, the microphone streams to OpenAI over WebRTC and the
- * transcript arrives on the data channel. Without an account (`enabled`
- * false) it reports the 'account' error right away.
+ * transcript arrives on the data channel. During onboarding it signs in
+ * anonymously first; if that's not possible it reports the 'account' error.
  */
-export function useLiveTranscription(enabled: boolean) {
-  const [status, setStatus] = useState<VoiceStatus>(enabled ? 'connecting' : 'error');
-  const [error, setError] = useState<VoiceError | null>(enabled ? null : 'account');
+export function useLiveTranscription() {
+  const [status, setStatus] = useState<VoiceStatus>('connecting');
+  const [error, setError] = useState<VoiceError | null>(null);
   const [transcript, setTranscript] = useState(emptyTranscript);
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
   const connection = useRef<Connection | null>(null);
@@ -48,7 +50,6 @@ export function useLiveTranscription(enabled: boolean) {
   };
 
   useEffect(() => {
-    if (!enabled) return;
     let cancelled = false;
     const fail = (code: VoiceError) => {
       if (cancelled) return;
@@ -58,6 +59,7 @@ export function useLiveTranscription(enabled: boolean) {
     };
 
     (async () => {
+      if (!(await ensureUser())) return fail('account');
       // The microphone first: a denied permission shouldn't use up an AI capture.
       let stream: MediaStream;
       try {
@@ -104,7 +106,7 @@ export function useLiveTranscription(enabled: boolean) {
       cancelled = true;
       disconnect();
     };
-  }, [enabled]);
+  }, []);
 
   // Counts down to the session cap (app_config.voice_max_seconds).
   useEffect(() => {

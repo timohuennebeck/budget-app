@@ -69,7 +69,8 @@ pg_cron runs `private.dispatch_notifications()` every 5 minutes: it queues due r
    select vault.create_secret('<random string>', 'notifications_cron_secret');
    ```
 3. Push tokens need an EAS project id: run `npx eas-cli init` once.
-4. Enable leaked password protection under Authentication › Settings.
+4. Authentication › Sign In / Providers: turn on **anonymous sign-ins** (AI capture during onboarding) and turn off **Confirm email** under Email.
+5. Enable leaked password protection under Authentication › Settings.
 
 ## Still to come
 

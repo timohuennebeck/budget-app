@@ -52,10 +52,7 @@
   },
   "currency": {
     "continueWith": "Continuer avec {{name}}",
-    "empty": "Aucune devise pour « {{query}} ».",
-    "search": "Chercher une devise",
     "subtitle": "Tous les montants et budgets s'affichent dans cette devise.",
-    "suggestions": "Suggestions",
     "title": "Dans quelle devise\ndépenses-tu ?"
   },
   "onboarding": {

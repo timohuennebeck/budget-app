@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { StepIntro } from '@/features/onboarding/components/step-intro';
 import { profileQueries } from '@/features/profile/data/profile-queries';
+import { useKeyboardVisible } from '@/shared/hooks/use-keyboard-visible';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { haptics } from '@/shared/lib/haptics';
@@ -21,6 +22,7 @@ import { isValidEmail } from '../lib/password-strength';
 // never finished stays in this group, so it continues at the last step.
 export function LoginScreen() {
   const { t } = useTranslation();
+  const typing = useKeyboardVisible();
   const signIn = useSignIn();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -57,7 +59,9 @@ export function LoginScreen() {
         />
       }>
       <ScreenHeader />
-      <Pip pose="door-wave" size={150} style={{ alignSelf: 'center', marginTop: 16 }} />
+      {typing ? null : (
+        <Pip pose="door-wave" size={150} style={{ alignSelf: 'center', marginTop: 16 }} />
+      )}
       <StepIntro title={t('auth.signInTitle')} subtitle={t('auth.signInSubtitle')} />
       <TextField
         containerClassName="mt-[18px]"

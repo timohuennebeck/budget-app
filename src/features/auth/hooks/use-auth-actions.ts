@@ -23,9 +23,22 @@ export function useSignIn() {
   });
 }
 
+// Creates the account. Someone who captured during onboarding is already an
+// anonymous user: their e-mail and password are attached to that user, so
+// everything captured so far stays theirs. `session` is null while the
+// address still needs confirming.
 export function useSignUp() {
   return useMutation({
     mutationFn: async ({ email, password, metadata }: SignUpInput) => {
+      const { data: current } = await supabase.auth.getSession();
+      if (current.session?.user.is_anonymous) {
+        const { data, error } = await supabase.auth.updateUser({ email, password, data: metadata });
+        if (error) throw error;
+        if (!data.user.email) return { user: data.user, session: null };
+        // New token without the anonymous claim.
+        const { data: refreshed } = await supabase.auth.refreshSession();
+        return { user: data.user, session: refreshed.session };
+      }
       const { data, error } = await supabase.auth.signUp({
         email,
         password,

@@ -7,11 +7,11 @@ import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store'
 import { MeasuredView } from '@/shared/components/measured-view';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
-import { cn } from '@/shared/lib/cn';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Chip } from '@/shared/ui/chip';
 import { IconButton } from '@/shared/ui/icon-button';
+import { SelectionRing } from '@/shared/ui/selection-ring';
 import { Text } from '@/shared/ui/text';
 
 import { type CaptureMode, useCaptureStore } from '../data/capture-store';
@@ -116,10 +116,8 @@ export function CaptureTextScreen({ mode, initialText, onClose }: CaptureTextScr
 
       <MeasuredView
         onMeasure={measure('text')}
-        className={cn(
-          'mt-[22px] min-h-[190px] rounded-3xl bg-surface p-[18px]',
-          focused || text ? 'border-2 border-primary' : 'border border-line-strong',
-        )}>
+        className="mt-[22px] min-h-[190px] rounded-3xl border border-line-strong bg-surface p-[18px]">
+        <SelectionRing visible={focused || !!text} className="rounded-3xl" />
         <TextInput
           value={text}
           onChangeText={setText}

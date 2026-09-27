@@ -4,7 +4,6 @@ import { useEffect, useRef } from 'react';
 import { Linking, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { useUserId } from '@/features/auth/lib/auth-provider';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 import { StatusHero } from '@/shared/components/status-hero';
@@ -33,10 +32,9 @@ const COUNTDOWN_FROM = 10;
 // parse-capture. Every failure falls back to typing.
 export function VoiceScreen({ mode }: { mode: CaptureMode }) {
   const { t } = useTranslation();
-  const signedIn = !!useUserId() && mode === 'app';
   const { currency } = useCaptureContext(mode);
   const setText = useCaptureStore((state) => state.setText);
-  const voice = useLiveTranscription(signedIn);
+  const voice = useLiveTranscription();
   const preview = useParsePreview(voice.transcript, mode);
   const typeInstead = () => router.dismissTo(captureHref(mode, 'index'));
   // stop() waits for the last words; the user may close the screen meanwhile.

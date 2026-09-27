@@ -2,6 +2,7 @@ import {
   BottomSheetBackdrop,
   type BottomSheetBackdropProps,
   BottomSheetModal,
+  BottomSheetTextInput,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
@@ -12,6 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { haptics } from '@/shared/lib/haptics';
 import { colors, shadows } from '@/shared/lib/theme';
 import { IconButton } from '@/shared/ui/icon-button';
+import { type InputComponent, InputComponentContext } from '@/shared/ui/input-component';
 import { Text } from '@/shared/ui/text';
 
 export interface SheetControls {
@@ -31,9 +33,14 @@ function Backdrop(props: BottomSheetBackdropProps) {
   return <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.3} />;
 }
 
-// Floating sheet from the design: inset 8px from the screen edges, 36px
-// corner radius, grabber on top and a dimmed backdrop that closes on tap.
+// Floating sheet from the design: inset 8px from the screen edges, corners
+// concentric with the iPhone's display corners, grabber on top and a dimmed
+// backdrop that closes on tap. It rises with the keyboard.
 // Content mounts on open, so state inside starts fresh every time.
+const INSET = 8;
+// Display corner radius of current iPhones (~55pt) minus the inset.
+const RADIUS = 47;
+
 export function Sheet({ open, onClose, children, title, height }: SheetProps) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
@@ -61,15 +68,16 @@ export function Sheet({ open, onClose, children, title, height }: SheetProps) {
     <BottomSheetModal
       ref={ref}
       detached
-      bottomInset={Math.max(insets.bottom - 26, 8)}
-      style={[{ marginHorizontal: 8 }, shadows.sheet]}
+      bottomInset={Math.max(insets.bottom - 26, INSET)}
+      style={[{ marginHorizontal: INSET }, shadows.sheet]}
       snapPoints={height ? [height] : undefined}
       enableDynamicSizing={!height}
       keyboardBehavior="interactive"
       keyboardBlurBehavior="restore"
       backdropComponent={Backdrop}
       onDismiss={handleDismiss}
-      backgroundStyle={{ borderRadius: 36, backgroundColor: colors.white }}
+      android_keyboardInputMode="adjustResize"
+      backgroundStyle={{ borderRadius: RADIUS, backgroundColor: colors.white }}
       handleIndicatorStyle={{ width: 36, height: 5, backgroundColor: colors.grabber }}>
       <BottomSheetView
         style={{ paddingHorizontal: 20, paddingBottom: 26, flex: height ? 1 : undefined }}>
@@ -87,7 +95,9 @@ export function Sheet({ open, onClose, children, title, height }: SheetProps) {
             />
           </View>
         ) : null}
-        {children}
+        <InputComponentContext.Provider value={BottomSheetTextInput as InputComponent}>
+          {children}
+        </InputComponentContext.Provider>
       </BottomSheetView>
     </BottomSheetModal>
   );

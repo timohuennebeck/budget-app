@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -13,6 +13,7 @@ import { profileQueries } from '@/features/profile/data/profile-queries';
 import { GradientPanel } from '@/shared/components/gradient-panel';
 import { Screen } from '@/shared/components/screen';
 import { useAppConfig } from '@/shared/hooks/use-app-config';
+import { useKeyboardVisible } from '@/shared/hooks/use-keyboard-visible';
 import { cn } from '@/shared/lib/cn';
 import { deviceTimeZone } from '@/shared/lib/dates';
 import { haptics } from '@/shared/lib/haptics';
@@ -34,19 +35,29 @@ const STRENGTH_LABELS = [
   'auth.strength.veryStrong',
 ] as const;
 
-function legalLink(kind: LegalKind) {
+// Inline link in the legal notice: fades while pressed instead of the grey
+// highlight iOS draws behind pressable text.
+function LegalLink({ kind, children }: { kind: LegalKind; children?: ReactNode }) {
+  const [pressed, setPressed] = useState(false);
   return (
     <Text
       size={12.5}
       weight="semibold"
       className="text-ink-soft"
-      onPress={() => router.push({ pathname: '/legal/[kind]', params: { kind } })}
-    />
+      suppressHighlighting
+      style={{ opacity: pressed ? 0.5 : 1 }}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
+      onPress={() => router.push({ pathname: '/legal/[kind]', params: { kind } })}>
+      {children}
+    </Text>
   );
 }
 
 export function SignUpScreen() {
   const { t, i18n } = useTranslation();
+  // Pip makes room for the fields while typing instead of getting squeezed.
+  const typing = useKeyboardVisible();
   const signUp = useSignUp();
   const { freeEntries } = useAppConfig();
   const { session } = useAuth();
@@ -61,8 +72,9 @@ export function SignUpScreen() {
     setSaving(true);
     try {
       // A retry after saving the answers failed: the account already exists
-      // and is signed in, so signing up again would only be rejected.
-      let userId = session?.user.id;
+      // and is signed in, so signing up again would only be rejected. An
+      // anonymous user (captured during onboarding) still gets converted.
+      let userId = session?.user.is_anonymous ? undefined : session?.user.id;
       if (!userId) {
         const result = await signUp.mutateAsync({
           email: email.trim(),
@@ -106,16 +118,21 @@ export function SignUpScreen() {
           <Text size={12.5} leading={1.5} className="px-4 text-center text-hint">
             <Trans
               i18nKey="auth.legalNotice"
-              components={{ terms: legalLink('terms'), privacy: legalLink('privacy') }}
+              components={{
+                terms: <LegalLink kind="terms" />,
+                privacy: <LegalLink kind="privacy" />,
+              }}
             />
           </Text>
         </View>
       }>
       <OnboardingHeader step={ONBOARDING_STEPS.signUp} />
-      <GradientPanel
-        style={{ flex: 1, minHeight: 120, alignItems: 'center', justifyContent: 'center' }}>
-        <Pip pose="account" size={150} />
-      </GradientPanel>
+      {typing ? null : (
+        <GradientPanel
+          style={{ flex: 1, minHeight: 120, alignItems: 'center', justifyContent: 'center' }}>
+          <Pip pose="account" size={150} />
+        </GradientPanel>
+      )}
       <StepIntro title={t('auth.signUpTitle')} subtitle={t('auth.signUpSubtitle')} />
       <TextField
         containerClassName="mt-[18px]"

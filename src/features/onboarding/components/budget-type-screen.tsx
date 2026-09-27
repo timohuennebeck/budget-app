@@ -3,11 +3,11 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { Screen } from '@/shared/components/screen';
-import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
 import { CheckBadge } from '@/shared/ui/check-badge';
 import { Pip, type PipPose } from '@/shared/ui/pip';
 import { Pressable } from '@/shared/ui/pressable';
+import { SelectionRing } from '@/shared/ui/selection-ring';
 import { Text } from '@/shared/ui/text';
 
 import { useOnboardingStore } from '../data/onboarding-store';
@@ -32,10 +32,8 @@ function ModeCard({ title, description, tags, pose, selected, onPress }: ModeCar
       accessibilityRole="radio"
       accessibilityState={{ selected }}
       accessibilityLabel={title}
-      className={cn(
-        'min-h-[200px] flex-1 justify-end overflow-hidden rounded-[28px] bg-surface px-[22px] py-5',
-        selected ? 'border-2 border-primary' : 'border border-line-card',
-      )}>
+      className="min-h-[200px] flex-1 justify-end rounded-[28px] border border-line-card bg-surface px-[22px] py-5">
+      <SelectionRing visible={selected} className="rounded-[28px]" />
       <View className="absolute top-0 right-3 bottom-0 justify-center">
         <Pip pose={pose} size={120} />
       </View>

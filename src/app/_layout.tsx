@@ -50,7 +50,7 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
       <Stack.Protected guard={isOnboarded}>
         <Stack.Screen name="(app)" />
       </Stack.Protected>
-      <Stack.Screen name="legal/[kind]" options={{ animation: 'slide_from_bottom' }} />
+      <Stack.Screen name="legal/[kind]" />
     </Stack>
   );
 }

@@ -24,27 +24,26 @@ export function ActionButtonIllustration() {
           borderColor: colors.ink,
         }}
       />
+      {/* Side buttons sit flush against the frame (left edge at 92). */}
       <View
         className="absolute rounded-[3px] bg-primary"
         style={{
-          left: 79,
-          top: 92,
+          left: 86,
+          top: 95,
           width: 6,
-          height: 34,
-          shadowColor: colors.primary,
-          shadowOpacity: 0.35,
-          shadowRadius: 8,
+          height: 41,
+          boxShadow: '0 0 0 5px rgba(47,124,246,0.22), 0 0 0 12px rgba(47,124,246,0.12)',
         }}
       />
       <View
         className="absolute rounded-[3px] bg-[#3B3F48]"
-        style={{ left: 80, top: 146, width: 5, height: 44 }}
+        style={{ left: 87, top: 153, width: 5, height: 44 }}
       />
       <View
         className="absolute rounded-[3px] bg-[#3B3F48]"
-        style={{ left: 80, top: 198, width: 5, height: 44 }}
+        style={{ left: 87, top: 205, width: 5, height: 44 }}
       />
-      <View className="absolute rounded-full bg-primary px-2 py-1" style={{ left: 16, top: 98 }}>
+      <View className="absolute rounded-full bg-primary px-2 py-1" style={{ left: 16, top: 103 }}>
         <Text size={11.5} weight="semibold" className="text-white">
           {t('onboarding.actionButton.action')}
         </Text>

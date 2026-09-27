@@ -16,7 +16,7 @@ export interface ChipProps {
   variant?: Variant;
   size?: Size;
   trailingIcon?: IconName;
-  /** Stretch to share the row with sibling chips */
+  /** Grow to share the row with sibling chips; the label never wraps */
   fill?: boolean;
 }
 
@@ -51,6 +51,7 @@ export function Chip({
   const content = (
     <View className="flex-row items-center gap-2">
       <Text
+        numberOfLines={1}
         size={textSizes[size]}
         weight={strong ? 'semibold' : 'medium'}
         className={labels[variant]}>
@@ -64,7 +65,7 @@ export function Chip({
   const classes = cn(
     'items-center justify-center rounded-full',
     heights[size],
-    fill && 'flex-1',
+    fill && 'grow',
     containers[variant],
   );
 
