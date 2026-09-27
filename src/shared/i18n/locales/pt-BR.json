@@ -17,7 +17,8 @@
     "search": "Buscar",
     "skip": "Pular",
     "today": "Hoje",
-    "yesterday": "Ontem"
+    "yesterday": "Ontem",
+    "doneSetUp": "Pronto"
   },
   "tabs": {
     "overview": "Resumo",
@@ -102,7 +103,8 @@
       "step2": "Deslize até <b>Atalho</b>",
       "step3": "Escolha <b>Looop: Registrar gasto</b>",
       "subtitle": "Coloque o Looop no botão de Ação do seu iPhone. Segure, fale, pronto.",
-      "title": "Um clique\ne já está registrado"
+      "title": "Um clique\ne já está registrado",
+      "reopenSettings": "Abrir Ajustes de novo"
     },
     "widget": {
       "add": "Adicionar widget",
@@ -448,7 +450,6 @@
     "step2": "Toque em <b>+</b> e escolha <b>Transação</b> › <b>Executar imediatamente</b>",
     "step3": "Escolha <b>Looop: Registrar pagamento</b> com <b>Valor</b> e <b>Estabelecimento</b>",
     "openShortcuts": "Abrir Atalhos",
-    "done": "Pronto",
     "reopen": "Abrir Atalhos de novo",
     "active": "Funcionando: o último pagamento com Apple Pay chegou em {{date}}.",
     "on": "Ativo"

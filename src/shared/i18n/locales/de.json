@@ -17,7 +17,8 @@
     "search": "Suchen",
     "skip": "Überspringen",
     "today": "Heute",
-    "yesterday": "Gestern"
+    "yesterday": "Gestern",
+    "doneSetUp": "Erledigt"
   },
   "tabs": {
     "overview": "Übersicht",
@@ -102,7 +103,8 @@
       "step2": "Wische zu <b>Kurzbefehl</b>",
       "step3": "Wähle <b>Looop: Ausgabe erfassen</b>",
       "subtitle": "Leg Looop auf die Aktionstaste deines iPhones. Gedrückt halten, sprechen, fertig.",
-      "title": "Ein Druck,\nund schon erfasst"
+      "title": "Ein Druck,\nund schon erfasst",
+      "reopenSettings": "Einstellungen erneut öffnen"
     },
     "widget": {
       "add": "Widget hinzufügen",
@@ -438,7 +440,6 @@
     "step2": "Tippe <b>+</b> und wähle <b>Transaktion</b> › <b>Sofort ausführen</b>",
     "step3": "Wähle <b>Looop: Zahlung erfassen</b> mit <b>Betrag</b> und <b>Händler</b>",
     "openShortcuts": "Kurzbefehle öffnen",
-    "done": "Erledigt",
     "reopen": "Kurzbefehle erneut öffnen",
     "active": "Läuft – die letzte Apple-Pay-Zahlung kam am {{date}} an.",
     "on": "Aktiv"

@@ -17,7 +17,8 @@
     "search": "Cerca",
     "skip": "Salta",
     "today": "Oggi",
-    "yesterday": "Ieri"
+    "yesterday": "Ieri",
+    "doneSetUp": "Fatto"
   },
   "tabs": {
     "overview": "Panoramica",
@@ -102,7 +103,8 @@
       "step2": "Scorri fino a <b>Comando rapido</b>",
       "step3": "Scegli <b>Looop: registra spesa</b>",
       "subtitle": "Metti Looop sul tasto Azione del tuo iPhone. Tieni premuto, parla, fatto.",
-      "title": "Una pressione,\ned è registrato"
+      "title": "Una pressione,\ned è registrato",
+      "reopenSettings": "Riapri Impostazioni"
     },
     "widget": {
       "add": "Aggiungi widget",
@@ -448,7 +450,6 @@
     "step2": "Tocca <b>+</b> e scegli <b>Transazione</b> › <b>Esegui subito</b>",
     "step3": "Scegli <b>Looop: Registra pagamento</b> con <b>Importo</b> ed <b>Esercente</b>",
     "openShortcuts": "Apri Comandi rapidi",
-    "done": "Fatto",
     "reopen": "Riapri Comandi rapidi",
     "active": "Funziona: l’ultimo pagamento Apple Pay è arrivato il {{date}}.",
     "on": "Attivo"

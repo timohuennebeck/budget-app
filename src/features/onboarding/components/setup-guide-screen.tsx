@@ -1,6 +1,7 @@
 import type { ParseKeys } from 'i18next';
-import type { ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import { View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { NumberedSteps } from '@/shared/components/numbered-steps';
 import { Screen } from '@/shared/components/screen';
@@ -17,11 +18,14 @@ interface SetupGuideScreenProps<Key extends ParseKeys> {
   steps: readonly Key[];
   /** Small print below the steps */
   note?: string;
-  primaryLabel: string;
-  onPrimary: () => void;
-  /** Secondary button, e.g. "Später" or "Schließen" */
+  /** Opens the iOS screen to set it up, e.g. "Einstellungen öffnen" */
+  openLabel: string;
+  reopenLabel: string;
+  onOpen: () => void;
+  /** Secondary button until then, e.g. "Später" or "Schließen" */
   laterLabel: string;
-  onLater: () => void;
+  /** "Erledigt", "Später" and "Schließen" all continue here */
+  onDone: () => void;
 }
 
 /** Illustrated how-to for an iOS setting the app can't change itself
@@ -33,18 +37,36 @@ export function SetupGuideScreen<Key extends ParseKeys>({
   subtitle,
   steps,
   note,
-  primaryLabel,
-  onPrimary,
+  openLabel,
+  reopenLabel,
+  onOpen,
   laterLabel,
-  onLater,
+  onDone,
 }: SetupGuideScreenProps<Key>) {
+  const { t } = useTranslation();
+  // The app can't tell whether the setting was made, so opening it doesn't
+  // move on. Back from it, "Erledigt" continues and the second button
+  // opens it again.
+  const [opened, setOpened] = useState(false);
+  const open = () => {
+    onOpen();
+    setOpened(true);
+  };
   return (
     <Screen
       scroll
       footer={
         <View>
-          <Button label={primaryLabel} onPress={onPrimary} />
-          <Button variant="ghost" className="mt-2.5" label={laterLabel} onPress={onLater} />
+          <Button
+            label={opened ? t('common.doneSetUp') : openLabel}
+            onPress={opened ? onDone : open}
+          />
+          <Button
+            variant="ghost"
+            className="mt-2.5"
+            label={opened ? reopenLabel : laterLabel}
+            onPress={opened ? open : onDone}
+          />
         </View>
       }>
       {header}

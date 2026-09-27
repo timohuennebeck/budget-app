@@ -17,7 +17,8 @@
     "search": "Buscar",
     "skip": "Omitir",
     "today": "Hoy",
-    "yesterday": "Ayer"
+    "yesterday": "Ayer",
+    "doneSetUp": "Hecho"
   },
   "tabs": {
     "overview": "Resumen",
@@ -102,7 +103,8 @@
       "step2": "Desliza hasta <b>Atajo</b>",
       "step3": "Elige <b>Looop: Registrar gasto</b>",
       "subtitle": "Pon Looop en el Botón de Acción de tu iPhone. Mantén pulsado, habla y listo.",
-      "title": "Un toque\ny ya está registrado"
+      "title": "Un toque\ny ya está registrado",
+      "reopenSettings": "Abrir Ajustes de nuevo"
     },
     "widget": {
       "add": "Añadir widget",
@@ -448,7 +450,6 @@
     "step2": "Toca <b>+</b> y elige <b>Transacción</b> › <b>Ejecutar inmediatamente</b>",
     "step3": "Elige <b>Looop: Anotar pago</b> con <b>Importe</b> y <b>Comercio</b>",
     "openShortcuts": "Abrir Atajos",
-    "done": "Hecho",
     "reopen": "Abrir Atajos de nuevo",
     "active": "Funciona: el último pago con Apple Pay llegó el {{date}}.",
     "on": "Activo"

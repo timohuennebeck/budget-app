@@ -17,7 +17,8 @@
     "search": "Search",
     "skip": "Skip",
     "today": "Today",
-    "yesterday": "Yesterday"
+    "yesterday": "Yesterday",
+    "doneSetUp": "Done"
   },
   "tabs": {
     "overview": "Overview",
@@ -102,7 +103,8 @@
       "step2": "Swipe to <b>Shortcut</b>",
       "step3": "Choose <b>Looop: Log expense</b>",
       "subtitle": "Put Looop on your iPhone's Action Button. Press and hold, speak, done.",
-      "title": "One press,\nand it's logged"
+      "title": "One press,\nand it's logged",
+      "reopenSettings": "Open Settings again"
     },
     "widget": {
       "add": "Add widget",
@@ -438,7 +440,6 @@
     "step2": "Tap <b>+</b> and choose <b>Transaction</b> › <b>Run Immediately</b>",
     "step3": "Choose <b>Looop: Log payment</b> with <b>Amount</b> and <b>Merchant</b>",
     "openShortcuts": "Open Shortcuts",
-    "done": "Done",
     "reopen": "Open Shortcuts again",
     "active": "Working – the last Apple Pay payment arrived on {{date}}.",
     "on": "On"

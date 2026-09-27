@@ -17,7 +17,8 @@
     "search": "Rechercher",
     "skip": "Passer",
     "today": "Aujourd'hui",
-    "yesterday": "Hier"
+    "yesterday": "Hier",
+    "doneSetUp": "C’est fait"
   },
   "tabs": {
     "overview": "Aperçu",
@@ -102,7 +103,8 @@
       "step2": "Balaye jusqu'à <b>Raccourci</b>",
       "step3": "Choisis <b>Looop : saisir une dépense</b>",
       "subtitle": "Mets Looop sur le bouton Action de ton iPhone. Maintiens, parle, c'est fait.",
-      "title": "Une pression,\net c'est noté"
+      "title": "Une pression,\net c'est noté",
+      "reopenSettings": "Rouvrir Réglages"
     },
     "widget": {
       "add": "Ajouter le widget",
@@ -448,7 +450,6 @@
     "step2": "Touche <b>+</b> et choisis <b>Transaction</b> › <b>Exécuter immédiatement</b>",
     "step3": "Choisis <b>Looop : Noter un paiement</b> avec <b>Montant</b> et <b>Commerçant</b>",
     "openShortcuts": "Ouvrir Raccourcis",
-    "done": "C’est fait",
     "reopen": "Rouvrir Raccourcis",
     "active": "Ça marche : le dernier paiement Apple Pay est arrivé le {{date}}.",
     "on": "Actif"
