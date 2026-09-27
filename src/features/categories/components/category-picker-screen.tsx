@@ -14,11 +14,7 @@ import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 import { TextField } from '@/shared/ui/text-field';
 
-import {
-  type CategoryDisplay,
-  useAppCategoryDisplays,
-  usePresetDisplays,
-} from '../hooks/use-category-display';
+import { type CategoryDisplay, useAppCategoryDisplays } from '../hooks/use-category-display';
 import { CategoryAvatar } from './category-avatar';
 
 interface CategoryPickerScreenProps {
@@ -26,14 +22,12 @@ interface CategoryPickerScreenProps {
   /** Amount of the entry being categorised, for the 30-day preview */
   amount: number;
   currency: string;
-  /** Receives the chosen category; a preset the user doesn't have yet has
-   * `presetId` set and no row until the caller creates it. */
-  onConfirm: (category: CategoryDisplay) => void;
+  onConfirm: (categoryId: string) => void;
 }
 
 // Category choice with last-30-days context (2xd3). The selected row
-// previews how its total changes once this entry is added. Presets the user
-// hasn't added yet are listed below and get added when chosen.
+// previews how its total changes once this entry is added. Every preset and
+// own category is listed, the most used in the last 30 days first.
 export function CategoryPickerScreen({
   initialId,
   amount,
@@ -42,7 +36,6 @@ export function CategoryPickerScreen({
 }: CategoryPickerScreenProps) {
   const { t } = useTranslation();
   const categories = useAppCategoryDisplays();
-  const presets = usePresetDisplays();
   const { data: recent = [] } = useRecentEntries();
   const [selectedId, setSelectedId] = useState(initialId);
   const [query, setQuery] = useState('');
@@ -55,24 +48,23 @@ export function CategoryPickerScreen({
     !needle ||
     category.name.toLowerCase().includes(needle) ||
     category.keywords.some((word) => word.startsWith(needle));
-  const owned = new Set(categories.map((category) => category.presetId));
-  const visible = categories.filter(matches);
-  const more = presets.filter((preset) => !owned.has(preset.presetId) && matches(preset));
-  const selected = [...categories, ...more].find((category) => category.id === selectedId);
+  // Sorted once, so rows don't jump while choosing.
+  const sorted = useMemo(
+    () => [...categories].sort((a, b) => (counts.get(b.id) ?? 0) - (counts.get(a.id) ?? 0)),
+    [categories, counts],
+  );
+  const visible = sorted.filter(matches);
+  const selected = categories.find((category) => category.id === selectedId);
 
   const renderRow = (category: CategoryDisplay) => {
     const active = category.id === selectedId;
     const total = totals.get(category.id) ?? 0;
     const count = counts.get(category.id) ?? 0;
-    // Presets from "Weitere Kategorien" have no entries yet.
-    const isNew = !categories.includes(category);
-    const detail = isNew
-      ? active
-        ? t('categories.addOnSelect')
-        : null
-      : active
-        ? t('categories.preview', { from: money(total), to: money(roundMoney(total + amount)) })
-        : `${t('entries.count', { count })} · ${money(total)}`;
+    const detail = active
+      ? t('categories.preview', { from: money(total), to: money(roundMoney(total + amount)) })
+      : count
+        ? `${t('entries.count', { count })} · ${money(total)}`
+        : null;
     return (
       <Pressable
         key={category.id}
@@ -108,7 +100,7 @@ export function CategoryPickerScreen({
           label={selected ? t('categories.apply', { name: selected.name }) : t('categories.choose')}
           disabled={!selected}
           haptic="success"
-          onPress={() => selected && onConfirm(selected)}
+          onPress={() => selected && onConfirm(selected.id)}
         />
       }>
       <ScreenHeader title={t('categories.category')} />
@@ -129,12 +121,6 @@ export function CategoryPickerScreen({
         contentContainerClassName="gap-1.5 pb-4"
         showsVerticalScrollIndicator={false}>
         {visible.map(renderRow)}
-        {more.length ? (
-          <Text size={13} weight="semibold" className="mt-3 px-1 text-subtle">
-            {t('categories.more')}
-          </Text>
-        ) : null}
-        {more.map(renderRow)}
       </ScrollView>
     </Screen>
   );

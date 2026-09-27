@@ -106,9 +106,7 @@ export type Database = {
           hue: number
           icon: string
           id: string
-          monthly_limit: number | null
           name: string
-          preset_id: string | null
           profile_id: string
           sort_order: number
         }
@@ -118,9 +116,7 @@ export type Database = {
           hue: number
           icon: string
           id?: string
-          monthly_limit?: number | null
           name: string
-          preset_id?: string | null
           profile_id: string
           sort_order?: number
         }
@@ -130,22 +126,62 @@ export type Database = {
           hue?: number
           icon?: string
           id?: string
-          monthly_limit?: number | null
           name?: string
-          preset_id?: string | null
           profile_id?: string
           sort_order?: number
         }
         Relationships: [
           {
-            foreignKeyName: "categories_preset_id_fkey"
+            foreignKeyName: "categories_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      categories_limits: {
+        Row: {
+          amount: number
+          category_id: string | null
+          created_at: string
+          id: string
+          preset_id: string | null
+          profile_id: string
+        }
+        Insert: {
+          amount: number
+          category_id?: string | null
+          created_at?: string
+          id?: string
+          preset_id?: string | null
+          profile_id: string
+        }
+        Update: {
+          amount?: number
+          category_id?: string | null
+          created_at?: string
+          id?: string
+          preset_id?: string | null
+          profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_limits_category_fkey"
+            columns: ["category_id", "profile_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id", "profile_id"]
+          },
+          {
+            foreignKeyName: "categories_limits_preset_id_fkey"
             columns: ["preset_id"]
             isOneToOne: false
             referencedRelation: "categories_presets"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "categories_profile_id_fkey"
+            foreignKeyName: "categories_limits_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -243,6 +279,7 @@ export type Database = {
           is_favorite: boolean
           kind: Database["public"]["Enums"]["entry_kind"]
           occurred_at: string
+          preset_id: string | null
           profile_id: string
           source: Database["public"]["Enums"]["entry_source"]
           title: string
@@ -257,6 +294,7 @@ export type Database = {
           is_favorite?: boolean
           kind?: Database["public"]["Enums"]["entry_kind"]
           occurred_at?: string
+          preset_id?: string | null
           profile_id: string
           source?: Database["public"]["Enums"]["entry_source"]
           title: string
@@ -271,6 +309,7 @@ export type Database = {
           is_favorite?: boolean
           kind?: Database["public"]["Enums"]["entry_kind"]
           occurred_at?: string
+          preset_id?: string | null
           profile_id?: string
           source?: Database["public"]["Enums"]["entry_source"]
           title?: string
@@ -290,6 +329,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "categories"
             referencedColumns: ["id", "profile_id"]
+          },
+          {
+            foreignKeyName: "entries_preset_id_fkey"
+            columns: ["preset_id"]
+            isOneToOne: false
+            referencedRelation: "categories_presets"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "entries_profile_id_fkey"

@@ -3,26 +3,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useUserId } from '@/features/auth/lib/auth-provider';
 import { restore, snapshot } from '@/shared/lib/optimistic';
 
-import {
-  type Category,
-  type CategoryInsert,
-  insertCategories,
-  updateCategory,
-} from '../data/categories-api';
+import { type Category, type CategoryInsert, insertCategories } from '../data/categories-api';
 import { categoryQueries } from '../data/categories-queries';
 
 const listKey = categoryQueries.list.queryKey;
 
-/** All categories, archived ones included, so old entries keep theirs. */
+/** The user's own categories, archived ones included, so old entries keep theirs. */
 export function useCategories(enabled = true) {
   return useQuery({ ...categoryQueries.list, enabled });
-}
-
-const withoutArchived = (list: Category[]) => list.filter((category) => !category.archived_at);
-
-/** Categories the user can still pick and budget. */
-export function useActiveCategories(enabled = true) {
-  return useQuery({ ...categoryQueries.list, enabled, select: withoutArchived });
 }
 
 /** New categories carry their id (expo-crypto randomUUID) so the list updates at once. */
@@ -54,8 +42,6 @@ export function useCreateCategory() {
     (list, category) => [
       ...list,
       {
-        preset_id: null,
-        monthly_limit: null,
         archived_at: null,
         sort_order: list.length,
         created_at: new Date().toISOString(),
@@ -63,16 +49,5 @@ export function useCreateCategory() {
         profile_id: userId,
       },
     ],
-  );
-}
-
-export function useSetCategoryLimit() {
-  return useCategoryMutation(
-    ({ id, limit }: { id: string; limit: number | null }) =>
-      updateCategory(id, { monthly_limit: limit }),
-    (list, { id, limit }) =>
-      list.map((category) =>
-        category.id === id ? { ...category, monthly_limit: limit } : category,
-      ),
   );
 }

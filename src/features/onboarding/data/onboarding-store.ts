@@ -6,23 +6,12 @@ import { deviceCurrency } from '@/shared/data/currencies';
 import type { Enums } from '@/shared/lib/database.types';
 import { persistStorage } from '@/shared/lib/storage';
 
-export interface CustomCategoryDraft {
-  /** Local id, used as category key until the row exists */
-  id: string;
-  name: string;
-  icon: string;
-  hue: number;
-}
-
 export interface OnboardingDraft {
   firstName: string;
   currency: string;
-  /** Selected preset ids and custom category ids, in display order; null
-   * until the user changes it, meaning the suggested presets */
-  categoryIds: string[] | null;
-  customCategories: CustomCategoryDraft[];
   budgetMode: Enums<'budget_mode'>;
   monthlyBudget: number;
+  /** Limits by preset id */
   categoryLimits: Record<string, number | null>;
   reminderEnabled: boolean;
   reminderTime: string;
@@ -36,9 +25,6 @@ export interface OnboardingDraft {
 
 interface OnboardingState extends OnboardingDraft {
   update: (patch: Partial<OnboardingDraft>) => void;
-  /** `selected` is the current selection from useSelectedCategoryIds */
-  toggleCategory: (id: string, selected: string[]) => void;
-  addCustomCategory: (category: Omit<CustomCategoryDraft, 'id'>, selected: string[]) => void;
   addEntries: (entries: DraftEntry[]) => void;
   reset: () => void;
 }
@@ -46,8 +32,6 @@ interface OnboardingState extends OnboardingDraft {
 const initialDraft: OnboardingDraft = {
   firstName: '',
   currency: deviceCurrency(),
-  categoryIds: null,
-  customCategories: [],
   budgetMode: 'per_category',
   monthlyBudget: 800,
   categoryLimits: {},
@@ -68,20 +52,6 @@ export const useOnboardingStore = create<OnboardingState>()(
     (set) => ({
       ...initialDraft,
       update: (patch) => set(patch),
-      toggleCategory: (id, selected) =>
-        set({
-          categoryIds: selected.includes(id)
-            ? selected.filter((current) => current !== id)
-            : [...selected, id],
-        }),
-      addCustomCategory: (category, selected) =>
-        set((state) => {
-          const id = `custom-${Date.now().toString(36)}`;
-          return {
-            customCategories: [...state.customCategories, { ...category, id }],
-            categoryIds: [...selected, id],
-          };
-        }),
       addEntries: (entries) => set((state) => ({ entries: [...state.entries, ...entries] })),
       reset: () => set(initialDraft),
     }),

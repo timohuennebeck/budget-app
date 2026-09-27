@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
+import { categoryIdOf } from '@/features/categories/lib/category-ref';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { ConfirmSheet } from '@/shared/components/confirm-sheet';
 import { Screen } from '@/shared/components/screen';
@@ -35,9 +36,11 @@ function EntryDetailForm({ entry }: { entry: Entry }) {
     title: entry.title,
     amount: Number(entry.amount),
     kind: entry.kind,
-    categoryId: entry.category_id,
+    categoryId: categoryIdOf(entry),
     occurredAt: entry.occurred_at,
   }));
+
+  const categoryId = categoryIdOf(entry);
 
   const save = () => {
     update.mutate({
@@ -75,8 +78,8 @@ function EntryDetailForm({ entry }: { entry: Entry }) {
       }>
       <ScreenHeader title={t('entries.entry')} />
       <EntryEditor
-        value={{ ...draft, categoryId: entry.category_id }}
-        category={entry.category_id ? lookup.get(entry.category_id) : undefined}
+        value={{ ...draft, categoryId }}
+        category={categoryId ? lookup.get(categoryId) : undefined}
         currency={currency}
         onChange={(patch) => setDraft({ ...draft, ...patch })}
         onCategoryPress={() =>

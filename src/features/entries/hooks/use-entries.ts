@@ -71,6 +71,7 @@ export function useCreateEntries() {
       const entries = rows.map<Entry>((row) => ({
         kind: 'expense',
         category_id: null,
+        preset_id: null,
         is_favorite: false,
         source: 'manual',
         occurred_at: now,

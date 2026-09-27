@@ -4,11 +4,11 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { CategoryBudgetsScreen } from '@/features/budgets/components/category-budgets-screen';
-import {
-  useActiveCategories,
-  useSetCategoryLimit,
-} from '@/features/categories/hooks/use-categories';
 import { useAppCategoryDisplays } from '@/features/categories/hooks/use-category-display';
+import {
+  useCategoryLimits,
+  useSetCategoryLimit,
+} from '@/features/categories/hooks/use-category-limits';
 import { useRecentEntries } from '@/features/entries/hooks/use-entries';
 import { spendByCategory } from '@/features/entries/lib/entry-stats';
 import { useCurrency, useProfile, useUpdateProfile } from '@/features/profile/hooks/use-profile';
@@ -19,7 +19,7 @@ import { Button } from '@/shared/ui/button';
 export default function BudgetSettings() {
   const { t } = useTranslation();
   const { data: profile } = useProfile();
-  const { data: categories = [] } = useActiveCategories();
+  const { data: limits } = useCategoryLimits();
   const displays = useAppCategoryDisplays();
   const { data: recent = [] } = useRecentEntries();
   const setLimit = useSetCategoryLimit();
@@ -32,12 +32,12 @@ export default function BudgetSettings() {
       const spent = totals.get(category.id) ?? 0;
       return {
         category,
-        limit: categories.find((row) => row.id === category.id)?.monthly_limit ?? null,
+        limit: limits?.get(category.id) ?? null,
         reference: spent || 100,
         hint: t('budgets.last30Days', { amount: formatMoney(spent, { currency, compact: true }) }),
       };
     });
-  }, [displays, categories, recent, currency, t]);
+  }, [displays, limits, recent, currency, t]);
 
   return (
     <CategoryBudgetsScreen

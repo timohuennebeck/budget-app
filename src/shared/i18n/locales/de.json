@@ -30,7 +30,6 @@
     "cafe": "Café",
     "transport": "Mobilität",
     "add": "Kategorie hinzufügen",
-    "addOnSelect": "Wird zu deinen Kategorien hinzugefügt",
     "apply": "{{name}} übernehmen",
     "category": "Kategorie",
     "choose": "Kategorie wählen",
@@ -38,13 +37,11 @@
     "create": "Kategorie erstellen",
     "icon": "Icon",
     "last30Days": "Letzte 30 Tage",
-    "more": "Weitere Kategorien",
     "namePlaceholder": "Name der Kategorie",
     "newSubtitle": "Gib ihr einen Namen, ein Icon und eine Farbe.",
     "newTitle": "Neue Kategorie",
     "preview": "{{from}} → {{to}} in 30 Tagen",
-    "search": "Kategorie suchen",
-    "suggestions": "Vorschläge"
+    "search": "Kategorie suchen"
   },
   "currencies": {
     "EUR": "Euro",
@@ -75,11 +72,6 @@
       "placeholder": "Dein Vorname",
       "subtitle": "Nur den Vornamen. So spricht Pip mit dir.",
       "title": "Wie soll Pip dich nennen?"
-    },
-    "categories": {
-      "continue": "Weiter mit {{count}}",
-      "subtitle": "Wähle mindestens {{count}}. Die anderen bleiben verfügbar.",
-      "title": "Wofür gibst du\nam meisten aus?"
     },
     "budgetType": {
       "monthly": "Monatsbudget",

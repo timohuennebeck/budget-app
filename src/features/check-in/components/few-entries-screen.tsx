@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
+import { categoryIdOf } from '@/features/categories/lib/category-ref';
 import { EntryRow } from '@/features/entries/components/entry-row';
 import { entryAmount, entryVisual } from '@/features/entries/lib/entry-display';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
@@ -49,7 +50,8 @@ export function FewEntriesScreen() {
       {entries.length ? (
         <Card className="mt-5 py-1">
           {entries.map((entry) => {
-            const category = entry.category_id ? categories.get(entry.category_id) : undefined;
+            const categoryId = categoryIdOf(entry);
+            const category = categoryId ? categories.get(categoryId) : undefined;
             return (
               <EntryRow
                 key={entry.id}

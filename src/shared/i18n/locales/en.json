@@ -30,7 +30,6 @@
     "cafe": "Café",
     "transport": "Transport",
     "add": "Add category",
-    "addOnSelect": "Added to your categories",
     "apply": "Use {{name}}",
     "category": "Category",
     "choose": "Choose category",
@@ -38,13 +37,11 @@
     "create": "Create category",
     "icon": "Icon",
     "last30Days": "Last 30 days",
-    "more": "More categories",
     "namePlaceholder": "Category name",
     "newSubtitle": "Give it a name, an icon and a color.",
     "newTitle": "New category",
     "preview": "{{from}} → {{to}} in 30 days",
-    "search": "Search categories",
-    "suggestions": "Suggestions"
+    "search": "Search categories"
   },
   "currencies": {
     "EUR": "Euro",
@@ -75,11 +72,6 @@
       "placeholder": "Your first name",
       "subtitle": "Just your first name. That's how Pip will talk to you.",
       "title": "What should Pip call you?"
-    },
-    "categories": {
-      "continue": "Continue with {{count}}",
-      "subtitle": "Pick at least {{count}}. The others stay available.",
-      "title": "What do you spend\nthe most on?"
     },
     "budgetType": {
       "monthly": "Monthly budget",

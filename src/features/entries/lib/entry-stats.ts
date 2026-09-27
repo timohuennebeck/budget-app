@@ -1,3 +1,4 @@
+import { type CategoryColumns, categoryIdOf } from '@/features/categories/lib/category-ref';
 import { addDays, formatDayLabel, startOfDay } from '@/shared/lib/dates';
 import { roundMoney } from '@/shared/lib/money';
 
@@ -24,22 +25,22 @@ export function netTotal(entries: Amounted[]) {
   );
 }
 
-export function spendByCategory(entries: Pick<Entry, 'amount' | 'kind' | 'category_id'>[]) {
+/** Expense totals by category id (preset or own category). */
+export function spendByCategory(entries: (Pick<Entry, 'amount' | 'kind'> & CategoryColumns)[]) {
   const totals = new Map<string, number>();
   for (const entry of entries) {
-    if (entry.kind !== 'expense' || !entry.category_id) continue;
-    totals.set(
-      entry.category_id,
-      roundMoney((totals.get(entry.category_id) ?? 0) + Number(entry.amount)),
-    );
+    const id = categoryIdOf(entry);
+    if (entry.kind !== 'expense' || !id) continue;
+    totals.set(id, roundMoney((totals.get(id) ?? 0) + Number(entry.amount)));
   }
   return totals;
 }
 
-export function countByCategory(entries: Pick<Entry, 'category_id'>[]) {
+export function countByCategory(entries: CategoryColumns[]) {
   const counts = new Map<string, number>();
   for (const entry of entries) {
-    if (entry.category_id) counts.set(entry.category_id, (counts.get(entry.category_id) ?? 0) + 1);
+    const id = categoryIdOf(entry);
+    if (id) counts.set(id, (counts.get(id) ?? 0) + 1);
   }
   return counts;
 }

@@ -45,46 +45,33 @@ async function readReceipt(path: string) {
   return `data:${type};base64,${encodeBase64(new Uint8Array(await data.arrayBuffer()))}`;
 }
 
-// The user's categories plus the presets they haven't added (marked new, so
-// the model prefers the user's own). Before sign-up (anonymous user, no
-// categories yet) every preset, with its key as id as onboarding drafts use.
+// Every preset (id = preset id) plus the user's own categories (id = uuid);
+// the app stores the chosen id in entries.preset_id or entries.category_id.
 async function readCategories(userId: string, locale: string): Promise<CategoryChoice[]> {
-  const [own, presets] = await Promise.all([
+  const [presets, own] = await Promise.all([
+    admin.from('categories_presets').select('id, names, keywords').order('sort_order'),
     admin
       .from('categories')
-      .select('id, name, preset_id, preset:categories_presets(names, keywords)')
+      .select('id, name')
       .eq('profile_id', userId)
-      .is('archived_at', null),
-    admin.from('categories_presets').select('id, names, keywords').order('sort_order'),
+      .is('archived_at', null)
+      .order('sort_order'),
   ]);
-  if (own.error) throw own.error;
   if (presets.error) throw presets.error;
+  if (own.error) throw own.error;
 
-  const words = (keywords: Record<string, string[]>) => [
-    ...new Set(Object.values(keywords).flat()),
+  return [
+    ...presets.data.map((preset) => {
+      const names = preset.names as Record<string, string>;
+      const keywords = preset.keywords as Record<string, string[]>;
+      return {
+        id: preset.id,
+        name: names[locale] ?? names.en,
+        keywords: [...new Set(Object.values(keywords).flat())],
+      };
+    }),
+    ...own.data.map((category) => ({ id: category.id, name: category.name, keywords: [] })),
   ];
-  const owned = new Set(own.data.map((category) => category.preset_id));
-  const choices: CategoryChoice[] = own.data.map((category) => {
-    const preset = category.preset as unknown as {
-      names: Record<string, string>;
-      keywords: Record<string, string[]>;
-    } | null;
-    return {
-      id: category.id,
-      name: preset?.names[locale] ?? category.name,
-      keywords: preset ? words(preset.keywords) : [],
-    };
-  });
-  for (const preset of presets.data) {
-    if (owned.has(preset.id)) continue;
-    choices.push({
-      id: preset.id,
-      name: preset.names[locale] ?? preset.names.en,
-      keywords: words(preset.keywords as Record<string, string[]>),
-      isNew: own.data.length > 0,
-    });
-  }
-  return choices;
 }
 
 /** Up to 60 recent merchants with the category the user filed them under. */
@@ -92,9 +79,9 @@ async function readHints(userId: string): Promise<MerchantHint[]> {
   const since = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString();
   const { data, error } = await admin
     .from('entries')
-    .select('title, category_id')
+    .select('title, category_id, preset_id')
     .eq('profile_id', userId)
-    .not('category_id', 'is', null)
+    .or('category_id.not.is.null,preset_id.not.is.null')
     .gte('occurred_at', since)
     .order('occurred_at', { ascending: false })
     .limit(300);
@@ -102,7 +89,8 @@ async function readHints(userId: string): Promise<MerchantHint[]> {
   const seen = new Map<string, MerchantHint>();
   for (const row of data) {
     const key = row.title.toLowerCase();
-    if (!seen.has(key)) seen.set(key, { title: row.title, categoryId: row.category_id! });
+    const categoryId = (row.preset_id ?? row.category_id)!;
+    if (!seen.has(key)) seen.set(key, { title: row.title, categoryId });
   }
   return [...seen.values()].slice(0, 60);
 }

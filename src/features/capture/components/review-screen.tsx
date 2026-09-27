@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { useAddSuggestedCategories } from '@/features/categories/hooks/use-add-suggested-categories';
+import { categoryColumns } from '@/features/categories/lib/category-ref';
 import { EntryRow } from '@/features/entries/components/entry-row';
 import { useCreateEntries } from '@/features/entries/hooks/use-entries';
 import { entryAmount, entrySubtitle, entryVisual } from '@/features/entries/lib/entry-display';
@@ -36,7 +36,6 @@ export function ReviewScreen() {
   const appendMore = useCaptureStore((state) => state.appendMore);
   const categories = useCaptureCategories('app');
   const createEntries = useCreateEntries();
-  const addSuggestedCategories = useAddSuggestedCategories();
   const allowance = useEntriesAllowance();
 
   const categoryFor = (draft: DraftEntry) =>
@@ -46,21 +45,10 @@ export function ReviewScreen() {
   const pickCategory = (draft: DraftEntry) =>
     router.push({ pathname: '/select-category', params: { draftId: draft.id } });
 
-  const save = async () => {
+  const save = () => {
     if (!allowance.canAdd(drafts.length)) {
       router.push('/limit');
       return;
-    }
-    // Categories Pip suggested from the presets are added first; a failure
-    // shows the "not saved" alert and keeps the drafts here.
-    const added = await addSuggestedCategories(drafts.map((draft) => draft.categoryId)).catch(
-      () => null,
-    );
-    if (!added) return;
-    for (const [presetId, categoryId] of added) {
-      drafts
-        .filter((draft) => draft.categoryId === presetId)
-        .forEach((draft) => updateDraft(draft.id, { categoryId }));
     }
     createEntries.mutate(
       drafts.map((draft) => ({
@@ -68,7 +56,7 @@ export function ReviewScreen() {
         title: draft.title,
         amount: draft.amount,
         kind: draft.kind,
-        category_id: (draft.categoryId && added.get(draft.categoryId)) ?? draft.categoryId,
+        ...categoryColumns(draft.categoryId),
         source: draft.source,
         capture_id: draft.captureId ?? null,
         occurred_at: draft.occurredAt,

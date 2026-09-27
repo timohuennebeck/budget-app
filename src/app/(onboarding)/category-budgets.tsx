@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { CategoryBudgetsScreen } from '@/features/budgets/components/category-budgets-screen';
-import { useOnboardingCategoryDisplays } from '@/features/categories/hooks/use-category-display';
+import { usePresetDisplays } from '@/features/categories/hooks/use-category-display';
 import { OnboardingHeader } from '@/features/onboarding/components/onboarding-header';
 import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store';
 import { ONBOARDING_STEPS } from '@/features/onboarding/lib/steps';
@@ -11,7 +11,7 @@ import { Button } from '@/shared/ui/button';
 
 export default function OnboardingCategoryBudgets() {
   const { t } = useTranslation();
-  const categories = useOnboardingCategoryDisplays();
+  const categories = usePresetDisplays();
   const limits = useOnboardingStore((state) => state.categoryLimits);
   const currency = useOnboardingStore((state) => state.currency);
   const update = useOnboardingStore((state) => state.update);

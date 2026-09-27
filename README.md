@@ -48,7 +48,7 @@ Routing: `src/app/_layout.tsx` uses `Stack.Protected`. The onboarding group stay
 
 ## Data model
 
-`profiles` (1:1 with `auth.users`, created by trigger) · `categories_presets` (39 built-in categories with names and parser keywords in all 7 languages, readable before sign-up) · `categories` (the user's own; `preset_id` for presets, which are named in the app language) · `entries` · `entries_allowance` (free entries per budget month, enforced by trigger) · `captures` (every AI request; the daily AI limit) · `check_ins` · `notifications`, `notifications_templates`, `notifications_settings`, `push_tokens` · `legal_documents` / `legal_acceptances` · `app_config` (limits, prices, AI model, …). Every user table is protected by row level security on `auth.uid()`.
+`profiles` (1:1 with `auth.users`, created by trigger) · `categories_presets` (39 built-in categories with names and parser keywords in all 7 languages, readable before sign-up) · `categories` (only the ones users create themselves) · `categories_limits` (monthly limit per preset or own category) · `entries` (point at a preset via `preset_id` or an own category via `category_id`) · `entries_allowance` (free entries per budget month, enforced by trigger) · `captures` (every AI request; the daily AI limit) · `check_ins` · `notifications`, `notifications_templates`, `notifications_settings`, `push_tokens` · `legal_documents` / `legal_acceptances` · `app_config` (limits, prices, AI model, …). Every user table is protected by row level security on `auth.uid()`.
 
 ## AI capture and voice
 

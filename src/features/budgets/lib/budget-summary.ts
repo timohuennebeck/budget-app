@@ -1,4 +1,4 @@
-import type { Category } from '@/features/categories/data/categories-api';
+import type { CategoryDisplay } from '@/features/categories/hooks/use-category-display';
 import type { Entry } from '@/features/entries/data/entries-api';
 import { spendByCategory, sumExpenses } from '@/features/entries/lib/entry-stats';
 import type { Profile } from '@/features/profile/data/profile-api';
@@ -6,7 +6,7 @@ import { budgetCycle, daysBetween } from '@/shared/lib/dates';
 import { roundMoney } from '@/shared/lib/money';
 
 export interface BudgetCard {
-  category: Category;
+  category: CategoryDisplay;
   limit: number;
   spent: number;
   /** Negative when the category is over budget */
@@ -44,7 +44,9 @@ function plannedTotal(profile: BudgetProfile, categoryTotal: number) {
 // hero number, the coloured spend bar and one card per limited category.
 export function summarizeBudget(
   profile: BudgetProfile,
-  categories: Category[],
+  categories: CategoryDisplay[],
+  /** Monthly limits by category id */
+  limits: Map<string, number>,
   entries: Entry[],
   now = new Date(),
 ): BudgetSummary {
@@ -52,9 +54,9 @@ export function summarizeBudget(
   const byCategory = spendByCategory(entries);
   const spent = sumExpenses(entries);
 
-  const limited = categories.filter((category) => category.monthly_limit !== null);
+  const limited = categories.filter((category) => limits.has(category.id));
   const categoryTotal = roundMoney(
-    limited.reduce((sum, category) => sum + Number(category.monthly_limit), 0),
+    limited.reduce((sum, category) => sum + limits.get(category.id)!, 0),
   );
   const total = plannedTotal(profile, categoryTotal);
 
@@ -80,7 +82,7 @@ export function summarizeBudget(
     // The per-category cards only show in that mode; totals still use limits.
     cards: (profile.budget_mode === 'per_category' ? limited : []).map((category) => {
       const categorySpent = byCategory.get(category.id) ?? 0;
-      const limit = Number(category.monthly_limit);
+      const limit = limits.get(category.id)!;
       return {
         category,
         limit,

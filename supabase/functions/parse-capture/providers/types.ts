@@ -5,8 +5,6 @@ export interface CategoryChoice {
   id: string;
   name: string;
   keywords: string[];
-  /** A preset the user hasn't added yet; saving an entry with it adds it */
-  isNew?: boolean;
 }
 
 export interface MerchantHint {

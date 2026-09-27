@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { useCategories } from '@/features/categories/hooks/use-categories';
 import { usePresets } from '@/features/categories/hooks/use-presets';
 import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store';
-import { resolveCategoryIds } from '@/features/onboarding/lib/category-ids';
 import { Screen } from '@/shared/components/screen';
 import { haptics } from '@/shared/lib/haptics';
 import { Pip } from '@/shared/ui/pip';
@@ -31,7 +30,7 @@ export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
   const { t } = useTranslation();
   const { source } = useLocalSearchParams<{ source?: DraftEntry['source'] }>();
   const categories = useCaptureCategories(mode);
-  const { data: presets, isPending: presetsPending } = usePresets();
+  const presetsPending = usePresets().isPending;
   // Wait for the categories to load, but not for them to be non-empty: an
   // account without categories would otherwise spin here forever.
   const appPending = useCategories(mode === 'app').isPending && mode === 'app';
@@ -80,19 +79,9 @@ export function ProcessingScreen({ mode }: { mode: CaptureMode }) {
     }
     haptics.success();
     useCaptureStore.getState().addDrafts(result);
-    if (mode === 'onboarding') {
-      const onboarding = useOnboardingStore.getState();
-      onboarding.addEntries(result);
-      // Categories Pip used for the first entries start out selected.
-      const used = result.map((draft) => draft.categoryId).filter((id): id is string => !!id);
-      // Without presets the suggested selection is unknown; keep it unset.
-      if (onboarding.categoryIds || presets) {
-        const selected = resolveCategoryIds(onboarding.categoryIds, presets);
-        onboarding.update({ categoryIds: [...new Set([...selected, ...used])] });
-      }
-    }
+    if (mode === 'onboarding') useOnboardingStore.getState().addEntries(result);
     router.replace(captureHref(mode, mode === 'onboarding' ? 'saved' : 'review'));
-  }, [progress, result, mode, presets, t]);
+  }, [progress, result, mode, t]);
 
   const found = result?.length ?? 0;
   const stepState = (threshold: number, next: number) =>

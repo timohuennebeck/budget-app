@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 
 import type { CategoryDisplay } from '@/features/categories/hooks/use-category-display';
+import { categoryIdOf } from '@/features/categories/lib/category-ref';
 import { formatMoney } from '@/shared/lib/money';
 import { Card } from '@/shared/ui/card';
 import { Text } from '@/shared/ui/text';
@@ -25,7 +26,8 @@ interface EntryListProps extends Omit<EntryRowsProps, 'entries'> {
 
 function EntryRows({ entries, categories, currency }: EntryRowsProps) {
   return entries.map((entry) => {
-    const category = entry.category_id ? categories.get(entry.category_id) : undefined;
+    const categoryId = categoryIdOf(entry);
+    const category = categoryId ? categories.get(categoryId) : undefined;
     return (
       <EntryRow
         key={entry.id}

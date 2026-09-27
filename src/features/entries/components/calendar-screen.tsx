@@ -4,6 +4,7 @@ import { ScrollView, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
+import { categoryIdOf } from '@/features/categories/lib/category-ref';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
@@ -171,7 +172,8 @@ export function CalendarScreen() {
         </View>
         <ScrollView className="mt-2.5 flex-1" showsVerticalScrollIndicator={false}>
           {selectedGroup?.entries.map((entry) => {
-            const category = entry.category_id ? lookup.get(entry.category_id) : undefined;
+            const categoryId = categoryIdOf(entry);
+            const category = categoryId ? lookup.get(categoryId) : undefined;
             return (
               <EntryRow
                 key={entry.id}

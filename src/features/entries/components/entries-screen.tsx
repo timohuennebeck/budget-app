@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useAppCategoryDisplays } from '@/features/categories/hooks/use-category-display';
 import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
+import { categoryIdOf } from '@/features/categories/lib/category-ref';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
 import { useSheet } from '@/shared/components/sheet';
@@ -55,9 +56,10 @@ export function EntriesScreen() {
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return entries.filter((entry) => {
-      if (categoryId && entry.category_id !== categoryId) return false;
+      if (categoryId && categoryIdOf(entry) !== categoryId) return false;
       if (!needle) return true;
-      const categoryLabel = entry.category_id ? (lookup.get(entry.category_id)?.name ?? '') : '';
+      const entryCategory = categoryIdOf(entry);
+      const categoryLabel = entryCategory ? (lookup.get(entryCategory)?.name ?? '') : '';
       return (
         entry.title.toLowerCase().includes(needle) || categoryLabel.toLowerCase().includes(needle)
       );

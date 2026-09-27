@@ -4,6 +4,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 
 import { CategoryPill } from '@/features/categories/components/category-pill';
+import { categoryColumns } from '@/features/categories/lib/category-ref';
 import { EntryRow } from '@/features/entries/components/entry-row';
 import { useRecentEntries } from '@/features/entries/hooks/use-entries';
 import { entryVisual } from '@/features/entries/lib/entry-display';
@@ -45,7 +46,9 @@ export function SavedScreen({ mode }: { mode: CaptureMode }) {
   const monthly =
     mode === 'app'
       ? spendByCategory(recent)
-      : spendByCategory(drafts.map((draft) => ({ ...draft, category_id: draft.categoryId })));
+      : spendByCategory(
+          drafts.map((draft) => ({ ...draft, ...categoryColumns(draft.categoryId) })),
+        );
 
   const rows: SavedRow[] = [];
   for (const draft of drafts) {
@@ -85,7 +88,7 @@ export function SavedScreen({ mode }: { mode: CaptureMode }) {
     .reduce((sum, draft) => sum + draft.amount, 0);
 
   const next = () => {
-    if (mode === 'onboarding') return router.replace('/categories');
+    if (mode === 'onboarding') return router.replace('/budget-type');
     if (ratingPrompt.shouldAsk) return router.replace('/rating');
     // Close the whole capture modal. dismissAll() would only pop the nested
     // capture stack back to the text screen when the flow started there.

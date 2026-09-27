@@ -8,12 +8,10 @@ import { cn } from '@/shared/lib/cn';
 import { huePalette } from '@/shared/lib/color';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
-import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
 import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 
-import type { CategoryDisplay } from '../hooks/use-category-display';
 import { customHueChoices, customIconChoices } from '../lib/custom-choices';
 import { CategoryAvatar } from './category-avatar';
 
@@ -26,37 +24,15 @@ export interface NewCategoryValues {
 interface NewCategoryScreenProps {
   header: ReactNode;
   onSubmit: (values: NewCategoryValues) => void;
-  /** Presets the user doesn't have yet, offered as one-tap chips */
-  suggestions?: CategoryDisplay[];
-  onPickSuggestion?: (preset: CategoryDisplay) => void;
-}
-
-const MAX_SUGGESTIONS = 8;
-
-// Presets whose name or keywords start like the typed name.
-function matchSuggestions(suggestions: CategoryDisplay[], query: string) {
-  const text = query.trim().toLowerCase();
-  if (!text) return suggestions.slice(0, MAX_SUGGESTIONS);
-  return suggestions
-    .filter((preset) =>
-      [preset.name.toLowerCase(), ...preset.keywords].some((word) => word.startsWith(text)),
-    )
-    .slice(0, MAX_SUGGESTIONS);
 }
 
 /** Name, icon and colour for a custom category (2e1). */
-export function NewCategoryScreen({
-  header,
-  onSubmit,
-  suggestions = [],
-  onPickSuggestion,
-}: NewCategoryScreenProps) {
+export function NewCategoryScreen({ header, onSubmit }: NewCategoryScreenProps) {
   const { t } = useTranslation();
   const [name, setName] = useState('');
   const [icon, setIcon] = useState(customIconChoices[0]);
   const [hue, setHue] = useState(customHueChoices[0]);
   const palette = huePalette(hue);
-  const matches = matchSuggestions(suggestions, name);
 
   return (
     <Screen
@@ -86,23 +62,6 @@ export function NewCategoryScreen({
           className="flex-1 font-inter-medium text-[19px] text-ink"
         />
       </View>
-
-      {onPickSuggestion && matches.length > 0 && (
-        <>
-          <Text size={14} weight="semibold" className="mt-[26px] text-muted-soft">
-            {t('categories.suggestions')}
-          </Text>
-          <View className="mt-3 flex-row flex-wrap gap-2">
-            {matches.map((preset) => (
-              <Chip
-                key={preset.id}
-                label={`+ ${preset.name}`}
-                onPress={() => onPickSuggestion(preset)}
-              />
-            ))}
-          </View>
-        </>
-      )}
 
       <Text size={14} weight="semibold" className="mt-[26px] text-muted-soft">
         {t('categories.icon')}

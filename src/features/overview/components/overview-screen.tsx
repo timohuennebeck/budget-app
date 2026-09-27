@@ -10,11 +10,11 @@ import { AvailableHero } from '@/features/budgets/components/available-hero';
 import { SpendBar } from '@/features/budgets/components/spend-bar';
 import { summarizeBudget } from '@/features/budgets/lib/budget-summary';
 import { CheckInCard } from '@/features/check-in/components/check-in-card';
-import type { Category } from '@/features/categories/data/categories-api';
+import { useAppCategoryDisplays } from '@/features/categories/hooks/use-category-display';
 import {
-  useActiveCategories,
+  useCategoryLimits,
   useSetCategoryLimit,
-} from '@/features/categories/hooks/use-categories';
+} from '@/features/categories/hooks/use-category-limits';
 import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
 import { EntryList } from '@/features/entries/components/entry-list';
 import { useEntries, useRecentEntries } from '@/features/entries/hooks/use-entries';
@@ -36,6 +36,7 @@ import { CaptureDock } from './capture-dock';
 import { EmptyEntriesCard } from './empty-entries-card';
 
 const RECENT_DAYS = 2;
+const NO_LIMITS = new Map<string, number>();
 
 // Übersicht (2l / 3a): what's left this month, spend per category, budget
 // cards with an edit sheet (2w), recent entries and the capture dock.
@@ -43,7 +44,8 @@ export function OverviewScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { data: profile } = useProfile();
-  const { data: categories = [] } = useActiveCategories();
+  const categories = useAppCategoryDisplays();
+  const { data: limits = NO_LIMITS } = useCategoryLimits();
   const lookup = useCategoryLookup();
   const cycle = budgetCycle(new Date(), profile?.month_start_day ?? 1);
   const { data: entries = [] } = useEntries(cycle);
@@ -61,13 +63,12 @@ export function OverviewScreen() {
 
   const currency = useCurrency();
   const summary = useMemo(
-    () => (profile ? summarizeBudget(profile, categories, entries) : null),
-    [profile, categories, entries],
+    () => (profile ? summarizeBudget(profile, categories, limits, entries) : null),
+    [profile, categories, limits, entries],
   );
   const groups = useMemo(() => groupByDay(entries).slice(0, RECENT_DAYS), [entries]);
   const recentTotals = useMemo(() => spendByCategory(recent), [recent]);
   const editing = categories.find((category) => category.id === editingId);
-  const nameOf = (category: Category) => lookup.get(category.id)?.name ?? category.name;
   const money = (value: number) => formatMoney(value, { currency, compact: true });
 
   if (!profile || !summary) return null;
@@ -143,7 +144,6 @@ export function OverviewScreen() {
               cards={summary.cards}
               currency={currency}
               editingId={editingId}
-              nameFor={(card) => nameOf(card.category)}
               onEdit={(id) => {
                 setEditingId(id);
                 sheet.present();
@@ -175,9 +175,9 @@ export function OverviewScreen() {
           sheet.dismiss();
           setEditingId(null);
         }}
-        title={editing ? nameOf(editing) : ''}
+        title={editing?.name ?? ''}
         currency={currency}
-        initial={editing?.monthly_limit ?? null}
+        initial={editing ? (limits.get(editing.id) ?? null) : null}
         reference={editing ? (recentTotals.get(editing.id) ?? 100) : 100}
         hint={t('budgets.last30Days', {
           amount: money(editing ? (recentTotals.get(editing.id) ?? 0) : 0),
