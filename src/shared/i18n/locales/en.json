@@ -105,9 +105,14 @@
       "title": "One press,\nand it's logged"
     },
     "applePay": {
-      "title": "Apple Pay?\nIt logs itself",
-      "subtitle": "Pay with Apple Pay and every payment lands in Looop automatically. You just confirm it with a tap.",
-      "setUp": "Yes, set it up"
+      "title": "Paid with Apple Pay,\nlogged automatically.",
+      "subtitle": "After every payment Looop notes the amount and the store. You just confirm with a tap.",
+      "setUp": "Set up",
+      "later": "Maybe later",
+      "now": "now",
+      "captured": "{{amount}} logged",
+      "guideTitle": "Set up\nin a minute",
+      "guideSubtitle": "The Shortcuts app hands every Apple Pay payment to Looop. Set it up once and it runs by itself."
     },
     "widget": {
       "add": "Add widget",
@@ -445,6 +450,10 @@
     "step4": "Set <b>Amount</b> and <b>Merchant</b> to the transaction’s values",
     "openShortcuts": "Open Shortcuts",
     "hint": "Looop notes payments in the background and sorts them when you open the app. Needs iOS 17 or later.",
-    "noted": "Noted in Looop"
+    "noted": "Noted in Looop",
+    "done": "Done",
+    "reopen": "Open Shortcuts again",
+    "active": "Working – the last Apple Pay payment arrived on {{date}}.",
+    "on": "On"
   }
 }

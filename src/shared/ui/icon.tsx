@@ -1,5 +1,6 @@
 import {
   AirplaneTiltIcon,
+  AppleLogoIcon,
   ArrowRightIcon,
   BabyIcon,
   BankIcon,
@@ -21,6 +22,7 @@ import {
   CarSimpleIcon,
   CheckIcon,
   CoffeeIcon,
+  ContactlessPaymentIcon,
   CouchIcon,
   CreditCardIcon,
   DotsThreeIcon,
@@ -80,6 +82,7 @@ import { colors } from '@/shared/lib/theme';
 // be stored as plain text in the database.
 const registry = {
   'airplane-tilt': AirplaneTiltIcon,
+  'apple-logo': AppleLogoIcon,
   'arrow-right': ArrowRightIcon,
   baby: BabyIcon,
   bank: BankIcon,
@@ -101,6 +104,7 @@ const registry = {
   'caret-up': CaretUpIcon,
   check: CheckIcon,
   coffee: CoffeeIcon,
+  'contactless-payment': ContactlessPaymentIcon,
   couch: CouchIcon,
   'credit-card': CreditCardIcon,
   'dots-three': DotsThreeIcon,

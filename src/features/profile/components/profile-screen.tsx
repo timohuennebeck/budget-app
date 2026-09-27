@@ -6,6 +6,7 @@ import { useAuth } from '@/features/auth/lib/auth-provider';
 import { useAppCategoryDisplays } from '@/features/categories/hooks/use-category-display';
 import { useNotificationSettings } from '@/features/notifications/hooks/use-notification-settings';
 import { useEntriesAllowance } from '@/features/paywall/hooks/use-entries-allowance';
+import { useLastWalletPayment } from '@/features/wallet/hooks/use-last-wallet-payment';
 import { ListGroup, ListRow } from '@/shared/components/list-group';
 import { Screen } from '@/shared/components/screen';
 import { useSheet } from '@/shared/components/sheet';
@@ -26,6 +27,7 @@ export function ProfileScreen() {
   const { session } = useAuth();
   const { data: profile } = useProfile();
   const categories = useAppCategoryDisplays();
+  const { data: lastWalletPayment } = useLastWalletPayment();
   const updateProfile = useUpdateProfile();
   const allowance = useEntriesAllowance();
   const { data: settings } = useNotificationSettings();
@@ -104,6 +106,7 @@ export function ProfileScreen() {
         {Platform.OS === 'android' ? null : (
           <ListRow
             title={t('profile.applePay')}
+            value={lastWalletPayment ? t('wallet.on') : undefined}
             onPress={() => router.push('/settings/apple-pay')}
           />
         )}

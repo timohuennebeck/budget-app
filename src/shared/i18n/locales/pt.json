@@ -105,9 +105,14 @@
       "title": "Um clique\ne fica registado"
     },
     "applePay": {
-      "title": "Apple Pay?\nRegista-se sozinho",
-      "subtitle": "Pagas com Apple Pay? Cada pagamento chega ao Looop automaticamente. Só tens de o confirmar com um toque.",
-      "setUp": "Sim, configurar"
+      "title": "Pago com Apple Pay,\nregistado sozinho.",
+      "subtitle": "Depois de cada pagamento, o Looop guarda o montante e a loja. Só tens de confirmar com um toque.",
+      "setUp": "Configurar",
+      "later": "Talvez mais tarde",
+      "now": "agora",
+      "captured": "{{amount}} registado",
+      "guideTitle": "Pronto\nnum minuto",
+      "guideSubtitle": "A app Atalhos passa cada pagamento Apple Pay ao Looop. Configuras uma vez e funciona sozinho."
     },
     "widget": {
       "add": "Adicionar widget",
@@ -455,6 +460,10 @@
     "step4": "Define <b>Montante</b> e <b>Comerciante</b> com os valores da transação",
     "openShortcuts": "Abrir Atalhos",
     "hint": "O Looop guarda os pagamentos em segundo plano e organiza-os quando abres a app. Requer iOS 17 ou posterior.",
-    "noted": "Guardado no Looop"
+    "noted": "Guardado no Looop",
+    "done": "Feito",
+    "reopen": "Abrir Atalhos de novo",
+    "active": "Está a funcionar: o último pagamento Apple Pay chegou a {{date}}.",
+    "on": "Ativo"
   }
 }

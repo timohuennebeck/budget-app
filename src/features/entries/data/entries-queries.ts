@@ -9,6 +9,7 @@ import {
   fetchEntriesAllowance,
   fetchEntry,
   fetchEntryStats,
+  fetchLastWalletPayment,
 } from './entries-api';
 
 export const entryQueries = createQueryKeys('entries', {
@@ -18,6 +19,7 @@ export const entryQueries = createQueryKeys('entries', {
   }),
   detail: (id: string) => ({ queryKey: [id], queryFn: () => fetchEntry(id) }),
   stats: { queryKey: null, queryFn: fetchEntryStats },
+  lastWallet: { queryKey: null, queryFn: fetchLastWalletPayment },
   allowance: (periodStart: string) => ({
     queryKey: [periodStart],
     queryFn: () => fetchEntriesAllowance(periodStart),

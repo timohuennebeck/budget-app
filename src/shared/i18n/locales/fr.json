@@ -105,9 +105,14 @@
       "title": "Une pression,\net c'est noté"
     },
     "applePay": {
-      "title": "Apple Pay ?\nÇa s’enregistre tout seul",
-      "subtitle": "Paie avec Apple Pay et chaque paiement arrive automatiquement dans Looop. Tu le confirmes d’un geste.",
-      "setUp": "Oui, configurer"
+      "title": "Payé avec Apple Pay,\nnoté automatiquement.",
+      "subtitle": "Après chaque paiement, Looop note le montant et le magasin. Tu confirmes d’un geste.",
+      "setUp": "Configurer",
+      "later": "Peut-être plus tard",
+      "now": "maintenant",
+      "captured": "{{amount}} noté",
+      "guideTitle": "Prêt\nen une minute",
+      "guideSubtitle": "L’app Raccourcis transmet chaque paiement Apple Pay à Looop. À configurer une fois, puis ça tourne tout seul."
     },
     "widget": {
       "add": "Ajouter le widget",
@@ -455,6 +460,10 @@
     "step4": "Règle <b>Montant</b> et <b>Commerçant</b> sur les valeurs de la transaction",
     "openShortcuts": "Ouvrir Raccourcis",
     "hint": "Looop note les paiements en arrière-plan et les classe à l’ouverture de l’app. iOS 17 ou plus récent requis.",
-    "noted": "Noté dans Looop"
+    "noted": "Noté dans Looop",
+    "done": "C’est fait",
+    "reopen": "Rouvrir Raccourcis",
+    "active": "Ça marche : le dernier paiement Apple Pay est arrivé le {{date}}.",
+    "on": "Actif"
   }
 }

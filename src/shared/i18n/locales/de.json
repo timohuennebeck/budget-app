@@ -105,9 +105,14 @@
       "title": "Ein Druck,\nund schon erfasst"
     },
     "applePay": {
-      "title": "Apple Pay?\nTrägt sich selbst ein",
-      "subtitle": "Zahlst du mit Apple Pay, landet jede Zahlung automatisch in Looop. Du bestätigst sie nur noch mit einem Tipp.",
-      "setUp": "Ja, einrichten"
+      "title": "Mit Apple Pay bezahlt,\nautomatisch erfasst.",
+      "subtitle": "Nach jeder Zahlung merkt sich Looop Betrag und Geschäft. Du bestätigst nur noch mit einem Tipp.",
+      "setUp": "Einrichten",
+      "later": "Vielleicht später",
+      "now": "jetzt",
+      "captured": "{{amount}} erfasst",
+      "guideTitle": "In einer Minute\neingerichtet",
+      "guideSubtitle": "Die Kurzbefehle-App gibt jede Apple-Pay-Zahlung an Looop weiter. Einmal einrichten, dann läuft es von selbst."
     },
     "widget": {
       "add": "Widget hinzufügen",
@@ -445,6 +450,10 @@
     "step4": "Setze <b>Betrag</b> und <b>Händler</b> auf die Werte der Transaktion",
     "openShortcuts": "Kurzbefehle öffnen",
     "hint": "Looop merkt sich die Zahlungen im Hintergrund und sortiert sie, sobald du die App öffnest. Braucht iOS 17 oder neuer.",
-    "noted": "In Looop gemerkt"
+    "noted": "In Looop gemerkt",
+    "done": "Erledigt",
+    "reopen": "Kurzbefehle erneut öffnen",
+    "active": "Läuft – die letzte Apple-Pay-Zahlung kam am {{date}} an.",
+    "on": "Aktiv"
   }
 }

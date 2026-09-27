@@ -51,6 +51,19 @@ export async function fetchEntriesAllowance(periodStart: string) {
   return data?.used ?? 0;
 }
 
+/** When the last Apple Pay payment came in, or null if none has yet. */
+export async function fetchLastWalletPayment() {
+  const { data, error } = await supabase
+    .from('entries')
+    .select('occurred_at')
+    .eq('source', 'wallet')
+    .order('occurred_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  return data?.occurred_at ?? null;
+}
+
 /** Whether the signed-in user has saved any entry yet. */
 export async function hasEntries() {
   const { data, error } = await supabase.from('entries').select('id').limit(1);
