@@ -3,18 +3,15 @@ import { useTranslation } from 'react-i18next';
 
 import { OnboardingHeader } from '@/features/onboarding/components/onboarding-header';
 import { ONBOARDING_STEPS } from '@/features/onboarding/lib/steps';
-import { WalletSetupScreen } from '@/features/wallet/components/wallet-setup-screen';
+import { WalletLinkScreen } from '@/features/wallet/components/wallet-link-screen';
 
-// Payments noted before sign-up wait in the inbox and show up for review
-// right after the account exists.
-export default function OnboardingApplePay() {
+export default function OnboardingApplePayLink() {
   const { t } = useTranslation();
   return (
-    <WalletSetupScreen
+    <WalletLinkScreen
       header={<OnboardingHeader step={ONBOARDING_STEPS.applePay} />}
-      onNext={() => router.push('/apple-pay-link')}
       laterLabel={t('common.later')}
-      onLater={() => router.push('/widget')}
+      onDone={() => router.push('/widget')}
     />
   );
 }

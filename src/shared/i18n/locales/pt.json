@@ -448,10 +448,20 @@
     "subtitle": "Carrega duas vezes no botão lateral e paga com Apple Pay. A despesa chega ao Looop automaticamente.",
     "step1": "Abre Atalhos › <b>Automatização</b> › <b>+</b>",
     "step2": "Escolhe <b>Wallet</b>, os teus cartões e <b>Executar imediatamente</b>",
-    "step3": "<b>Nova automatização em branco</b> › <b>Looop: Registar pagamento</b>, depois toca em <b>Montante</b> e <b>Comerciante</b> e escolhe os valores da transação",
+    "step3": "<b>Nova automatização em branco</b> › <b>Adicionar ação</b> › <b>Looop: Registar pagamento</b>",
     "openShortcuts": "Abrir Atalhos",
     "reopen": "Abrir Atalhos de novo",
     "active": "Está a funcionar: o último pagamento Apple Pay chegou a {{date}}.",
-    "on": "Ativo"
+    "on": "Ativo",
+    "linkTitle": "Ligar montante\ne comerciante",
+    "linkSubtitle": "Indica uma vez que valores do pagamento o Looop recebe. Depois funciona sozinho.",
+    "link1": "No bloco do Looop, toca em <b>›</b>",
+    "link2": "<b>Montante</b> › <b>Entrada do atalho</b>, depois o chip azul › <b>Montante</b>",
+    "link3": "<b>Comerciante</b> › <b>Entrada do atalho</b>, depois o chip › <b>Comerciante</b>",
+    "link4": "Toca em <b>OK</b> no canto superior direito",
+    "shortcutInput": "Entrada do atalho",
+    "amount": "Montante",
+    "merchant": "Comerciante",
+    "actionName": "Registar pagamento"
   }
 }

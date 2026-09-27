@@ -448,10 +448,20 @@
     "subtitle": "Premi due volte il tasto laterale e paga con Apple Pay. La spesa arriva in Looop in automatico.",
     "step1": "Apri Comandi rapidi › <b>Automazione</b> › <b>+</b>",
     "step2": "Scegli <b>Wallet</b>, le tue carte ed <b>Esegui subito</b>",
-    "step3": "<b>Nuova automazione vuota</b> › <b>Looop: Registra pagamento</b>, poi tocca <b>Importo</b> ed <b>Esercente</b> e scegli i valori della transazione",
+    "step3": "<b>Nuova automazione vuota</b> › <b>Aggiungi azione</b> › <b>Looop: Registra pagamento</b>",
     "openShortcuts": "Apri Comandi rapidi",
     "reopen": "Riapri Comandi rapidi",
     "active": "Funziona: l’ultimo pagamento Apple Pay è arrivato il {{date}}.",
-    "on": "Attivo"
+    "on": "Attivo",
+    "linkTitle": "Collega importo\ned esercente",
+    "linkSubtitle": "Indica una volta quali valori del pagamento riceve Looop. Poi va da solo.",
+    "link1": "Nel blocco di Looop tocca <b>›</b>",
+    "link2": "<b>Importo</b> › <b>Input comando rapido</b>, poi il chip blu › <b>Importo</b>",
+    "link3": "<b>Esercente</b> › <b>Input comando rapido</b>, poi il chip › <b>Esercente</b>",
+    "link4": "Tocca <b>Fine</b> in alto a destra",
+    "shortcutInput": "Input comando rapido",
+    "amount": "Importo",
+    "merchant": "Esercente",
+    "actionName": "Registra pagamento"
   }
 }

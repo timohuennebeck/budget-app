@@ -28,16 +28,19 @@ export function ActionButtonScreen({ header, onDone, laterLabel }: ActionButtonS
       title={t('onboarding.actionButton.title')}
       subtitle={t('onboarding.actionButton.subtitle')}
       steps={STEPS}
-      openLabel={t('onboarding.actionButton.openSettings')}
-      reopenLabel={t('onboarding.actionButton.reopenSettings')}
-      // Not available on web, where it throws instead of rejecting.
-      onOpen={() =>
-        Promise.resolve()
-          .then(Linking.openSettings)
-          .catch(() => {})
-      }
+      action={{
+        kind: 'open',
+        label: t('onboarding.actionButton.openSettings'),
+        reopenLabel: t('onboarding.actionButton.reopenSettings'),
+        // Not available on web, where it throws instead of rejecting.
+        onOpen: () =>
+          Promise.resolve()
+            .then(Linking.openSettings)
+            .catch(() => {}),
+        onDone,
+      }}
       laterLabel={laterLabel}
-      onDone={onDone}
+      onLater={onDone}
     />
   );
 }

@@ -1,18 +1,17 @@
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
-import { WalletSetupScreen } from '@/features/wallet/components/wallet-setup-screen';
+import { WalletLinkScreen } from '@/features/wallet/components/wallet-link-screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
 
-export default function ApplePaySettings() {
+export default function ApplePayLinkSettings() {
   const { t } = useTranslation();
   return (
-    <WalletSetupScreen
+    <WalletLinkScreen
       header={<ScreenHeader title="Apple Pay" />}
-      onNext={() => router.push('/settings/apple-pay-link')}
       laterLabel={t('common.close')}
-      onLater={() => router.back()}
-      showStatus
+      // Back past page 1 to Profil.
+      onDone={() => router.dismissTo('/profile')}
     />
   );
 }

@@ -18,14 +18,14 @@ interface SetupGuideScreenProps<Key extends ParseKeys> {
   steps: readonly Key[];
   /** Small print below the steps */
   note?: string;
-  /** Opens the iOS screen to set it up, e.g. "Einstellungen öffnen" */
-  openLabel: string;
-  reopenLabel: string;
-  onOpen: () => void;
+  /** Primary button: open the iOS screen to set it up ("Einstellungen
+   * öffnen"), then "Erledigt"; or move on to the next page ("Weiter"). */
+  action:
+    | { kind: 'open'; label: string; reopenLabel: string; onOpen: () => void; onDone: () => void }
+    | { kind: 'next'; label: string; onNext: () => void };
   /** Secondary button until then, e.g. "Später" or "Schließen" */
   laterLabel: string;
-  /** "Erledigt", "Später" and "Schließen" all continue here */
-  onDone: () => void;
+  onLater: () => void;
 }
 
 /** Illustrated how-to for an iOS setting the app can't change itself
@@ -37,11 +37,9 @@ export function SetupGuideScreen<Key extends ParseKeys>({
   subtitle,
   steps,
   note,
-  openLabel,
-  reopenLabel,
-  onOpen,
+  action,
   laterLabel,
-  onDone,
+  onLater,
 }: SetupGuideScreenProps<Key>) {
   const { t } = useTranslation();
   // The app can't tell whether the setting was made, so opening it doesn't
@@ -49,24 +47,25 @@ export function SetupGuideScreen<Key extends ParseKeys>({
   // opens it again.
   const [opened, setOpened] = useState(false);
   const open = () => {
-    onOpen();
+    if (action.kind !== 'open') return;
+    action.onOpen();
     setOpened(true);
   };
+  const buttons =
+    action.kind === 'next'
+      ? { primary: [action.label, action.onNext], secondary: [laterLabel, onLater] }
+      : opened
+        ? { primary: [t('common.doneSetUp'), action.onDone], secondary: [action.reopenLabel, open] }
+        : { primary: [action.label, open], secondary: [laterLabel, onLater] };
+  const [primaryLabel, onPrimary] = buttons.primary as [string, () => void];
+  const [secondaryLabel, onSecondary] = buttons.secondary as [string, () => void];
   return (
     <Screen
       scroll
       footer={
         <View>
-          <Button
-            label={opened ? t('common.doneSetUp') : openLabel}
-            onPress={opened ? onDone : open}
-          />
-          <Button
-            variant="ghost"
-            className="mt-2.5"
-            label={opened ? reopenLabel : laterLabel}
-            onPress={opened ? open : onDone}
-          />
+          <Button label={primaryLabel} onPress={onPrimary} />
+          <Button variant="ghost" className="mt-2.5" label={secondaryLabel} onPress={onSecondary} />
         </View>
       }>
       {header}

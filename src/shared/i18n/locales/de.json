@@ -438,10 +438,20 @@
     "subtitle": "Zweimal die Seitentaste drücken, mit Apple Pay zahlen. Die Ausgabe landet automatisch in Looop.",
     "step1": "Öffne Kurzbefehle › <b>Automation</b> › <b>+</b>",
     "step2": "Wähle <b>Wallet</b>, deine Karten und <b>Sofort ausführen</b>",
-    "step3": "<b>Neue leere Automation</b> › <b>Looop: Zahlung erfassen</b>, dann <b>Betrag</b> und <b>Händler</b> antippen und die Werte der Transaktion wählen",
+    "step3": "<b>Neue leere Automation</b> › <b>Aktion hinzufügen</b> › <b>Looop: Zahlung erfassen</b>",
     "openShortcuts": "Kurzbefehle öffnen",
     "reopen": "Kurzbefehle erneut öffnen",
     "active": "Läuft – die letzte Apple-Pay-Zahlung kam am {{date}} an.",
-    "on": "Aktiv"
+    "on": "Aktiv",
+    "linkTitle": "Betrag und Händler\nverknüpfen",
+    "linkSubtitle": "Einmal festlegen, welche Werte der Zahlung Looop bekommt. Danach läuft alles von selbst.",
+    "link1": "Tippe im Looop-Block auf <b>›</b>",
+    "link2": "<b>Betrag</b> › <b>Kurzbefehleingabe</b>, dann den blauen Chip › <b>Betrag</b>",
+    "link3": "<b>Händler</b> › <b>Kurzbefehleingabe</b>, dann den Chip › <b>Händler</b>",
+    "link4": "Oben rechts <b>Fertig</b> tippen",
+    "shortcutInput": "Kurzbefehleingabe",
+    "amount": "Betrag",
+    "merchant": "Händler",
+    "actionName": "Zahlung erfassen"
   }
 }

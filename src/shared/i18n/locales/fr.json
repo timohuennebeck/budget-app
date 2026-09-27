@@ -448,10 +448,20 @@
     "subtitle": "Double-clique sur le bouton latéral et paie avec Apple Pay. La dépense arrive automatiquement dans Looop.",
     "step1": "Ouvre Raccourcis › <b>Automatisation</b> › <b>+</b>",
     "step2": "Choisis <b>Wallet</b>, tes cartes et <b>Exécuter immédiatement</b>",
-    "step3": "<b>Nouvelle automatisation vierge</b> › <b>Looop : Noter un paiement</b>, puis touche <b>Montant</b> et <b>Commerçant</b> et choisis les valeurs de la transaction",
+    "step3": "<b>Nouvelle automatisation vierge</b> › <b>Ajouter une action</b> › <b>Looop : Noter un paiement</b>",
     "openShortcuts": "Ouvrir Raccourcis",
     "reopen": "Rouvrir Raccourcis",
     "active": "Ça marche : le dernier paiement Apple Pay est arrivé le {{date}}.",
-    "on": "Actif"
+    "on": "Actif",
+    "linkTitle": "Relier montant\net commerçant",
+    "linkSubtitle": "Indique une fois quelles valeurs du paiement Looop reçoit. Ensuite, tout se fait tout seul.",
+    "link1": "Dans le bloc Looop, touche <b>›</b>",
+    "link2": "<b>Montant</b> › <b>Entrée du raccourci</b>, puis la puce bleue › <b>Montant</b>",
+    "link3": "<b>Commerçant</b> › <b>Entrée du raccourci</b>, puis la puce › <b>Commerçant</b>",
+    "link4": "Touche <b>OK</b> en haut à droite",
+    "shortcutInput": "Entrée du raccourci",
+    "amount": "Montant",
+    "merchant": "Commerçant",
+    "actionName": "Noter un paiement"
   }
 }

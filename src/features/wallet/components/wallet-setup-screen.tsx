@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { SetupGuideScreen } from '@/features/onboarding/components/setup-guide-screen';
@@ -10,29 +9,31 @@ import { ApplePayIllustration } from './apple-pay-illustration';
 
 interface WalletSetupScreenProps {
   header: ReactNode;
-  /** Secondary button before Shortcuts was opened, e.g. "Später" */
+  onNext: () => void;
+  /** Secondary button, e.g. "Später" or "Schließen" */
   laterLabel: string;
-  onDone: () => void;
+  onLater: () => void;
   /** Signed in: say when the last Apple Pay payment arrived */
   showStatus?: boolean;
 }
 
 const STEPS = ['wallet.step1', 'wallet.step2', 'wallet.step3'] as const;
 
-// Logging Apple Pay payments automatically: a personal automation in the
-// Shortcuts app ("Wallet" trigger, iOS 17+) that runs "Zahlung erfassen"
-// (2p5-b, also Profil › Apple Pay). Apps can't create automations or see
-// whether one exists; the first payment that arrives is the real proof, and
-// with showStatus the screen says when the last one came in.
+// Page 1 of 2 on logging Apple Pay payments automatically (2p5-b, also
+// Profil › Apple Pay): the personal automation in Shortcuts ("Wallet"
+// trigger, iOS 17+) that runs "Zahlung erfassen". Page 2 (WalletLinkScreen)
+// links the payment's amount and merchant, then opens Shortcuts, so both
+// are read before the one trip there. Apps can't see automations; the first
+// payment that arrives is the real proof, which showStatus reports.
 export function WalletSetupScreen({
   header,
+  onNext,
   laterLabel,
-  onDone,
+  onLater,
   showStatus = false,
 }: WalletSetupScreenProps) {
   const { t } = useTranslation();
   const { data: lastPayment } = useLastWalletPayment(showStatus);
-
   return (
     <SetupGuideScreen
       header={header}
@@ -45,11 +46,9 @@ export function WalletSetupScreen({
           ? t('wallet.active', { date: formatShortDate(new Date(lastPayment)) })
           : undefined
       }
-      openLabel={t('wallet.openShortcuts')}
-      reopenLabel={t('wallet.reopen')}
-      onOpen={() => Linking.openURL('shortcuts://').catch(() => {})}
+      action={{ kind: 'next', label: t('common.continue'), onNext }}
       laterLabel={laterLabel}
-      onDone={onDone}
+      onLater={onLater}
     />
   );
 }

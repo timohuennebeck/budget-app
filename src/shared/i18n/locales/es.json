@@ -448,10 +448,20 @@
     "subtitle": "Pulsa dos veces el botón lateral y paga con Apple Pay. El gasto llega a Looop automáticamente.",
     "step1": "Abre Atajos › <b>Automatización</b> › <b>+</b>",
     "step2": "Elige <b>Wallet</b>, tus tarjetas y <b>Ejecutar inmediatamente</b>",
-    "step3": "<b>Nueva automatización en blanco</b> › <b>Looop: Anotar pago</b>, luego toca <b>Importe</b> y <b>Comercio</b> y elige los valores de la transacción",
+    "step3": "<b>Nueva automatización en blanco</b> › <b>Añadir acción</b> › <b>Looop: Anotar pago</b>",
     "openShortcuts": "Abrir Atajos",
     "reopen": "Abrir Atajos de nuevo",
     "active": "Funciona: el último pago con Apple Pay llegó el {{date}}.",
-    "on": "Activo"
+    "on": "Activo",
+    "linkTitle": "Vincula importe\ny comercio",
+    "linkSubtitle": "Indica una vez qué valores del pago recibe Looop. Después funciona solo.",
+    "link1": "En el bloque de Looop, toca <b>›</b>",
+    "link2": "<b>Importe</b> › <b>Entrada del atajo</b>, luego el chip azul › <b>Importe</b>",
+    "link3": "<b>Comercio</b> › <b>Entrada del atajo</b>, luego el chip › <b>Comercio</b>",
+    "link4": "Toca <b>OK</b> arriba a la derecha",
+    "shortcutInput": "Entrada del atajo",
+    "amount": "Importe",
+    "merchant": "Comercio",
+    "actionName": "Anotar pago"
   }
 }
