@@ -35,15 +35,8 @@ export function averageAccuracy(checkIns: CheckIn[]) {
   return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
 }
 
-export function filterCheckIns(
-  checkIns: CheckIn[],
-  period: CheckInPeriod,
-  query: string,
-  describe: (checkIn: CheckIn) => string,
-  now = new Date(),
-) {
+export function filterCheckIns(checkIns: CheckIn[], period: CheckInPeriod, now = new Date()) {
   const since = new Date(now.getFullYear(), now.getMonth() - 3, now.getDate());
-  const needle = query.trim().toLowerCase();
   return checkIns.filter((checkIn) => {
     const sunday = sundayOf(checkIn);
     if (period === 'recent' && sunday < since) return false;
@@ -53,7 +46,7 @@ export function filterCheckIns(
       (sunday.getFullYear() !== period.getFullYear() || sunday.getMonth() !== period.getMonth())
     )
       return false;
-    return !needle || describe(checkIn).toLowerCase().includes(needle);
+    return true;
   });
 }
 

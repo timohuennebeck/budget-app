@@ -21,7 +21,6 @@ import { IconButton } from '@/shared/ui/icon-button';
 import { Pip } from '@/shared/ui/pip';
 import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
-import { TextField } from '@/shared/ui/text-field';
 
 import type { CheckIn } from '../data/check-ins-api';
 import { useCheckIns } from '../hooks/use-check-ins';
@@ -90,7 +89,6 @@ export function CheckInsScreen() {
   const layout = tabListProps(insets.top, 4);
   const currency = useCurrency();
   const { data: checkIns = [] } = useCheckIns();
-  const [query, setQuery] = useState('');
   const [period, setPeriod] = useState<CheckInPeriod>('all');
   const monthSheet = useSheet();
 
@@ -106,14 +104,7 @@ export function CheckInsScreen() {
   const average = averageAccuracy(checkIns);
   const years = useMemo(() => checkInYears(checkIns), [checkIns]);
   const thisYear = new Date().getFullYear();
-  const groups = groupByMonth(
-    filterCheckIns(
-      checkIns,
-      period,
-      query,
-      (checkIn) => `${formatWeekRange(weekOf(checkIn))} ${detail(checkIn)}`,
-    ),
-  );
+  const groups = groupByMonth(filterCheckIns(checkIns, period));
 
   const periods: { value: Exclude<CheckInPeriod, Date>; label: string }[] = [
     { value: 'all', label: t('entries.all') },
@@ -168,20 +159,10 @@ export function CheckInsScreen() {
         <CheckInHero currency={currency} />
         {checkIns.length ? (
           <>
-            <TextField
-              containerClassName="mt-[18px]"
-              shape="pill"
-              leadingIcon="magnifying-glass"
-              placeholder={t('common.search')}
-              value={query}
-              onChangeText={setQuery}
-              clearable
-              returnKeyType="search"
-            />
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
-              className="-mx-4 mt-3"
+              className="-mx-4 mt-[18px]"
               style={{ height: 36, flexGrow: 0, flexShrink: 0 }}
               contentContainerStyle={{ paddingHorizontal: 16, gap: 8, alignItems: 'center' }}>
               {periods.map((option) => (
