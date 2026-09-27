@@ -50,15 +50,18 @@ export function BalanceHero({ label, amount, currency, over }: BalanceHeroProps)
           delay={0}
           position={{ top: -10, left: -14 }}
         />
-        <FloatingDecor
-          source={coin}
-          size={30}
-          tilt={-10}
-          lift={7}
-          duration={3800}
-          delay={700}
-          position={{ bottom: 6, right: -12 }}
-        />
+        {/* No coin to wave around once the budget is gone. */}
+        {over ? null : (
+          <FloatingDecor
+            source={coin}
+            size={30}
+            tilt={-10}
+            lift={7}
+            duration={3800}
+            delay={700}
+            position={{ bottom: 6, right: -12 }}
+          />
+        )}
       </View>
     </View>
   );
