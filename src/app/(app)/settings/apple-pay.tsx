@@ -1,3 +1,19 @@
-import { WalletSetupScreen } from '@/features/wallet/components/wallet-setup-screen';
+import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 
-export default WalletSetupScreen;
+import { WalletSetupScreen } from '@/features/wallet/components/wallet-setup-screen';
+import { ScreenHeader } from '@/shared/components/screen-header';
+
+export default function ApplePaySettings() {
+  const { t } = useTranslation();
+  return (
+    <WalletSetupScreen
+      header={<ScreenHeader title="Apple Pay" />}
+      title={t('wallet.title')}
+      subtitle={t('wallet.subtitle')}
+      primaryLabel={t('wallet.openShortcuts')}
+      laterLabel={t('common.close')}
+      onDone={() => router.back()}
+    />
+  );
+}

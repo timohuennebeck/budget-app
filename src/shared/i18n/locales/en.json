@@ -104,6 +104,11 @@
       "subtitle": "Put Looop on your iPhone's Action Button. Press and hold, speak, done.",
       "title": "One press,\nand it's logged"
     },
+    "applePay": {
+      "title": "Apple Pay?\nIt logs itself",
+      "subtitle": "Pay with Apple Pay and every payment lands in Looop automatically. You just confirm it with a tap.",
+      "setUp": "Yes, set it up"
+    },
     "widget": {
       "add": "Add widget",
       "later": "Maybe later",
@@ -439,6 +444,7 @@
     "step3": "Add the action <b>Looop: Log payment</b>",
     "step4": "Set <b>Amount</b> and <b>Merchant</b> to the transaction’s values",
     "openShortcuts": "Open Shortcuts",
-    "hint": "Looop notes payments in the background and sorts them when you open the app. Needs iOS 17 or later."
+    "hint": "Looop notes payments in the background and sorts them when you open the app. Needs iOS 17 or later.",
+    "noted": "Noted in Looop"
   }
 }

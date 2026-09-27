@@ -1,13 +1,9 @@
 import type { ReactNode } from 'react';
-import { Linking, View } from 'react-native';
+import { Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { NumberedSteps } from '@/shared/components/numbered-steps';
-import { Screen } from '@/shared/components/screen';
-import { Button } from '@/shared/ui/button';
-
 import { ActionButtonIllustration } from './action-button-illustration';
-import { StepIntro } from './step-intro';
+import { SetupGuideScreen } from './setup-guide-screen';
 
 interface ActionButtonScreenProps {
   header: ReactNode;
@@ -26,27 +22,19 @@ const STEPS = [
 export function ActionButtonScreen({ header, onDone, laterLabel }: ActionButtonScreenProps) {
   const { t } = useTranslation();
   return (
-    <Screen
-      scroll
-      footer={
-        <View>
-          <Button
-            label={t('onboarding.actionButton.openSettings')}
-            onPress={() => {
-              Linking.openSettings();
-              onDone();
-            }}
-          />
-          <Button variant="ghost" className="mt-2.5" label={laterLabel} onPress={onDone} />
-        </View>
-      }>
-      {header}
-      <StepIntro
-        title={t('onboarding.actionButton.title')}
-        subtitle={t('onboarding.actionButton.subtitle')}
-      />
-      <ActionButtonIllustration />
-      <NumberedSteps steps={STEPS} />
-    </Screen>
+    <SetupGuideScreen
+      header={header}
+      illustration={<ActionButtonIllustration />}
+      title={t('onboarding.actionButton.title')}
+      subtitle={t('onboarding.actionButton.subtitle')}
+      steps={STEPS}
+      primaryLabel={t('onboarding.actionButton.openSettings')}
+      onPrimary={() => {
+        Linking.openSettings();
+        onDone();
+      }}
+      laterLabel={laterLabel}
+      onLater={onDone}
+    />
   );
 }

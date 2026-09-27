@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { Platform } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { ActionButtonScreen } from '@/features/onboarding/components/action-button-screen';
@@ -11,7 +12,8 @@ export default function OnboardingActionButton() {
     <ActionButtonScreen
       header={<OnboardingHeader step={ONBOARDING_STEPS.actionButton} />}
       laterLabel={t('common.later')}
-      onDone={() => router.push('/widget')}
+      // Apple Pay only exists on iPhone.
+      onDone={() => router.push(Platform.OS === 'android' ? '/widget' : '/apple-pay')}
     />
   );
 }

@@ -104,6 +104,11 @@
       "subtitle": "Leg Looop auf die Aktionstaste deines iPhones. Gedrückt halten, sprechen, fertig.",
       "title": "Ein Druck,\nund schon erfasst"
     },
+    "applePay": {
+      "title": "Apple Pay?\nTrägt sich selbst ein",
+      "subtitle": "Zahlst du mit Apple Pay, landet jede Zahlung automatisch in Looop. Du bestätigst sie nur noch mit einem Tipp.",
+      "setUp": "Ja, einrichten"
+    },
     "widget": {
       "add": "Widget hinzufügen",
       "later": "Vielleicht später",
@@ -439,6 +444,7 @@
     "step3": "Füge die Aktion <b>Looop: Zahlung eintragen</b> hinzu",
     "step4": "Setze <b>Betrag</b> und <b>Händler</b> auf die Werte der Transaktion",
     "openShortcuts": "Kurzbefehle öffnen",
-    "hint": "Looop merkt sich die Zahlungen im Hintergrund und sortiert sie, sobald du die App öffnest. Braucht iOS 17 oder neuer."
+    "hint": "Looop merkt sich die Zahlungen im Hintergrund und sortiert sie, sobald du die App öffnest. Braucht iOS 17 oder neuer.",
+    "noted": "In Looop gemerkt"
   }
 }

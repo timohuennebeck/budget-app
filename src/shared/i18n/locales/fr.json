@@ -104,6 +104,11 @@
       "subtitle": "Mets Looop sur le bouton Action de ton iPhone. Maintiens, parle, c'est fait.",
       "title": "Une pression,\net c'est noté"
     },
+    "applePay": {
+      "title": "Apple Pay ?\nÇa s’enregistre tout seul",
+      "subtitle": "Paie avec Apple Pay et chaque paiement arrive automatiquement dans Looop. Tu le confirmes d’un geste.",
+      "setUp": "Oui, configurer"
+    },
     "widget": {
       "add": "Ajouter le widget",
       "later": "Peut-être plus tard",
@@ -449,6 +454,7 @@
     "step3": "Ajoute l’action <b>Looop : Noter un paiement</b>",
     "step4": "Règle <b>Montant</b> et <b>Commerçant</b> sur les valeurs de la transaction",
     "openShortcuts": "Ouvrir Raccourcis",
-    "hint": "Looop note les paiements en arrière-plan et les classe à l’ouverture de l’app. iOS 17 ou plus récent requis."
+    "hint": "Looop note les paiements en arrière-plan et les classe à l’ouverture de l’app. iOS 17 ou plus récent requis.",
+    "noted": "Noté dans Looop"
   }
 }

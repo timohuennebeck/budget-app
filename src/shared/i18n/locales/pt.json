@@ -104,6 +104,11 @@
       "subtitle": "Põe o Looop no botão de Ação do teu iPhone. Mantém premido, fala, pronto.",
       "title": "Um clique\ne fica registado"
     },
+    "applePay": {
+      "title": "Apple Pay?\nRegista-se sozinho",
+      "subtitle": "Pagas com Apple Pay? Cada pagamento chega ao Looop automaticamente. Só tens de o confirmar com um toque.",
+      "setUp": "Sim, configurar"
+    },
     "widget": {
       "add": "Adicionar widget",
       "later": "Talvez mais tarde",
@@ -449,6 +454,7 @@
     "step3": "Adiciona a ação <b>Looop: Registar pagamento</b>",
     "step4": "Define <b>Montante</b> e <b>Comerciante</b> com os valores da transação",
     "openShortcuts": "Abrir Atalhos",
-    "hint": "O Looop guarda os pagamentos em segundo plano e organiza-os quando abres a app. Requer iOS 17 ou posterior."
+    "hint": "O Looop guarda os pagamentos em segundo plano e organiza-os quando abres a app. Requer iOS 17 ou posterior.",
+    "noted": "Guardado no Looop"
   }
 }

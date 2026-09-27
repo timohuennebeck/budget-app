@@ -1,4 +1,4 @@
-// Progress shown in the onboarding header ("3 von 10"). The capture sub-steps
+// Progress shown in the onboarding header ("3 von 11"). The capture sub-steps
 // (camera, voice, processing, saved) and the paywall sit outside the count.
 export const ONBOARDING_STEPS = {
   name: 1,
@@ -8,9 +8,10 @@ export const ONBOARDING_STEPS = {
   notifications: 5,
   reminder: 6,
   actionButton: 7,
-  widget: 8,
-  birthday: 9,
-  signUp: 10,
+  applePay: 8,
+  widget: 9,
+  birthday: 10,
+  signUp: 11,
 } as const;
 
-export const ONBOARDING_TOTAL = 10;
+export const ONBOARDING_TOTAL = 11;
