@@ -8,14 +8,14 @@
     "scheme": "looop",
     "userInterfaceStyle": "light",
     "ios": {
-      "bundleIdentifier": "com.looop.app",
+      "bundleIdentifier": "com.timohuennebeck.looop",
       "supportsTablet": false,
       "infoPlist": {
         "NSMicrophoneUsageDescription": "Looop listens when you say what you spent."
       }
     },
     "android": {
-      "package": "com.looop.app",
+      "package": "com.timohuennebeck.looop",
       "adaptiveIcon": {
         "backgroundColor": "#2F7CF6",
         "foregroundImage": "./assets/images/icon.png"
@@ -28,6 +28,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "./plugins/without-push-entitlement",
       "expo-router",
       [
         "expo-splash-screen",
