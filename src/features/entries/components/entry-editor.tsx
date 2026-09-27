@@ -1,4 +1,4 @@
-import { type ReactNode, useRef, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -74,21 +74,15 @@ export function EntryEditor({
   const occurred = new Date(value.occurredAt);
 
   // The amount applies while typing, since a footer button doesn't blur the
-  // field. entries.amount must be > 0, so a "-" or an empty field (typed on
-  // Android) is skipped, and leaving it that way restores the earlier amount.
-  const amountBefore = useRef(value.amount);
+  // field. entries.amount must be > 0, so while the text isn't a positive
+  // amount (empty, or a "-" on Android) the one from before typing stands.
+  const [amountBefore, setAmountBefore] = useState(value.amount);
   const typeAmount = (text: string) => {
     setAmountDraft(text);
     const parsed = parseAmount(text);
-    if (parsed && parsed > 0) onChange({ amount: parsed });
+    onChange({ amount: parsed && parsed > 0 ? parsed : amountBefore });
   };
-  const commitAmount = () => {
-    const parsed = amountDraft === null ? null : parseAmount(amountDraft);
-    setAmountDraft(null);
-    if (amountDraft !== null && !(parsed && parsed > 0)) {
-      onChange({ amount: amountBefore.current });
-    }
-  };
+  const commitAmount = () => setAmountDraft(null);
 
   return (
     <View>
@@ -112,7 +106,7 @@ export function EntryEditor({
             value={amountDraft ?? formatAmountInput(value.amount)}
             onChangeText={typeAmount}
             onFocus={() => {
-              amountBefore.current = value.amount;
+              setAmountBefore(value.amount);
               setAmountDraft(formatAmountInput(value.amount));
             }}
             onBlur={commitAmount}

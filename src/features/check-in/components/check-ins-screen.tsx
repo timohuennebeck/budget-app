@@ -4,9 +4,9 @@ import { ScrollView, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { MonthSheet } from '@/features/entries/components/month-sheet';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
+import { MonthSheet } from '@/shared/components/month-sheet';
 import { useSheet } from '@/shared/components/sheet';
 import { ChipRow, MonthPill, TabTitle } from '@/shared/components/tab-header';
 import { useAppConfig } from '@/shared/hooks/use-app-config';
@@ -86,7 +86,7 @@ function CheckInRow({ checkIn, currency }: { checkIn: CheckIn; currency: string 
 export function CheckInsScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const layout = tabListProps(insets.top, 4);
+  const layout = tabListProps(insets.top);
   const currency = useCurrency();
   const { data: checkIns = [] } = useCheckIns();
   const [period, setPeriod] = useState<CheckInPeriod>('all');

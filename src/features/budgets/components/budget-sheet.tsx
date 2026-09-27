@@ -60,7 +60,8 @@ function BudgetSheetBody({ currency, initial, reference, hint, onSave }: BudgetS
         className="mt-[22px]"
         label={t('common.save')}
         haptic="success"
-        onPress={() => onSave(choice === NO_LIMIT ? null : amount)}
+        // A limit stepped down to 0 is no limit.
+        onPress={() => onSave(choice === NO_LIMIT || amount <= 0 ? null : amount)}
       />
     </>
   );

@@ -1,5 +1,7 @@
 import { t } from 'i18next';
 
+import { formatClock } from '@/shared/lib/dates';
+
 const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
@@ -12,6 +14,5 @@ export function formatCountdown(ms: number) {
   const minutes = Math.floor((left % HOUR) / MINUTE);
   if (days > 0) return t('checkIn.countdownDays', { days, hours });
   if (hours > 0) return t('checkIn.countdownHours', { hours, minutes });
-  const seconds = Math.floor((left % MINUTE) / 1000);
-  return `${minutes}:${String(seconds).padStart(2, '0')}`;
+  return formatClock(Math.floor(left / 1000));
 }

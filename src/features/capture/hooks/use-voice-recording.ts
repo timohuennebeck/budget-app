@@ -11,8 +11,9 @@ import { Platform } from 'react-native';
 import { APP_AUDIO_MODE } from '@/shared/lib/sounds';
 
 import type { VoiceRecording } from '../data/capture-store';
+import type { BlockingError } from '../lib/capture-errors';
 
-export type VoiceError = 'account' | 'permission' | 'limit' | 'unavailable';
+export type VoiceError = BlockingError | 'permission' | 'unavailable';
 type VoiceStatus = 'starting' | 'recording';
 
 // Speech needs little: 16 kHz mono AAC at 32 kbit/s keeps a minute ~240 KB.

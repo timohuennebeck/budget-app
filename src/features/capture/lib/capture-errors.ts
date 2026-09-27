@@ -2,7 +2,7 @@
  * parse-capture failures (by HTTP status) where trying again won't help: no
  * account yet, or the daily AI limit. Anything else is worth a retry.
  */
-export const BLOCKING_ERRORS = { '401': 'account', '429': 'limit' } as const;
+const BLOCKING_ERRORS = { '401': 'account', '429': 'limit' } as const;
 
 export type BlockingError = (typeof BLOCKING_ERRORS)[keyof typeof BLOCKING_ERRORS];
 

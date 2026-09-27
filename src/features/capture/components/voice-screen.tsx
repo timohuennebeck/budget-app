@@ -10,6 +10,7 @@ import { ScreenHeader } from '@/shared/components/screen-header';
 import { StatusHero } from '@/shared/components/status-hero';
 import { useAppConfig } from '@/shared/hooks/use-app-config';
 import { cn } from '@/shared/lib/cn';
+import { formatClock } from '@/shared/lib/dates';
 import { haptics } from '@/shared/lib/haptics';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
@@ -25,9 +26,6 @@ import { captureHref } from '../lib/capture-routes';
 
 /** Shows the seconds left once the cap is this close. */
 const COUNTDOWN_FROM = 10;
-
-const clock = (seconds: number) =>
-  `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 
 // Voice capture (2i). Recording starts as the screen opens; stopping sends
 // the audio to parse-capture, which transcribes and sorts it. Every failure
@@ -109,7 +107,7 @@ function VoiceRecorder({ mode, onType }: { mode: CaptureMode; onType: () => void
           weight="semibold"
           className="text-ink-soft"
           style={{ fontVariant: ['tabular-nums'] }}>
-          {clock(voice.seconds)}
+          {formatClock(voice.seconds)}
         </Text>
         <View className="size-[136px] items-center justify-center">
           <Animated.View

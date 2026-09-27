@@ -115,7 +115,7 @@ export function ResultScreen() {
             </Text>{' '}
             {difference >= 0 ? t('checkIn.more') : t('checkIn.less')}
           </Text>
-          <AccuracyPill size="md" accuracy={accuracy} />
+          <AccuracyPill accuracy={accuracy} />
         </View>
       </Card>
 

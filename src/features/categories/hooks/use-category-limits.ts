@@ -4,7 +4,7 @@ import { useUserId } from '@/features/auth/lib/auth-provider';
 import { restore, snapshot } from '@/shared/lib/optimistic';
 
 import { limitQueries } from '../data/categories-queries';
-import { type CategoryLimit, setLimit } from '../data/limits-api';
+import { type CategoryLimit, positiveOrNull, setLimit } from '../data/limits-api';
 import { categoryColumns, categoryIdOf } from '../lib/category-ref';
 
 const listKey = limitQueries.list.queryKey;
@@ -12,12 +12,9 @@ const listKey = limitQueries.list.queryKey;
 const byCategory = (rows: CategoryLimit[]) =>
   new Map(rows.map((row) => [categoryIdOf(row)!, Number(row.amount)]));
 
-// The table only takes positive limits; a limit stepped down to 0 means none.
-const positiveOrNull = (limit: number | null) => (limit !== null && limit > 0 ? limit : null);
-
 /** Monthly limits by category id (preset or own category). */
-export function useCategoryLimits(enabled = true) {
-  return useQuery({ ...limitQueries.list, enabled, select: byCategory });
+export function useCategoryLimits() {
+  return useQuery({ ...limitQueries.list, select: byCategory });
 }
 
 export function useSetCategoryLimit() {
@@ -25,7 +22,7 @@ export function useSetCategoryLimit() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: ({ id, limit }: { id: string; limit: number | null }) =>
-      setLimit(userId, id, positiveOrNull(limit)),
+      setLimit(userId, id, limit),
     meta: { optimistic: true },
     onMutate: async ({ id, limit: requested }) => {
       const limit = positiveOrNull(requested);

@@ -17,9 +17,6 @@ export interface TextFieldProps extends TextInputProps {
   revealable?: boolean;
   /** Shows a clear button while there is text */
   clearable?: boolean;
-  size?: 'md' | 'lg';
-  /** `filled` is the borderless grey search field */
-  variant?: 'outline' | 'filled';
   /** `pill`: fully rounded ends, used by the search fields */
   shape?: 'rounded' | 'pill';
   containerClassName?: string;
@@ -31,8 +28,6 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
     leadingIcon,
     revealable,
     clearable,
-    size = 'lg',
-    variant = 'outline',
     shape = 'rounded',
     containerClassName,
     secureTextEntry,
@@ -58,15 +53,11 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
       ) : null}
       <View
         className={cn(
-          'flex-row items-center gap-2.5 px-4',
-          size === 'lg' ? 'h-14' : 'h-[46px]',
+          'h-14 flex-row items-center gap-2.5 border border-line-strong bg-surface px-4',
           shape === 'pill' ? 'rounded-full px-5' : 'rounded-[18px]',
-          variant === 'filled'
-            ? 'h-[50px] rounded-2xl bg-field'
-            : 'border border-line-strong bg-surface',
         )}>
         <SelectionRing
-          visible={focused && variant !== 'filled'}
+          visible={focused}
           className={shape === 'pill' ? 'rounded-full' : 'rounded-[18px]'}
         />
         {leadingIcon ? <Icon name={leadingIcon} size={17} color={colors.subtle} /> : null}
@@ -89,7 +80,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
           className={cn('h-full flex-1 font-inter text-ink', className)}
           // Size without a line height: iOS clips input text and placeholders
           // that get one.
-          style={{ fontSize: size === 'lg' ? 17 : 16, paddingVertical: 0 }}
+          style={{ fontSize: 17, paddingVertical: 0 }}
           {...props}
         />
         {clearable && value ? (

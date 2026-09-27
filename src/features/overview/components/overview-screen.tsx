@@ -44,7 +44,7 @@ const NO_LIMITS = new Map<string, number>();
 export function OverviewScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const scroll = tabScrollProps(insets.top, 4);
+  const scroll = tabScrollProps(insets.top);
   const { data: profile } = useProfile();
   const categories = useAppCategoryDisplays();
   const { data: limits = NO_LIMITS } = useCategoryLimits();

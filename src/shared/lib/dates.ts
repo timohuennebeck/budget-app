@@ -141,3 +141,8 @@ export function formatDayLabel(date: Date, now = new Date()) {
   if (diff === 1) return t('common.yesterday');
   return formatLongDate(date);
 }
+
+/** "1:05": minutes and seconds, for timers. */
+export function formatClock(totalSeconds: number) {
+  return `${Math.floor(totalSeconds / 60)}:${String(totalSeconds % 60).padStart(2, '0')}`;
+}

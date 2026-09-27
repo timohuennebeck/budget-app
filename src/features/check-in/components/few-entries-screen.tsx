@@ -3,9 +3,7 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
-import { categoryIdOf } from '@/features/categories/lib/category-ref';
-import { EntryRow } from '@/features/entries/components/entry-row';
-import { entryAmount, entryVisual } from '@/features/entries/lib/entry-display';
+import { EntryRows } from '@/features/entries/components/entry-list';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { Screen } from '@/shared/components/screen';
 import { StatusHero } from '@/shared/components/status-hero';
@@ -49,20 +47,14 @@ export function FewEntriesScreen() {
       />
       {entries.length ? (
         <Card className="mt-5 py-1">
-          {entries.map((entry) => {
-            const categoryId = categoryIdOf(entry);
-            const category = categoryId ? categories.get(categoryId) : undefined;
-            return (
-              <EntryRow
-                key={entry.id}
-                {...entryVisual(entry.kind, category)}
-                title={entry.title}
-                subtitle={`${category ? category.name : t('entries.income')} · ${formatWeekday(new Date(entry.occurred_at), 'short')}`}
-                amount={entryAmount(entry, currency)}
-                onPress={() => router.push({ pathname: '/entry/[id]', params: { id: entry.id } })}
-              />
-            );
-          })}
+          <EntryRows
+            entries={entries}
+            categories={categories}
+            currency={currency}
+            subtitle={(entry, category) =>
+              `${category ? category.name : t('entries.income')} · ${formatWeekday(new Date(entry.occurred_at), 'short')}`
+            }
+          />
         </Card>
       ) : null}
     </Screen>

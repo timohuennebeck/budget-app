@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { GradientPanel } from '@/shared/components/gradient-panel';
 import { useNow } from '@/shared/hooks/use-now';
 import { cn } from '@/shared/lib/cn';
-import { addDays, formatWeekRange, isSameDay } from '@/shared/lib/dates';
+import { addDays, formatWeekRange, isSameDay, weekRange } from '@/shared/lib/dates';
 import { colors, shadows } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Text } from '@/shared/ui/text';
@@ -79,14 +79,14 @@ export function CheckInHero({ currency }: { currency: string }) {
     return {
       value: '???',
       eyebrow: t('checkIn.notOpenYet'),
-      // Plain "Sunday" reads oddly on a Sunday: it opens tonight, or (a new
-      // user's first week) only next Sunday.
+      // A new user's first check-in opens only next week's Sunday, and on a
+      // Sunday afternoon plain "Sunday" would read as a week away.
       title:
-        now.getDay() !== 0
-          ? t('checkIn.heroLockedTitle')
+        window.opensAt >= weekRange(now).end
+          ? t('checkIn.heroLockedTitleNextWeek')
           : isSameDay(window.opensAt, now)
             ? t('checkIn.heroLockedTitleTonight')
-            : t('checkIn.heroLockedTitleNextWeek'),
+            : t('checkIn.heroLockedTitle'),
       button: t('checkIn.opensIn', { time: until(window.opensAt) }),
     };
   };

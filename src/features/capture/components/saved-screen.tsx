@@ -5,7 +5,6 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 
 import { CategoryPill } from '@/features/categories/components/category-pill';
-import { categoryColumns } from '@/features/categories/lib/category-ref';
 import { EntryRow } from '@/features/entries/components/entry-row';
 import { useRecentEntries } from '@/features/entries/hooks/use-entries';
 import { entrySubtitle, entryVisual } from '@/features/entries/lib/entry-display';
@@ -21,6 +20,7 @@ import { Pip } from '@/shared/ui/pip';
 import { type CaptureMode, useCaptureStore } from '../data/capture-store';
 import { useCaptureCategories } from '../hooks/use-capture-categories';
 import { useCaptureContext } from '../hooks/use-capture-context';
+import { draftRow } from '../lib/draft-row';
 import type { DraftEntry } from '../lib/types';
 
 interface SavedRow {
@@ -45,12 +45,7 @@ export function SavedScreen({ mode }: { mode: CaptureMode }) {
   const navigation = useNavigation();
 
   const onlyIncome = drafts.length > 0 && drafts.every((draft) => draft.kind === 'income');
-  const monthly =
-    mode === 'app'
-      ? spendByCategory(recent)
-      : spendByCategory(
-          drafts.map((draft) => ({ ...draft, ...categoryColumns(draft.categoryId) })),
-        );
+  const monthly = mode === 'app' ? spendByCategory(recent) : spendByCategory(drafts.map(draftRow));
 
   const rows: SavedRow[] = [];
   for (const draft of drafts) {

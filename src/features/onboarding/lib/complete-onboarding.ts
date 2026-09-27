@@ -39,11 +39,7 @@ export async function completeOnboarding(
 
   // Limits by preset id; re-running just overwrites them.
   if (draft.budgetMode === 'per_category') {
-    // The table only takes positive limits; 0 means no limit.
-    const limits = Object.entries(draft.categoryLimits).filter(
-      (limit): limit is [string, number] => limit[1] !== null && limit[1] > 0,
-    );
-    await upsertLimits(userId, limits);
+    await upsertLimits(userId, Object.entries(draft.categoryLimits));
   }
 
   if (draft.entries.length && !(await hasEntries())) {

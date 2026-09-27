@@ -40,7 +40,7 @@ export function addInput(chips: string[], value: string): CaptureChips {
   return { chips: next, current: rest.trimStart() };
 }
 
-/** Plain text (e.g. a prefilled search term) in the chip format. */
+/** Plain text (e.g. an example from Start's empty card) in the chip format. */
 export function toCaptureText(value: string) {
   return joinChips(addInput([], value));
 }

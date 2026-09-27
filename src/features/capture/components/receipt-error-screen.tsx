@@ -30,14 +30,14 @@ export function ReceiptErrorScreen({ mode }: { mode: CaptureMode }) {
   const { t } = useTranslation();
   const { code = '422' } = useLocalSearchParams<{ code?: string }>();
   // Another photo won't help without an account or past the daily limit.
-  const special = blockingError(code);
+  const blocking = blockingError(code);
   const now = new Date();
   const typeInstead = () => router.dismissTo(captureHref(mode, 'index'));
 
   return (
     <Screen
       footer={
-        special ? (
+        blocking ? (
           <Button label={t('capture.typeInstead')} onPress={typeInstead} />
         ) : (
           <View>
@@ -59,12 +59,12 @@ export function ReceiptErrorScreen({ mode }: { mode: CaptureMode }) {
         <StatusHero
           pose="dizzy"
           pipSize={150}
-          title={t(special ? `capture.receiptErrors.${special}.title` : 'capture.errorTitle')}
+          title={t(blocking ? `capture.receiptErrors.${blocking}.title` : 'capture.errorTitle')}
           subtitle={t(
-            special ? `capture.receiptErrors.${special}.subtitle` : 'capture.errorSubtitle',
+            blocking ? `capture.receiptErrors.${blocking}.subtitle` : 'capture.errorSubtitle',
           )}
         />
-        {special ? null : (
+        {blocking ? null : (
           <Card className="gap-2.5 self-stretch px-[18px] py-4">
             {TIPS.map((tip) => (
               <View key={tip.key} className="flex-row items-center gap-3">

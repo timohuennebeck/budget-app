@@ -9,8 +9,10 @@ import { useCategoryLookup } from '@/features/categories/hooks/use-category-look
 import { categoryIdOf } from '@/features/categories/lib/category-ref';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
+import { MonthSheet } from '@/shared/components/month-sheet';
 import { useSheet } from '@/shared/components/sheet';
 import { ChipRow, MonthPill, TabTitle } from '@/shared/components/tab-header';
+import { useToday } from '@/shared/hooks/use-today';
 import { formatMonthLabel, monthRange } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { tabListProps } from '@/shared/lib/tab-insets';
@@ -22,14 +24,13 @@ import { useEntries } from '../hooks/use-entries';
 import { countByCategory, groupByDay, netTotal } from '../lib/entry-stats';
 import { EmptySearch } from './empty-search';
 import { EntryList } from './entry-list';
-import { MonthSheet } from './month-sheet';
 
 // Einträge (2t): a month of entries grouped by day, with search, category
 // filter chips and a month picker.
 export function EntriesScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const layout = tabListProps(insets.top, 4);
+  const layout = tabListProps(insets.top);
   const { search } = useLocalSearchParams<{ search?: string }>();
   const categories = useAppCategoryDisplays();
   const lookup = useCategoryLookup();
@@ -46,7 +47,10 @@ export function EntriesScreen() {
   );
 
   const monthSheet = useSheet();
-  const [month, setMonth] = useState(() => new Date());
+  // Follows today (the tab stays mounted past midnight) until a month is picked.
+  const today = useToday();
+  const [picked, setPicked] = useState<Date | null>(null);
+  const month = picked ?? today;
   const range = monthRange(month);
   const [query, setQuery] = useState('');
   const [categoryId, setCategoryId] = useState<string | null>(null);
@@ -145,7 +149,7 @@ export function EntriesScreen() {
         {...monthSheet.controls}
         selected={month}
         onSelect={(next) => {
-          setMonth(next);
+          setPicked(next);
           monthSheet.dismiss();
         }}
       />

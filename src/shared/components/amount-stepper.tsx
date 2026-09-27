@@ -44,12 +44,15 @@ export function AmountStepper({
 }: AmountStepperProps) {
   const { t } = useTranslation();
   const input = useRef<TextInput>(null);
+  // Typed digits apply right away, since a footer button doesn't blur the
+  // field; an empty field stands for the amount from before typing. The typed
+  // text shows only while it matches the value (−, + or a chip replace it).
   const [draft, setDraft] = useState<string | null>(null);
-  // Typed digits apply right away (a footer button doesn't blur the field);
-  // leaving the field empty goes back to the amount it had before.
-  const before = useRef(value);
+  const [before, setBefore] = useState(value);
   const [rowWidth, setRowWidth] = useState(0);
-  const shown = draft ?? String(value);
+  const clamp = (next: number) => Math.min(MAX, Math.max(MIN, next));
+  const typed = draft === '' ? before : clamp(Number(draft));
+  const shown = draft !== null && typed === value ? draft : String(value);
   // Long amounts shrink so the − and + buttons stay on screen: the number and
   // € share what's left between them (tabular digits are ~0.64 em wide).
   const base = sizes[size];
@@ -62,7 +65,6 @@ export function AmountStepper({
     caret: Math.round(base.caret * scale),
   };
 
-  const clamp = (next: number) => Math.min(MAX, Math.max(MIN, next));
   const stepBy = (direction: 1 | -1) => {
     const next = clamp(Math.round(value / step) * step + direction * step);
     if (next !== value) haptics.select();
@@ -97,16 +99,13 @@ export function AmountStepper({
             onChangeText={(text) => {
               const digits = text.replace(/\D/g, '').slice(0, 7);
               setDraft(digits);
-              if (digits !== '') onChange(clamp(Number(digits)));
+              onChange(digits === '' ? before : clamp(Number(digits)));
             }}
             onFocus={() => {
-              before.current = value;
+              setBefore(value);
               setDraft(String(value));
             }}
-            onBlur={() => {
-              if (draft === '') onChange(before.current);
-              setDraft(null);
-            }}
+            onBlur={() => setDraft(null)}
             keyboardType="number-pad"
             returnKeyType="done"
             caretHidden

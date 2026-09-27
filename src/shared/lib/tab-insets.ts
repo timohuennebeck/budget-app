@@ -1,16 +1,17 @@
 import { Platform } from 'react-native';
 
+// Breathing room between the status bar and a tab's first row.
+const EXTRA_TOP = 4;
+
 /**
- * Props for a tab's full-screen ScrollView, scrolling behind the status bar
- * and native tab bar. Native tabs only inset a ScrollView that is the first
- * child, missing screens that start with a background, so it asks for
- * automatic insets itself (status bar included). Android pads the tab above
- * the bar and leaves the top to us.
+ * Props for a tab's full-screen ScrollView behind the status bar and native
+ * tab bar. Native tabs only inset a first-child ScrollView, so it asks for
+ * automatic insets itself; Android pads above the bar and leaves the top to us.
  */
-export function tabScrollProps(safeTop: number, extraTop = 0) {
+export function tabScrollProps(safeTop: number) {
   return {
     contentInsetAdjustmentBehavior: 'automatic' as const,
-    paddingTop: (Platform.OS === 'ios' ? 0 : safeTop) + extraTop,
+    paddingTop: (Platform.OS === 'ios' ? 0 : safeTop) + EXTRA_TOP,
   };
 }
 
@@ -19,9 +20,9 @@ export function tabScrollProps(safeTop: number, extraTop = 0) {
  * the status bar itself, and the list (not the first child any more) asks
  * for automatic insets so it ends above the native tab bar.
  */
-export function tabListProps(safeTop: number, extraTop = 0) {
+export function tabListProps(safeTop: number) {
   return {
-    headerPaddingTop: safeTop + extraTop,
+    headerPaddingTop: safeTop + EXTRA_TOP,
     contentInsetAdjustmentBehavior: 'automatic' as const,
   };
 }
