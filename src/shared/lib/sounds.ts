@@ -1,7 +1,7 @@
 import { type AudioPlayer, createAudioPlayer, setAudioModeAsync } from 'expo-audio';
 
-// Short UI sounds, loaded once at start and reused. They respect the silent
-// switch and mix with music instead of pausing it.
+// Short UI sounds, loaded once at start and reused. They play even with the
+// silent switch on and mix with music instead of pausing it.
 
 const sources = {
   click: require('@/assets/sounds/click.wav'),
@@ -25,7 +25,7 @@ function player(name: SoundName) {
 /** Sets the audio mode and loads every sound, so the first play isn't lost. */
 export function preloadSounds() {
   try {
-    setAudioModeAsync({ playsInSilentMode: false, interruptionMode: 'mixWithOthers' }).catch(
+    setAudioModeAsync({ playsInSilentMode: true, interruptionMode: 'mixWithOthers' }).catch(
       () => {},
     );
     (Object.keys(sources) as SoundName[]).forEach(player);
