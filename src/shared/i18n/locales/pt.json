@@ -322,8 +322,7 @@
     "spentOn": "em {{category}}",
     "share": "{{percent}} % do total",
     "leftIn": "Resta em {{month}}",
-    "categoryLeft": "{{name}} · resta",
-    "categoryOver": "{{name}} · ultrapassado"
+    "budgets": "Orçamentos"
   },
   "budgets": {
     "edit": "Editar {{name}}",
@@ -355,8 +354,8 @@
     "guessSubtitle": "Todos os gastos de segunda a domingo. As receitas não contam.",
     "guessTitle": "{{name}}, qual é a tua estimativa?",
     "guessed": "Estimado",
-    "historyEmpty": "Ainda sem check-ins",
-    "historyEmptySubtitle": "Todos os domingos, a partir das 18h, podes estimar a tua semana.",
+    "historyEmpty": "Ainda não há check-ins",
+    "historyEmptySubtitle": "Ao domingo a partir das 18h, o Pip pergunta quanto gastaste nos últimos 7 dias.",
     "lastWeek": "Semana passada: {{percent}} % de precisão",
     "less": "menos do que pensavas",
     "missedTitle": "Check-in perdido",

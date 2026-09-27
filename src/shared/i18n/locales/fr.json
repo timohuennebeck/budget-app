@@ -322,8 +322,7 @@
     "spentOn": "pour {{category}}",
     "share": "{{percent}} % du total",
     "leftIn": "Reste en {{month}}",
-    "categoryLeft": "{{name}} · reste",
-    "categoryOver": "{{name}} · dépassé"
+    "budgets": "Budgets"
   },
   "budgets": {
     "edit": "Modifier {{name}}",
@@ -355,8 +354,8 @@
     "guessSubtitle": "Toutes les dépenses du lundi au dimanche. Les revenus ne comptent pas.",
     "guessTitle": "{{name}}, ton estimation ?",
     "guessed": "Estimé",
-    "historyEmpty": "Aucun bilan pour l'instant",
-    "historyEmptySubtitle": "Chaque dimanche dès 18 h, tu peux estimer ta semaine.",
+    "historyEmpty": "Aucun check-in pour l’instant",
+    "historyEmptySubtitle": "Dimanche dès 18 h, Pip te demande combien tu as dépensé ces 7 derniers jours.",
     "lastWeek": "Semaine dernière : précis à {{percent}} %",
     "less": "de moins que prévu",
     "missedTitle": "Bilan manqué",

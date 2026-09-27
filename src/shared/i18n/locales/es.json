@@ -322,8 +322,7 @@
     "spentOn": "en {{category}}",
     "share": "{{percent}} % del total",
     "leftIn": "Te queda en {{month}}",
-    "categoryLeft": "{{name}} · te queda",
-    "categoryOver": "{{name}} · pasado"
+    "budgets": "Presupuestos"
   },
   "budgets": {
     "edit": "Editar {{name}}",
@@ -356,7 +355,7 @@
     "guessTitle": "{{name}}, ¿cuánto calculas?",
     "guessed": "Estimado",
     "historyEmpty": "Aún no hay check-ins",
-    "historyEmptySubtitle": "Cada domingo a partir de las 18:00 puedes estimar tu semana.",
+    "historyEmptySubtitle": "El domingo desde las 18 h, Pip te pregunta cuánto gastaste en los últimos 7 días.",
     "lastWeek": "Semana pasada: {{percent}} % de acierto",
     "less": "menos de lo que pensabas",
     "missedTitle": "Check-in perdido",

@@ -314,8 +314,7 @@
     "spentOn": "on {{category}}",
     "share": "{{percent}} % of all",
     "leftIn": "Left in {{month}}",
-    "categoryLeft": "{{name}} · left",
-    "categoryOver": "{{name}} · over"
+    "budgets": "Budgets"
   },
   "budgets": {
     "edit": "Edit {{name}}",
@@ -347,7 +346,7 @@
     "guessTitle": "{{name}}, what's your guess?",
     "guessed": "Guessed",
     "historyEmpty": "No check-ins yet",
-    "historyEmptySubtitle": "Every Sunday from 6 pm you can guess your week.",
+    "historyEmptySubtitle": "From Sunday 6 pm, Pip asks how much you spent in the last 7 days.",
     "lastWeek": "Last week: {{percent}}% accurate",
     "less": "less than expected",
     "missedTitle": "Check-in missed",

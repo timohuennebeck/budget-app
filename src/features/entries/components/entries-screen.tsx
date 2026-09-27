@@ -116,7 +116,7 @@ export function EntriesScreen() {
         </View>
 
         <View className="mt-[22px] flex-row items-baseline justify-between px-1">
-          <Text size={34} weight="bold" tracking={-0.04} leading={1.05}>
+          <Text size={34} weight="semibold" tracking={-0.04} leading={1.05}>
             {t('entries.title')}
           </Text>
           <Text size={14.5} className="text-muted">

@@ -37,7 +37,7 @@ export function SpendBar({
   const money = (value: number) => formatMoney(value, { currency });
 
   return (
-    <View className="mx-1 mt-[34px]">
+    <View className="mx-1 mt-6">
       <View className="h-2 flex-row gap-[3px]">
         {segments.map((segment) => (
           <Pressable

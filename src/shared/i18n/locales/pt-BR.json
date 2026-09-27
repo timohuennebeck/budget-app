@@ -322,8 +322,7 @@
     "spentOn": "em {{category}}",
     "share": "{{percent}} % do total",
     "leftIn": "Resta em {{month}}",
-    "categoryLeft": "{{name}} · resta",
-    "categoryOver": "{{name}} · estourado"
+    "budgets": "Orçamentos"
   },
   "budgets": {
     "edit": "Editar {{name}}",
@@ -356,7 +355,7 @@
     "guessTitle": "{{name}}, qual é o seu palpite?",
     "guessed": "Palpite",
     "historyEmpty": "Nenhum check-in ainda",
-    "historyEmptySubtitle": "Todo domingo, a partir das 18h, você pode estimar sua semana.",
+    "historyEmptySubtitle": "No domingo a partir das 18h, o Pip pergunta quanto você gastou nos últimos 7 dias.",
     "lastWeek": "Semana passada: {{percent}}% de precisão",
     "less": "menos do que você pensava",
     "missedTitle": "Check-in perdido",

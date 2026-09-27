@@ -24,7 +24,7 @@ export function CaptureActions() {
   const { t } = useTranslation();
   const allowance = useEntriesAllowance();
   return (
-    <View className="flex-row justify-center gap-11">
+    <View className="mt-7 flex-row justify-center gap-11">
       {ACTIONS.map(({ path, icon, label, primary }) => (
         <Pressable
           key={path}
