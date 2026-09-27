@@ -7,7 +7,7 @@ export interface DraftEntry {
   /** The user's share */
   amount: number;
   kind: Enums<'entry_kind'>;
-  /** Category id in the app, preset key during onboarding */
+  /** Category id in the app, preset id during onboarding */
   categoryId: string | null;
   source: Enums<'entry_source'>;
   occurredAt: string;

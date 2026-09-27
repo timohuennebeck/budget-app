@@ -50,24 +50,24 @@ export async function completeOnboarding(
   const categoryIds = [...new Set([...resolveCategoryIds(draft.categoryIds, presets), ...usedIds])];
   const existing = await fetchCategories();
 
-  // The row each draft id (preset key or custom draft id) becomes.
+  // The row each draft id (preset id or custom draft id) becomes.
   const describe = (id: string) => {
-    const preset = presets.find((row) => row.key === id);
+    const preset = presets.find((row) => row.id === id);
     if (preset) {
-      const { key, icon, hue } = preset;
-      return { preset_key: key, name: presetName(preset, locale), icon, hue };
+      const { id: presetId, icon, hue } = preset;
+      return { preset_id: presetId, name: presetName(preset, locale), icon, hue };
     }
     const custom = draft.customCategories.find((category) => category.id === id);
-    return custom && { preset_key: null, name: custom.name, icon: custom.icon, hue: custom.hue };
+    return custom && { preset_id: null, name: custom.name, icon: custom.icon, hue: custom.hue };
   };
   const described = new Map(categoryIds.map((id) => [id, describe(id)]));
   const findSaved = (id: string, rows: typeof existing) => {
     const category = described.get(id);
     if (!category) return undefined;
     return rows.find((row) =>
-      category.preset_key
-        ? row.preset_key === category.preset_key
-        : row.preset_key === null && row.name === category.name,
+      category.preset_id
+        ? row.preset_id === category.preset_id
+        : row.preset_id === null && row.name === category.name,
     );
   };
 

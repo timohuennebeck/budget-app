@@ -12,7 +12,7 @@ import { usePresets } from './use-presets';
 /** Minimal shape every category list/row/picker renders. */
 export interface CategoryDisplay {
   id: string;
-  presetKey: string | null;
+  presetId: string | null;
   name: string;
   icon: string;
   hue: number;
@@ -23,13 +23,13 @@ export interface CategoryDisplay {
 
 function usePresetMap() {
   const { data } = usePresets();
-  return useMemo(() => new Map((data ?? []).map((preset) => [preset.key, preset])), [data]);
+  return useMemo(() => new Map((data ?? []).map((preset) => [preset.id, preset])), [data]);
 }
 
 function presetDisplay(preset: CategoryPreset): CategoryDisplay {
   return {
-    id: preset.key,
-    presetKey: preset.key,
+    id: preset.id,
+    presetId: preset.id,
     name: presetName(preset),
     icon: preset.icon,
     hue: preset.hue,
@@ -49,10 +49,10 @@ export function useAppCategoryDisplays(enabled = true, includeArchived = false):
       (data ?? [])
         .filter((category) => includeArchived || !category.archived_at)
         .map((category) => {
-          const preset = category.preset_key ? presets.get(category.preset_key) : undefined;
+          const preset = category.preset_id ? presets.get(category.preset_id) : undefined;
           return {
             id: category.id,
-            presetKey: category.preset_key,
+            presetId: category.preset_id,
             // Presets follow the app language; custom names stay as typed.
             name: preset ? presetName(preset) : category.name,
             icon: category.icon,
@@ -78,7 +78,7 @@ export function usePresetDisplays(): CategoryDisplay[] {
   );
 }
 
-/** Onboarding selection (preset keys + custom drafts) in the same shape. */
+/** Onboarding selection (preset ids + custom drafts) in the same shape. */
 export function useOnboardingCategoryDisplays(): CategoryDisplay[] {
   const categoryIds = useSelectedCategoryIds();
   const customCategories = useOnboardingStore((state) => state.customCategories);
@@ -91,7 +91,7 @@ export function useOnboardingCategoryDisplays(): CategoryDisplay[] {
         const preset = presets.get(id);
         if (preset) return [presetDisplay(preset)];
         const custom = customCategories.find((category) => category.id === id);
-        return custom ? [{ ...custom, presetKey: null, keywords: [], peerAverage: null }] : [];
+        return custom ? [{ ...custom, presetId: null, keywords: [], peerAverage: null }] : [];
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [categoryIds, customCategories, presets, i18n.language],

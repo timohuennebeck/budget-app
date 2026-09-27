@@ -54,7 +54,7 @@ export function useCreateCategory() {
     (list, category) => [
       ...list,
       {
-        preset_key: null,
+        preset_id: null,
         monthly_limit: null,
         archived_at: null,
         sort_order: list.length,

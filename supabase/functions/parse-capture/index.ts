@@ -171,7 +171,7 @@ serve(async (request) => {
         result: entries,
         input_tokens: result.inputTokens,
         output_tokens: result.outputTokens,
-        latency_ms: Date.now() - started,
+        duration_ms: Date.now() - started,
         completed_at: new Date().toISOString(),
       })
       .eq('id', captureId);
@@ -185,7 +185,7 @@ serve(async (request) => {
       .update({
         status: 'failed',
         error_code: error instanceof Error ? error.message.slice(0, 200) : code,
-        latency_ms: Date.now() - started,
+        duration_ms: Date.now() - started,
         completed_at: new Date().toISOString(),
       })
       .eq('id', captureId)

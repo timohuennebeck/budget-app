@@ -18,9 +18,9 @@ export const entryQueries = createQueryKeys('entries', {
   }),
   detail: (id: string) => ({ queryKey: [id], queryFn: () => fetchEntry(id) }),
   stats: { queryKey: null, queryFn: fetchEntryStats },
-  allowance: (cycleStart: string) => ({
-    queryKey: [cycleStart],
-    queryFn: () => fetchEntriesAllowance(cycleStart),
+  allowance: (periodStart: string) => ({
+    queryKey: [periodStart],
+    queryFn: () => fetchEntriesAllowance(periodStart),
   }),
 });
 

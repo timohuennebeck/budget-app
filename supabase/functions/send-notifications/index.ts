@@ -14,7 +14,7 @@ interface Queued {
   profile_id: string;
   title: string;
   content: string;
-  data: Record<string, unknown>;
+  path: string | null;
 }
 
 interface Ticket {
@@ -75,7 +75,7 @@ serve(async (request) => {
       due.map((row) => row.id),
     )
     .eq('status', 'queued')
-    .select('id, profile_id, title, content, data');
+    .select('id, profile_id, title, content, path');
   if (error) throw error;
   const queued = (claimed ?? []) as Queued[];
   if (queued.length === 0) return json({ sent: 0, failed: 0, skipped: 0 });
@@ -99,7 +99,7 @@ serve(async (request) => {
           title: notification.title,
           body: notification.content,
           sound: 'default',
-          data: { ...notification.data, notification_id: notification.id },
+          data: { path: notification.path, notification_id: notification.id },
         },
       });
     }

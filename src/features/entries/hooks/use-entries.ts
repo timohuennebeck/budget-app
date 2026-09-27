@@ -35,8 +35,8 @@ export function useEntryStats(enabled = true) {
 
 /** Entries used in the current budget month, as counted by the database. */
 export function useEntriesUsed(monthStartDay = 1) {
-  const cycleStart = toISODate(budgetCycle(new Date(), monthStartDay).start);
-  return useQuery(entryQueries.allowance(cycleStart));
+  const periodStart = toISODate(budgetCycle(new Date(), monthStartDay).start);
+  return useQuery(entryQueries.allowance(periodStart));
 }
 
 /** New entries carry their id (expo-crypto randomUUID) so the cache can show them at once. */

@@ -130,9 +130,9 @@ unique (profile_id, week_start)
 
 ```sql
 profile_id uuid references profiles on delete cascade,
-cycle_start date not null,
+period_start date not null,
 used int not null default 0 check (used >= 0),
-primary key (profile_id, cycle_start)
+primary key (profile_id, period_start)
 ```
 
 This is the free-entry counter for the current budget month, one row per user per month. It exists because deleted entries still count (decision 2): counting rows in `entries` would free a slot on every delete.
@@ -148,7 +148,7 @@ input_text text check (char_length(input_text) <= 2000),
 receipt_path text,          -- 'receipts' bucket: '{profile_id}/{capture_id}.jpg'
 status capture_status not null default 'pending',   -- pending | parsed | failed
 result jsonb,               -- DraftEntry[] returned to the app
-error_code text, model text, input_tokens int, output_tokens int, latency_ms int,
+error_code text, model text, input_tokens int, output_tokens int, duration_ms int,
 created_at timestamptz not null default now(), completed_at timestamptz,
 check (source <> 'camera' or receipt_path is not null),
 index (profile_id, created_at desc)
@@ -213,9 +213,9 @@ Left out on purpose:
 new.created_at := now()
 select month_start_day, time_zone, plus_expires_at from profiles
 if plus_expires_at > now() then return new
-cycle_start := start of the budget month in time_zone (UTC if the name is invalid)
+period_start := start of the budget month in time_zone (UTC if the name is invalid)
 limit := (select value from app_config where key = 'free_entries'), default 15
-insert into entries_allowance values (profile_id, cycle_start, 1)
+insert into entries_allowance values (profile_id, period_start, 1)
   on conflict do update set used = used + 1 where used < limit
   returning used
 if no row: raise 'entry_limit_reached'

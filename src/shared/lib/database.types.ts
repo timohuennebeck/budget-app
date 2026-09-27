@@ -21,32 +21,21 @@ export type Database = {
           description: string
           key: string
           updated_at: string
-          updated_by: string | null
           value: Json
         }
         Insert: {
           description: string
           key: string
           updated_at?: string
-          updated_by?: string | null
           value: Json
         }
         Update: {
           description?: string
           key?: string
           updated_at?: string
-          updated_by?: string | null
           value?: Json
         }
-        Relationships: [
-          {
-            foreignKeyName: "app_config_updated_by_fkey"
-            columns: ["updated_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       captures: {
         Row: {
@@ -56,7 +45,7 @@ export type Database = {
           id: string
           input_text: string | null
           input_tokens: number | null
-          latency_ms: number | null
+          duration_ms: number | null
           model: string | null
           output_tokens: number | null
           profile_id: string
@@ -73,7 +62,7 @@ export type Database = {
           id?: string
           input_text?: string | null
           input_tokens?: number | null
-          latency_ms?: number | null
+          duration_ms?: number | null
           model?: string | null
           output_tokens?: number | null
           profile_id: string
@@ -90,7 +79,7 @@ export type Database = {
           id?: string
           input_text?: string | null
           input_tokens?: number | null
-          latency_ms?: number | null
+          duration_ms?: number | null
           model?: string | null
           output_tokens?: number | null
           profile_id?: string
@@ -119,7 +108,7 @@ export type Database = {
           id: string
           monthly_limit: number | null
           name: string
-          preset_key: string | null
+          preset_id: string | null
           profile_id: string
           sort_order: number
         }
@@ -131,7 +120,7 @@ export type Database = {
           id?: string
           monthly_limit?: number | null
           name: string
-          preset_key?: string | null
+          preset_id?: string | null
           profile_id: string
           sort_order?: number
         }
@@ -143,17 +132,17 @@ export type Database = {
           id?: string
           monthly_limit?: number | null
           name?: string
-          preset_key?: string | null
+          preset_id?: string | null
           profile_id?: string
           sort_order?: number
         }
         Relationships: [
           {
-            foreignKeyName: "categories_preset_key_fkey"
-            columns: ["preset_key"]
+            foreignKeyName: "categories_preset_id_fkey"
+            columns: ["preset_id"]
             isOneToOne: false
             referencedRelation: "categories_presets"
-            referencedColumns: ["key"]
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "categories_profile_id_fkey"
@@ -169,7 +158,7 @@ export type Database = {
           group_key: string
           hue: number
           icon: string
-          key: string
+          id: string
           keywords: Json
           names: Json
           peer_average: number | null
@@ -180,7 +169,7 @@ export type Database = {
           group_key: string
           hue: number
           icon: string
-          key: string
+          id: string
           keywords?: Json
           names: Json
           peer_average?: number | null
@@ -191,7 +180,7 @@ export type Database = {
           group_key?: string
           hue?: number
           icon?: string
-          key?: string
+          id?: string
           keywords?: Json
           names?: Json
           peer_average?: number | null
@@ -313,17 +302,17 @@ export type Database = {
       }
       entries_allowance: {
         Row: {
-          cycle_start: string
+          period_start: string
           profile_id: string
           used: number
         }
         Insert: {
-          cycle_start: string
+          period_start: string
           profile_id: string
           used?: number
         }
         Update: {
-          cycle_start?: string
+          period_start?: string
           profile_id?: string
           used?: number
         }
@@ -413,12 +402,12 @@ export type Database = {
         Row: {
           content: string
           created_at: string
-          data: Json
           dedupe_key: string
           error: string | null
           id: string
           kind: Database["public"]["Enums"]["notification_kind"]
           opened_at: string | null
+          path: string | null
           profile_id: string
           scheduled_for: string
           sent_at: string | null
@@ -428,12 +417,12 @@ export type Database = {
         Insert: {
           content: string
           created_at?: string
-          data?: Json
           dedupe_key: string
           error?: string | null
           id?: string
           kind: Database["public"]["Enums"]["notification_kind"]
           opened_at?: string | null
+          path?: string | null
           profile_id: string
           scheduled_for?: string
           sent_at?: string | null
@@ -443,12 +432,12 @@ export type Database = {
         Update: {
           content?: string
           created_at?: string
-          data?: Json
           dedupe_key?: string
           error?: string | null
           id?: string
           kind?: Database["public"]["Enums"]["notification_kind"]
           opened_at?: string | null
+          path?: string | null
           profile_id?: string
           scheduled_for?: string
           sent_at?: string | null
@@ -508,7 +497,7 @@ export type Database = {
           locale: string
           title: string
           updated_at: string
-          url: string | null
+          path: string | null
         }
         Insert: {
           active?: boolean
@@ -517,7 +506,7 @@ export type Database = {
           locale: string
           title: string
           updated_at?: string
-          url?: string | null
+          path?: string | null
         }
         Update: {
           active?: boolean
@@ -526,7 +515,7 @@ export type Database = {
           locale?: string
           title?: string
           updated_at?: string
-          url?: string | null
+          path?: string | null
         }
         Relationships: []
       }

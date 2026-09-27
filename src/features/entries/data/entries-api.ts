@@ -40,12 +40,12 @@ export async function fetchEntryStats() {
   };
 }
 
-/** Entries used in the budget month starting on `cycleStart` (YYYY-MM-DD). */
-export async function fetchEntriesAllowance(cycleStart: string) {
+/** Entries used in the budget month starting on `periodStart` (YYYY-MM-DD). */
+export async function fetchEntriesAllowance(periodStart: string) {
   const { data, error } = await supabase
     .from('entries_allowance')
     .select('used')
-    .eq('cycle_start', cycleStart)
+    .eq('period_start', periodStart)
     .maybeSingle();
   if (error) throw error;
   return data?.used ?? 0;

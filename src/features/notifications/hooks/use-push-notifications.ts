@@ -8,11 +8,11 @@ import { registerDevice } from '../lib/push';
 
 function open(response: Notifications.NotificationResponse) {
   const data = response.notification.request.content.data as {
-    url?: string;
+    path?: string;
     notification_id?: string;
   };
   if (data.notification_id) markNotificationOpened(data.notification_id).catch(() => {});
-  if (data.url) router.push(data.url as Href);
+  if (data.path) router.push(data.path as Href);
 }
 
 /**

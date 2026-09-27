@@ -16,7 +16,7 @@ export interface CustomCategoryDraft {
 export interface OnboardingDraft {
   firstName: string;
   currency: string;
-  /** Selected preset keys and custom category ids, in display order; null
+  /** Selected preset ids and custom category ids, in display order; null
    * until the user changes it, meaning the suggested presets */
   categoryIds: string[] | null;
   customCategories: CustomCategoryDraft[];
