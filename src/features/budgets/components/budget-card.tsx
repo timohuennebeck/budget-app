@@ -20,8 +20,8 @@ interface BudgetCardProps {
 }
 
 /**
- * Compact tile for the 2×2 budget grid: the category, what is left and a
- * bar of what is spent. Turns red once over the limit.
+ * Compact tile for the 2×2 budget grid: the category, what is left of which
+ * limit and a bar of what is spent. Turns red once over the limit.
  */
 export function BudgetCard({
   name,
@@ -61,6 +61,15 @@ export function BudgetCard({
         numberOfLines={1}
         className={over ? 'text-danger-text' : undefined}>
         {money(remaining)}
+      </Text>
+      <Text
+        size={12.5}
+        weight={over ? 'semibold' : 'regular'}
+        numberOfLines={1}
+        className={over ? '-mt-2 text-danger-text' : '-mt-2 text-subtle'}>
+        {over
+          ? t('budgets.over', { limit: money(limit) })
+          : t('budgets.freeOf', { limit: money(limit) })}
       </Text>
       <View className="h-1.5 overflow-hidden rounded-full bg-field">
         <View
