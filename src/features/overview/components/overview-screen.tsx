@@ -21,13 +21,13 @@ import { useCurrency, useProfile } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
 import { SectionHeader } from '@/shared/components/section-header';
 import { useSheet } from '@/shared/components/sheet';
+import { TabTopBar } from '@/shared/components/tab-header';
 import { useToday } from '@/shared/hooks/use-today';
 import { budgetCycle, formatMonth } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
 import { tabScrollProps } from '@/shared/lib/tab-insets';
 import { shadows } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
-import { IconButton } from '@/shared/ui/icon-button';
 import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 
@@ -95,7 +95,7 @@ export function OverviewScreen() {
           paddingBottom: 32,
         }}
         showsVerticalScrollIndicator={false}>
-        <View className="flex-row items-center justify-between px-1">
+        <TabTopBar>
           <Pressable
             onPress={() => router.navigate({ pathname: '/entries', params: { search: '1' } })}
             accessibilityLabel={t('common.search')}
@@ -106,15 +106,7 @@ export function OverviewScreen() {
               {t('common.search')}
             </Text>
           </Pressable>
-          <IconButton
-            icon="gear-six"
-            variant="surface"
-            size={40}
-            iconSize={18}
-            accessibilityLabel={t('tabs.profile')}
-            onPress={() => router.navigate('/profile')}
-          />
-        </View>
+        </TabTopBar>
 
         <BalanceHero
           label={

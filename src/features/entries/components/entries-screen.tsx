@@ -11,7 +11,7 @@ import { useCurrency } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
 import { MonthSheet } from '@/shared/components/month-sheet';
 import { useSheet } from '@/shared/components/sheet';
-import { ChipRow, MonthPill, TabTitle } from '@/shared/components/tab-header';
+import { ChipRow, MonthPill, TabTitle, TabTopBar } from '@/shared/components/tab-header';
 import { useToday } from '@/shared/hooks/use-today';
 import { formatMonthLabel, monthRange } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
@@ -85,7 +85,9 @@ export function EntriesScreen() {
       <GradientBackground name="sky" height={420} />
       {/* Month, title, search and chips stay put; only the list scrolls. */}
       <View style={{ paddingTop: layout.headerPaddingTop, paddingHorizontal: 16 }}>
-        <MonthPill label={formatMonthLabel(month)} onPress={monthSheet.present} />
+        <TabTopBar>
+          <MonthPill label={formatMonthLabel(month)} onPress={monthSheet.present} />
+        </TabTopBar>
         <TabTitle
           title={t('entries.title')}
           value={formatMoney(netTotal(filtered), { currency, signed: true })}

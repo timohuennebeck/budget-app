@@ -10,6 +10,7 @@ import { EntryList } from '@/features/entries/components/entry-list';
 import { useEntries } from '@/features/entries/hooks/use-entries';
 import { groupByDay } from '@/features/entries/lib/entry-stats';
 import { useCurrency, useProfile } from '@/features/profile/hooks/use-profile';
+import { EmptyCard } from '@/shared/components/empty-card';
 import { MoneyText } from '@/shared/components/money-text';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
@@ -17,7 +18,6 @@ import { useToday } from '@/shared/hooks/use-today';
 import { huePalette } from '@/shared/lib/color';
 import { addDays, budgetCycle, formatLongDate, formatMonth } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
-import { Card } from '@/shared/ui/card';
 import { Pip } from '@/shared/ui/pip';
 import { Text } from '@/shared/ui/text';
 
@@ -155,17 +155,16 @@ export function CategoryBudgetScreen({ id, month: shown }: { id: string; month?:
           <EntryList groups={groupByDay(entries)} categories={lookup} currency={currency} />
         </View>
       ) : (
-        <Card className="mt-8 items-center rounded-[28px] px-5 pt-[22px] pb-6">
-          <Pip pose="write" size={120} />
-          <Text variant="heading" className="mt-3 text-center">
-            {past ? t('budgets.emptyTitlePast', { month }) : t('budgets.emptyTitle')}
-          </Text>
-          <Text size={15} leading={1.45} className="mt-2 max-w-[280px] text-center text-muted-soft">
-            {past
+        <EmptyCard
+          pose="write"
+          title={past ? t('budgets.emptyTitlePast', { month }) : t('budgets.emptyTitle')}
+          subtitle={
+            past
               ? t('budgets.emptySubtitlePast', { category: category.name })
-              : t('budgets.emptySubtitle', { category: category.name })}
-          </Text>
-        </Card>
+              : t('budgets.emptySubtitle', { category: category.name })
+          }
+          className="mt-8"
+        />
       )}
     </Screen>
   );

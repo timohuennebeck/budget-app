@@ -15,7 +15,7 @@ import { useCurrency, useProfile, useUpdateProfile } from '@/features/profile/ho
 import { GradientBackground } from '@/shared/components/gradient-background';
 import { MonthSheet } from '@/shared/components/month-sheet';
 import { useSheet } from '@/shared/components/sheet';
-import { MonthPill, TabTitle } from '@/shared/components/tab-header';
+import { MonthPill, TabTitle, TabTopBar } from '@/shared/components/tab-header';
 import { useToday } from '@/shared/hooks/use-today';
 import { budgetCycle, formatMonthLabel, toISODate } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
@@ -98,7 +98,9 @@ export function BudgetsScreen() {
       <GradientBackground name="sky" height={420} />
       {/* Month, title and the month's bar stay put; only the list scrolls. */}
       <View style={{ paddingTop: layout.headerPaddingTop, paddingHorizontal: 16 }}>
-        <MonthPill label={formatMonthLabel(cycle.start)} onPress={monthSheet.present} />
+        <TabTopBar>
+          <MonthPill label={formatMonthLabel(cycle.start)} onPress={monthSheet.present} />
+        </TabTopBar>
         <TabTitle title={t('overview.budgets')} />
         {summary ? (
           <SpendBar

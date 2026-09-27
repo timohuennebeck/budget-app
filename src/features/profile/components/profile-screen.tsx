@@ -9,6 +9,7 @@ import { useEntriesAllowance } from '@/features/paywall/hooks/use-entries-allowa
 import { useLastWalletPayment } from '@/features/wallet/hooks/use-last-wallet-payment';
 import { ListGroup, ListRow } from '@/shared/components/list-group';
 import { Screen } from '@/shared/components/screen';
+import { TabTopBar } from '@/shared/components/tab-header';
 import { useSheet } from '@/shared/components/sheet';
 import { findLanguage } from '@/shared/data/languages';
 import { useAppConfig } from '@/shared/hooks/use-app-config';
@@ -40,11 +41,12 @@ export function ProfileScreen() {
 
   return (
     <Screen scroll tabBar>
-      <View className="h-[34px] items-center justify-center">
+      {/* Profil is where the gear leads, so it has none itself. */}
+      <TabTopBar settings={false}>
         <Text size={15} weight="semibold">
           {t('tabs.profile')}
         </Text>
-      </View>
+      </TabTopBar>
       <View className="mt-4 flex-row items-center gap-3.5">
         <InitialAvatar name={profile.first_name} />
         <View className="gap-0.5">

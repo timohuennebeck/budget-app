@@ -5,10 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useCurrency } from '@/features/profile/hooks/use-profile';
+import { EmptyCard } from '@/shared/components/empty-card';
 import { GradientBackground } from '@/shared/components/gradient-background';
 import { MonthSheet } from '@/shared/components/month-sheet';
 import { useSheet } from '@/shared/components/sheet';
-import { ChipRow, MonthPill, TabTitle } from '@/shared/components/tab-header';
+import { ChipRow, MonthPill, TabTitle, TabTopBar } from '@/shared/components/tab-header';
 import { useAppConfig } from '@/shared/hooks/use-app-config';
 import { formatMonthLabel, formatWeekRange, monthRange } from '@/shared/lib/dates';
 import { huePalette } from '@/shared/lib/color';
@@ -17,7 +18,6 @@ import { colors } from '@/shared/lib/theme';
 import { Card } from '@/shared/ui/card';
 import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
-import { Pip } from '@/shared/ui/pip';
 import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 
@@ -108,12 +108,14 @@ export function CheckInsScreen() {
       {/* Month, title, this week's card and chips stay put; only the
           history scrolls. */}
       <View style={{ paddingTop: layout.headerPaddingTop, paddingHorizontal: 16 }}>
-        <MonthPill
-          label={
-            typeof period === 'object' ? formatMonthLabel(period.start) : t('checkIn.allMonths')
-          }
-          onPress={monthSheet.present}
-        />
+        <TabTopBar>
+          <MonthPill
+            label={
+              typeof period === 'object' ? formatMonthLabel(period.start) : t('checkIn.allMonths')
+            }
+            onPress={monthSheet.present}
+          />
+        </TabTopBar>
         <TabTitle
           title={t('checkIn.title')}
           value={average !== null ? `Ø ${Math.round(average * 100)} %` : undefined}
@@ -141,18 +143,12 @@ export function CheckInsScreen() {
           contentInsetAdjustmentBehavior={layout.contentInsetAdjustmentBehavior}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
           showsVerticalScrollIndicator={false}>
-          <Card className="mt-[18px] items-center rounded-[28px] px-5 pt-[22px] pb-6">
-            <Pip pose="clock" size={120} />
-            <Text variant="heading" className="mt-3">
-              {t('checkIn.historyEmpty')}
-            </Text>
-            <Text
-              size={15}
-              leading={1.45}
-              className="mt-2 max-w-[280px] text-center text-muted-soft">
-              {t('checkIn.historyEmptySubtitle')}
-            </Text>
-          </Card>
+          <EmptyCard
+            pose="clock"
+            title={t('checkIn.historyEmpty')}
+            subtitle={t('checkIn.historyEmptySubtitle')}
+            className="mt-[18px]"
+          />
         </ScrollView>
       ) : groups.length === 0 ? (
         <View className="mt-3.5 flex-1 px-4">

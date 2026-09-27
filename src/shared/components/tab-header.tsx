@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import type { ReactNode } from 'react';
 import { ScrollView, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -5,29 +6,55 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '@/shared/lib/cn';
 import { colors, shadows } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
+import { IconButton } from '@/shared/ui/icon-button';
 import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 
-// The fixed header pieces shared by Einträge and Check-ins: the month pill,
-// the big title with its stat, and the row of filter chips.
+// Header pieces shared by the tabs: the top bar, the month pill, the big
+// title with its stat, and the row of filter chips.
+
+interface TabTopBarProps {
+  /** The tab's own control, e.g. the month pill or search */
+  children?: ReactNode;
+  /** The gear to Profil; off on Profil itself */
+  settings?: boolean;
+}
+
+/** Top row of every tab: its own control on the left, settings on the right. */
+export function TabTopBar({ children, settings = true }: TabTopBarProps) {
+  const { t } = useTranslation();
+  return (
+    <View className="h-10 flex-row items-center justify-between px-1">
+      <View className="flex-row items-center">{children}</View>
+      {settings ? (
+        <IconButton
+          icon="gear-six"
+          variant="surface"
+          size={40}
+          iconSize={18}
+          accessibilityLabel={t('tabs.profile')}
+          onPress={() => router.navigate('/profile')}
+        />
+      ) : null}
+    </View>
+  );
+}
 
 /** "September ⌄" pill that opens the month sheet. */
 export function MonthPill({ label, onPress }: { label: string; onPress: () => void }) {
   const { t } = useTranslation();
   return (
-    <View className="h-10 flex-row items-center px-1">
-      <Pressable
-        onPress={onPress}
-        haptic="none"
-        accessibilityLabel={t('entries.chooseMonth')}
-        className="flex-row items-center gap-2 rounded-full bg-surface px-3.5 py-[9px]"
-        style={shadows.card}>
-        <Text size={15} weight="semibold" tracking={-0.01} className="capitalize">
-          {label}
-        </Text>
-        <Icon name="caret-down" size={11} color={colors.primary} />
-      </Pressable>
-    </View>
+    <Pressable
+      onPress={onPress}
+      haptic="none"
+      accessibilityLabel={t('entries.chooseMonth')}
+      className="flex-row items-center gap-2 rounded-full bg-surface px-3.5 py-[9px]"
+      style={shadows.card}>
+      <Text size={15} weight="semibold" tracking={-0.01} className="capitalize">
+        {label}
+      </Text>
+      <Icon name="caret-down" size={11} color={colors.primary} />
+    </Pressable>
   );
 }
 

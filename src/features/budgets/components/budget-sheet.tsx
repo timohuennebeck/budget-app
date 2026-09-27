@@ -28,7 +28,12 @@ function BudgetSheetBody({ currency, initial, reference, hint, onSave }: BudgetS
   const [amount, setAmount] = useState(initial ?? fallback);
   const [choice, setChoice] = useState<number>(initial ?? fallback);
 
-  const quick = [roundToStep(fallback * 0.7, 10), fallback, roundToStep(fallback * 1.4, 50)];
+  // Below, at and above the typical amount. Small amounts round onto each
+  // other (50 € → 40, 50, 50), so the upper one moves up and repeats go.
+  const high = roundToStep(fallback * 1.4, 50);
+  const quick = [
+    ...new Set([roundToStep(fallback * 0.7, 10), fallback, high > fallback ? high : fallback + 50]),
+  ];
   const options = [
     ...quick.map((value) => ({ label: formatMoney(value, { currency, compact: true }), value })),
     { label: t('budgets.noLimit'), value: NO_LIMIT },
