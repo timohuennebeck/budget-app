@@ -12,6 +12,7 @@ import { GradientBackground } from '@/shared/components/gradient-background';
 import { useSheet } from '@/shared/components/sheet';
 import { formatMonth, monthRange } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
+import { tabScrollProps } from '@/shared/lib/tab-insets';
 import { colors, shadows } from '@/shared/lib/theme';
 import { Chip } from '@/shared/ui/chip';
 import { Icon } from '@/shared/ui/icon';
@@ -31,6 +32,7 @@ import { MonthSheet } from './month-sheet';
 export function EntriesScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
+  const scroll = tabScrollProps(insets.top, 4);
   const { search } = useLocalSearchParams<{ search?: string }>();
   const categories = useAppCategoryDisplays();
   const lookup = useCategoryLookup();
@@ -80,10 +82,11 @@ export function EntriesScreen() {
     <View className="flex-1 bg-canvas">
       <GradientBackground name="sky" height={420} />
       <ScrollView
+        contentInsetAdjustmentBehavior={scroll.contentInsetAdjustmentBehavior}
         keyboardShouldPersistTaps="handled"
         contentContainerClassName="grow"
         contentContainerStyle={{
-          paddingTop: insets.top + 4,
+          paddingTop: scroll.paddingTop,
           paddingHorizontal: 16,
           paddingBottom: 32,
         }}

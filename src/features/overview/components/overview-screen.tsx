@@ -26,6 +26,7 @@ import { SectionHeader } from '@/shared/components/section-header';
 import { useSheet } from '@/shared/components/sheet';
 import { budgetCycle, formatMonth } from '@/shared/lib/dates';
 import { formatMoney } from '@/shared/lib/money';
+import { tabScrollProps } from '@/shared/lib/tab-insets';
 import { shadows } from '@/shared/lib/theme';
 import { Icon } from '@/shared/ui/icon';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -43,6 +44,7 @@ const NO_LIMITS = new Map<string, number>();
 export function OverviewScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
+  const scroll = tabScrollProps(insets.top, 4);
   const { data: profile } = useProfile();
   const categories = useAppCategoryDisplays();
   const { data: limits = NO_LIMITS } = useCategoryLimits();
@@ -89,8 +91,9 @@ export function OverviewScreen() {
     <View className="flex-1 bg-canvas">
       <GradientBackground name="sky" />
       <ScrollView
+        contentInsetAdjustmentBehavior={scroll.contentInsetAdjustmentBehavior}
         contentContainerStyle={{
-          paddingTop: insets.top + 4,
+          paddingTop: scroll.paddingTop,
           paddingHorizontal: 16,
           paddingBottom: 32,
         }}
