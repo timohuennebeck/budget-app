@@ -2,13 +2,14 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { ScreenHeader } from '@/shared/components/screen-header';
 import { Screen } from '@/shared/components/screen';
 import { colors } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/button';
 import { Icon } from '@/shared/ui/icon';
 import { Text } from '@/shared/ui/text';
 
+import { ONBOARDING_STEPS } from '../lib/steps';
+import { OnboardingHeader } from './onboarding-header';
 import { StepIntro } from './step-intro';
 
 interface PlaceholderProps {
@@ -41,7 +42,7 @@ export function WidgetScreen() {
           />
         </View>
       }>
-      <ScreenHeader leading="close" onLeadingPress={next} />
+      <OnboardingHeader step={ONBOARDING_STEPS.widget} />
       <StepIntro title={t('onboarding.widget.title')} subtitle={t('onboarding.widget.subtitle')} />
       <View className="mt-[18px] gap-3.5 rounded-[26px] bg-ink p-[18px]">
         <View className="flex-row gap-3.5">

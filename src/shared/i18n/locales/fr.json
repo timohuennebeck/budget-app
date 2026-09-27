@@ -209,7 +209,7 @@
     "listening": "À l'écoute",
     "noAmountMessage": "Ajoute un montant à chaque entrée, par ex. « 12 € Uber ».",
     "noAmountTitle": "Aucun montant détecté",
-    "placeholder": "ex. 40€ courses, 12€ Uber, café 3,50",
+    "placeholder": "ex. 40€ courses",
     "processingTitle": "Pip trie tes entrées.",
     "receipt": "Reçu",
     "receiptErrors": {
@@ -244,7 +244,7 @@
     "stepIncome": "Séparation dépenses et revenus",
     "stop": "Arrêter et trier",
     "stopHint": "Touche pour arrêter et trier",
-    "subtitle": "Écris comme un message, autant que tu veux.",
+    "subtitle": "Tape puis appuie sur Entrée. Chaque entrée devient une puce.",
     "suggestionDining": "Resto entre amis",
     "suggestionFlights": "Billets d'avion",
     "suggestionTicket": "Abonnement transports",

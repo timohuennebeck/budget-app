@@ -209,7 +209,7 @@
     "listening": "Escuchando",
     "noAmountMessage": "Escribe un importe en cada registro, p. ej. «12 € Uber».",
     "noAmountTitle": "No se ha detectado ningún importe",
-    "placeholder": "p. ej. 40€ supermercado, 12€ Uber, café 3,50",
+    "placeholder": "p. ej. 40€ supermercado",
     "processingTitle": "Pip está ordenando tus registros.",
     "receipt": "Recibo",
     "receiptErrors": {
@@ -244,7 +244,7 @@
     "stepIncome": "Separando gastos e ingresos",
     "stop": "Parar y ordenar",
     "stopHint": "Toca para parar y ordenar",
-    "subtitle": "Escríbelo como un mensaje, todos los que quieras.",
+    "subtitle": "Escribe y pulsa Intro. Cada entrada se convierte en una etiqueta.",
     "suggestionDining": "Cena con amigos",
     "suggestionFlights": "Billetes de avión",
     "suggestionTicket": "Abono de transporte",

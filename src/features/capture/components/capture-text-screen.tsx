@@ -1,9 +1,11 @@
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { type LayoutRectangle, TextInput, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { type LayoutRectangle, Pressable, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { OnboardingHeader } from '@/features/onboarding/components/onboarding-header';
 import { useOnboardingStore } from '@/features/onboarding/data/onboarding-store';
+import { ONBOARDING_STEPS } from '@/features/onboarding/lib/steps';
 import { MeasuredView } from '@/shared/components/measured-view';
 import { Screen } from '@/shared/components/screen';
 import { ScreenHeader } from '@/shared/components/screen-header';
@@ -17,6 +19,7 @@ import { Text } from '@/shared/ui/text';
 import { type CaptureMode, useCaptureStore } from '../data/capture-store';
 import { useCaptureContext } from '../hooks/use-capture-context';
 import { useParsePreview } from '../hooks/use-parse-preview';
+import { addInput, joinChips, splitChips, toCaptureText } from '../lib/capture-chips';
 import { captureHref } from '../lib/capture-routes';
 import { CaptureTips, type TipTargets } from './capture-tips';
 import { RecognizedBadge } from './recognized-badge';
@@ -32,12 +35,13 @@ interface CaptureTextScreenProps {
   mode: CaptureMode;
   /** Prefill, e.g. the search term from "„Lunch“ als Eintrag erfassen" */
   initialText?: string;
-  /** Where the × goes; onboarding skips ahead instead of closing */
+  /** Where the × goes in the app */
   onClose: () => void;
 }
 
-// "Was hast du ausgegeben?" (2h): free text with live recognition, quick
-// suggestions, and shortcuts to the camera and voice capture.
+// "Was hast du ausgegeben?" (2h-b): each entry becomes a chip on "," or
+// Return, with live recognition, quick suggestions, and shortcuts to the
+// camera and voice capture. In onboarding it's step 3 with the progress bar.
 export function CaptureTextScreen({ mode, initialText, onClose }: CaptureTextScreenProps) {
   const { t } = useTranslation();
   const { firstName, currency } = useCaptureContext(mode);
@@ -51,7 +55,7 @@ export function CaptureTextScreen({ mode, initialText, onClose }: CaptureTextScr
   // keep the drafts collected so far.
   useEffect(() => {
     const store = useCaptureStore.getState();
-    if (!store.appending) store.start(initialText);
+    if (!store.appending) store.start(initialText && toCaptureText(initialText));
   }, [initialText]);
 
   const showTips = mode === 'onboarding' && !tipsSeen;
@@ -61,8 +65,31 @@ export function CaptureTextScreen({ mode, initialText, onClose }: CaptureTextScr
   const measure = (key: keyof TipTargets) => (rect: LayoutRectangle) =>
     setTargets((current) => ({ ...current, [key]: rect }));
 
-  const addSuggestion = (phrase: string) =>
-    setText(text.trim() ? `${text.trim()}, ${phrase} ` : `${phrase} `);
+  const input = useRef<TextInput>(null);
+  const { chips, current } = splitChips(text);
+  const update = (next: string[], typing: string) =>
+    setText(joinChips({ chips: next, current: typing }));
+  const type = (value: string) => {
+    const next = addInput(chips, value);
+    update(next.chips, next.current);
+  };
+  const commit = () => type(`${current}\n`);
+  const removeChip = (index: number) =>
+    update(
+      chips.filter((_, other) => other !== index),
+      current,
+    );
+  // Backspace in an empty field brings the last chip back for editing.
+  const editLastChip = () => {
+    if (current || chips.length === 0) return;
+    update(chips.slice(0, -1), chips[chips.length - 1]);
+  };
+  // A suggestion starts a new entry; the amount is typed after it.
+  const addSuggestion = (phrase: string) => {
+    const next = addInput(chips, `${current}\n`).chips;
+    update(next, `${phrase} `);
+    input.current?.focus();
+  };
   const placeholder = t('capture.placeholder');
 
   return (
@@ -106,7 +133,11 @@ export function CaptureTextScreen({ mode, initialText, onClose }: CaptureTextScr
           />
         </View>
       }>
-      <ScreenHeader leading="close" onLeadingPress={onClose} trailing={<TodayLabel />} />
+      {mode === 'onboarding' ? (
+        <OnboardingHeader step={ONBOARDING_STEPS.firstEntry} />
+      ) : (
+        <ScreenHeader leading="close" onLeadingPress={onClose} trailing={<TodayLabel />} />
+      )}
       <Text variant="display" leading={1.08} className="mt-[22px]">
         {t('capture.title', { name: firstName })}
       </Text>
@@ -118,19 +149,41 @@ export function CaptureTextScreen({ mode, initialText, onClose }: CaptureTextScr
         onMeasure={measure('text')}
         className="mt-[22px] min-h-[190px] rounded-3xl border border-line-strong bg-surface p-[18px]">
         <SelectionRing visible={focused || !!text} className="rounded-3xl" />
-        <TextInput
-          value={text}
-          onChangeText={setText}
-          multiline
-          autoFocus={!showTips}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          placeholder={placeholder}
-          placeholderTextColor={colors.faint}
-          selectionColor={colors.primary}
-          className="flex-1 font-inter-medium text-[21px] leading-[30px] text-ink"
-          style={{ textAlignVertical: 'top', letterSpacing: -0.3 }}
-        />
+        <Pressable
+          onPress={() => input.current?.focus()}
+          accessible={false}
+          className="flex-1 flex-row flex-wrap content-start items-center gap-2">
+          {chips.map((chip, index) => (
+            <Chip
+              key={`${index}-${chip}`}
+              label={chip}
+              variant="selected"
+              trailingIcon="x"
+              onPress={() => removeChip(index)}
+            />
+          ))}
+          <TextInput
+            ref={input}
+            value={current}
+            onChangeText={type}
+            onSubmitEditing={commit}
+            submitBehavior="submit"
+            returnKeyType="next"
+            onKeyPress={(event) => {
+              if (event.nativeEvent.key !== 'Backspace' || current || !chips.length) return;
+              event.preventDefault(); // web would delete a character of the restored chip
+              editLastChip();
+            }}
+            autoFocus={!showTips}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            placeholder={chips.length ? undefined : placeholder}
+            placeholderTextColor={colors.faint}
+            selectionColor={colors.primary}
+            className="h-10 min-w-[90px] grow font-inter-medium text-ink"
+            style={{ fontSize: 19, letterSpacing: -0.3, paddingVertical: 0 }}
+          />
+        </Pressable>
       </MeasuredView>
 
       <View className="mt-3 flex-row flex-wrap gap-2">

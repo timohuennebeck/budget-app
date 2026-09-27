@@ -206,7 +206,7 @@
     "listening": "Listening",
     "noAmountMessage": "Add an amount to each entry, e.g. “€12 Uber”.",
     "noAmountTitle": "No amount found",
-    "placeholder": "e.g. €40 groceries, €12 Uber, coffee €3.50",
+    "placeholder": "e.g. €40 groceries",
     "processingTitle": "Pip is sorting your entries.",
     "receipt": "Receipt",
     "receiptErrors": {
@@ -238,7 +238,7 @@
     "stepIncome": "Separating expenses and income",
     "stop": "Stop and sort",
     "stopHint": "Tap to stop and sort",
-    "subtitle": "Type it like a message, as many as you want.",
+    "subtitle": "Type and press Return. Each entry becomes a chip.",
     "suggestionDining": "Dinner with friends",
     "suggestionFlights": "Plane tickets",
     "suggestionTicket": "Monthly transit pass",

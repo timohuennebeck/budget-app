@@ -206,7 +206,7 @@
     "listening": "Hört zu",
     "noAmountMessage": "Schreib zu jedem Eintrag einen Betrag, z. B. „12 € Uber“.",
     "noAmountTitle": "Kein Betrag erkannt",
-    "placeholder": "z. B. 40€ Lebensmittel, 12€ Uber, Kaffee 3,50",
+    "placeholder": "z. B. 40€ Lebensmittel",
     "processingTitle": "Pip sortiert deine Einträge.",
     "receipt": "Beleg",
     "receiptErrors": {
@@ -238,7 +238,7 @@
     "stepIncome": "Ausgaben und Einnahmen trennen",
     "stop": "Stoppen und sortieren",
     "stopHint": "Tippen zum Stoppen und Sortieren",
-    "subtitle": "Schreib's wie eine Nachricht, so viele du willst.",
+    "subtitle": "Tippen und Enter drücken. Jeder Eintrag wird ein Chip.",
     "suggestionDining": "Essen gehen mit Freunden",
     "suggestionFlights": "Flugtickets",
     "suggestionTicket": "Deutschlandticket",

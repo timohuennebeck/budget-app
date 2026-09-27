@@ -209,7 +209,7 @@
     "listening": "A ouvir",
     "noAmountMessage": "Escreve um valor para cada registo, p. ex. «12 € Uber».",
     "noAmountTitle": "Nenhum valor reconhecido",
-    "placeholder": "p. ex. 40€ supermercado, 12€ Uber, café 3,50€",
+    "placeholder": "p. ex. 40€ supermercado",
     "processingTitle": "O Pip está a organizar os teus registos.",
     "receipt": "Talão",
     "receiptErrors": {
@@ -244,7 +244,7 @@
     "stepIncome": "Separar despesas e receitas",
     "stop": "Parar e organizar",
     "stopHint": "Toca para parar e organizar",
-    "subtitle": "Escreve como uma mensagem, quantos quiseres.",
+    "subtitle": "Escreve e carrega em Enter. Cada entrada vira uma etiqueta.",
     "suggestionDining": "Jantar com amigos",
     "suggestionFlights": "Bilhetes de avião",
     "suggestionTicket": "Passe mensal",

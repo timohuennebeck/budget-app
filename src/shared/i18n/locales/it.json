@@ -209,7 +209,7 @@
     "listening": "In ascolto",
     "noAmountMessage": "Scrivi un importo per ogni movimento, ad es. “12 € Uber”.",
     "noAmountTitle": "Nessun importo trovato",
-    "placeholder": "es. 40€ spesa, 12€ Uber, caffè 3,50",
+    "placeholder": "es. 40€ spesa",
     "processingTitle": "Pip sta ordinando i tuoi movimenti.",
     "receipt": "Scontrino",
     "receiptErrors": {
@@ -244,7 +244,7 @@
     "stepIncome": "Separo spese ed entrate",
     "stop": "Ferma e ordina",
     "stopHint": "Tocca per fermare e ordinare",
-    "subtitle": "Scrivi come in un messaggio, quanti ne vuoi.",
+    "subtitle": "Scrivi e premi Invio. Ogni voce diventa un'etichetta.",
     "suggestionDining": "Cena con gli amici",
     "suggestionFlights": "Biglietti aerei",
     "suggestionTicket": "Abbonamento mezzi",

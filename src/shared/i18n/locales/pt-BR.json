@@ -209,7 +209,7 @@
     "listening": "Ouvindo",
     "noAmountMessage": "Escreva um valor para cada registro, por ex. “12 € Uber”.",
     "noAmountTitle": "Nenhum valor reconhecido",
-    "placeholder": "ex.: 40€ mercado, 12€ Uber, café 3,50€",
+    "placeholder": "ex.: 40€ mercado",
     "processingTitle": "O Pip está organizando seus registros.",
     "receipt": "Recibo",
     "receiptErrors": {
@@ -244,7 +244,7 @@
     "stepIncome": "Separar gastos e receitas",
     "stop": "Parar e organizar",
     "stopHint": "Toque para parar e organizar",
-    "subtitle": "Escreva como uma mensagem, quantos quiser.",
+    "subtitle": "Digite e toque em Enter. Cada entrada vira uma etiqueta.",
     "suggestionDining": "Jantar com amigos",
     "suggestionFlights": "Passagens aéreas",
     "suggestionTicket": "Bilhete mensal",
