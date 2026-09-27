@@ -1,16 +1,22 @@
+import { randomUUID } from 'expo-crypto';
 import { router, useLocalSearchParams } from 'expo-router';
 
 import { useCaptureStore } from '@/features/capture/data/capture-store';
 import { CategoryPickerScreen } from '@/features/categories/components/category-picker-screen';
+import { useCategories, useCreateCategory } from '@/features/categories/hooks/use-categories';
+import type { CategoryDisplay } from '@/features/categories/hooks/use-category-display';
 import { useEntry, useUpdateEntry } from '@/features/entries/hooks/use-entries';
 import { useCurrency } from '@/features/profile/hooks/use-profile';
 
 // Category picker for either a saved entry (entryId) or a capture draft
-// (draftId); writes the choice to the matching place and returns.
+// (draftId); writes the choice to the matching place and returns. A preset
+// the user doesn't have yet is added to their categories first.
 export default function SelectCategoryRoute() {
   const { entryId, draftId } = useLocalSearchParams<{ entryId?: string; draftId?: string }>();
   const currency = useCurrency();
   const { data: entry } = useEntry(entryId ?? '');
+  const { data: categories = [] } = useCategories();
+  const createCategory = useCreateCategory();
   const draft = useCaptureStore((state) =>
     state.drafts.find((candidate) => candidate.id === draftId),
   );
@@ -21,12 +27,31 @@ export default function SelectCategoryRoute() {
   const amount = Number(entry?.amount ?? draft?.amount ?? 0);
   if (entryId && !entry) return null;
 
+  // The entry points at the new category, so it has to exist before the
+  // entry is updated; wait for the insert.
+  const resolveId = async (category: CategoryDisplay) => {
+    if (categories.some((row) => row.id === category.id)) return category.id;
+    const id = randomUUID();
+    await createCategory.mutateAsync({
+      id,
+      preset_id: category.presetId,
+      name: category.name,
+      icon: category.icon,
+      hue: category.hue,
+      sort_order: categories.length,
+    });
+    return id;
+  };
+
   return (
     <CategoryPickerScreen
       initialId={initialId}
       amount={amount}
       currency={currency}
-      onConfirm={(categoryId) => {
+      onConfirm={async (category) => {
+        // A failed insert already shows the "not saved" alert; stay here.
+        const categoryId = await resolveId(category).catch(() => null);
+        if (!categoryId) return;
         if (entryId) updateEntry.mutate({ id: entryId, patch: { category_id: categoryId } });
         if (draftId) updateDraft(draftId, { categoryId, uncertain: false });
         router.back();

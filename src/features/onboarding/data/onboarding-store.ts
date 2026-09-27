@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import type { DraftEntry } from '@/features/capture/lib/types';
+import { deviceCurrency } from '@/shared/data/currencies';
 import type { Enums } from '@/shared/lib/database.types';
 import { persistStorage } from '@/shared/lib/storage';
 
@@ -44,7 +45,7 @@ interface OnboardingState extends OnboardingDraft {
 
 const initialDraft: OnboardingDraft = {
   firstName: '',
-  currency: 'EUR',
+  currency: deviceCurrency(),
   categoryIds: null,
   customCategories: [],
   budgetMode: 'per_category',
