@@ -4,10 +4,11 @@ import { ScrollView, useWindowDimensions, View } from 'react-native';
 import { PageDots } from '@/shared/ui/page-dots';
 
 import type { BudgetCard as BudgetCardData } from '../lib/budget-summary';
-import { BUDGET_CARD_WIDTH, BudgetCard } from './budget-card';
+import { BudgetCard } from './budget-card';
 
 const GAP = 10;
 const EDGE = 16;
+const PER_PAGE = 4;
 
 interface BudgetCarouselProps {
   cards: BudgetCardData[];
@@ -15,42 +16,50 @@ interface BudgetCarouselProps {
   onEdit: (categoryId: string) => void;
 }
 
-/** Horizontally snapping budget cards with page dots (Start). */
+/** Budget cards in pages of 2×2 that snap one page at a time, with dots (Start). */
 export function BudgetCarousel({ cards, currency, onEdit }: BudgetCarouselProps) {
   const { width } = useWindowDimensions();
-  const [offset, setOffset] = useState(0);
-  // A peeking second card counts as on the page, so 4 cards give 2 dots.
-  const perPage = Math.max(1, Math.round((width - EDGE * 2 + GAP) / (BUDGET_CARD_WIDTH + GAP)));
-  const pages = Math.max(1, Math.ceil(cards.length / perPage));
-  const page = Math.min(pages - 1, Math.round(offset / ((BUDGET_CARD_WIDTH + GAP) * perPage)));
+  const [page, setPage] = useState(0);
+  const cardWidth = (width - EDGE * 2 - GAP) / 2;
+  const pages = Array.from({ length: Math.ceil(cards.length / PER_PAGE) }, (_, index) =>
+    cards.slice(index * PER_PAGE, (index + 1) * PER_PAGE),
+  );
 
   return (
     <View>
       <ScrollView
         horizontal
+        pagingEnabled
         showsHorizontalScrollIndicator={false}
-        snapToInterval={BUDGET_CARD_WIDTH + GAP}
-        decelerationRate="fast"
         className="-mx-4"
-        contentContainerStyle={{ paddingHorizontal: EDGE, gap: GAP, paddingVertical: 1 }}
         scrollEventThrottle={32}
-        onScroll={(event) => setOffset(event.nativeEvent.contentOffset.x)}>
-        {cards.map((card) => (
-          <BudgetCard
-            key={card.category.id}
-            name={card.category.name}
-            icon={card.category.icon}
-            hue={card.category.hue}
-            limit={card.limit}
-            remaining={card.remaining}
-            currency={currency}
-            onEdit={() => onEdit(card.category.id)}
-          />
+        onScroll={(event) =>
+          setPage(Math.round(event.nativeEvent.contentOffset.x / Math.max(1, width)))
+        }>
+        {pages.map((pageCards, index) => (
+          <View
+            key={index}
+            className="flex-row flex-wrap content-start"
+            style={{ width, paddingHorizontal: EDGE, gap: GAP, paddingVertical: 1 }}>
+            {pageCards.map((card) => (
+              <BudgetCard
+                key={card.category.id}
+                name={card.category.name}
+                icon={card.category.icon}
+                hue={card.category.hue}
+                limit={card.limit}
+                remaining={card.remaining}
+                currency={currency}
+                width={cardWidth}
+                onEdit={() => onEdit(card.category.id)}
+              />
+            ))}
+          </View>
         ))}
       </ScrollView>
-      {pages > 1 ? (
+      {pages.length > 1 ? (
         <View className="mt-3 items-center">
-          <PageDots count={pages} active={page} />
+          <PageDots count={pages.length} active={Math.min(page, pages.length - 1)} />
         </View>
       ) : null}
     </View>

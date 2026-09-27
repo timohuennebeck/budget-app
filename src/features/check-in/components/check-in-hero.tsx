@@ -89,11 +89,7 @@ export function CheckInHero({ currency }: { currency: string }) {
             };
 
   return (
-    // The border sits on a wrapper: iOS draws the gradient over a border set
-    // on the gradient view itself.
-    <View
-      className="mt-[18px] overflow-hidden rounded-[28px] border"
-      style={{ borderColor: colors.line }}>
+    <View className="mt-[18px] overflow-hidden rounded-[28px]">
       <GradientPanel style={{ marginTop: 0, borderRadius: 0, padding: 20 }}>
         <Paper value={content.value} range={formatWeekRange(window.week)} />
         <Text
@@ -113,6 +109,14 @@ export function CheckInHero({ currency }: { currency: string }) {
           onPress={() => router.push('/check-in')}
         />
       </GradientPanel>
+      {/* The border is an overlay: iOS paints a view's own border beneath its
+          children, where the gradient hides it. The line colour would vanish
+          on the blue panel, so it uses the soft primary. */}
+      <View
+        pointerEvents="none"
+        className="absolute inset-0 rounded-[28px] border"
+        style={{ borderColor: colors.primarySoft }}
+      />
     </View>
   );
 }
