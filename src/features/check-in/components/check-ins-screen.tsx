@@ -43,18 +43,9 @@ function CheckInRow({ checkIn, detail }: { checkIn: CheckIn; detail: string }) {
   const accuracy = checkInAccuracy(checkIn);
   const close = accuracy !== null && accuracy >= checkInCloseRatio;
   const skipped = checkIn.guess === null;
-  return (
-    // Answered weeks open their result again; skipped ones have none.
-    <Pressable
-      haptic={skipped ? 'none' : 'tap'}
-      accessibilityLabel={formatWeekRange(weekOf(checkIn))}
-      onPress={
-        skipped
-          ? undefined
-          : () =>
-              router.push({ pathname: '/check-in/result', params: { week: checkIn.week_start } })
-      }
-      className="flex-row items-center gap-3.5 px-4 py-3">
+  const className = 'flex-row items-center gap-3.5 px-4 py-3';
+  const content = (
+    <>
       <View
         className="size-11 items-center justify-center rounded-full"
         style={{ backgroundColor: close ? GREEN.background : colors.primaryTint }}>
@@ -75,6 +66,18 @@ function CheckInRow({ checkIn, detail }: { checkIn: CheckIn; detail: string }) {
       <Text size={16} weight="semibold" style={{ fontVariant: ['tabular-nums'] }}>
         {accuracy === null ? '–' : `${Math.round(accuracy * 100)} %`}
       </Text>
+    </>
+  );
+  // Skipped weeks have no result to open, so they don't react to taps.
+  if (skipped) return <View className={className}>{content}</View>;
+  return (
+    <Pressable
+      accessibilityLabel={formatWeekRange(weekOf(checkIn))}
+      onPress={() =>
+        router.push({ pathname: '/check-in/result', params: { week: checkIn.week_start } })
+      }
+      className={className}>
+      {content}
     </Pressable>
   );
 }
