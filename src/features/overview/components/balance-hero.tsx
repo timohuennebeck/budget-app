@@ -4,6 +4,11 @@ import { MoneyText } from '@/shared/components/money-text';
 import { Pip } from '@/shared/ui/pip';
 import { Text } from '@/shared/ui/text';
 
+import { FloatingDecor } from './floating-decor';
+
+const star = require('@/assets/images/decor/star.png');
+const paper = require('@/assets/images/decor/paper.png');
+
 interface BalanceHeroProps {
   label: string;
   amount: number;
@@ -22,7 +27,28 @@ export function BalanceHero({ label, amount, currency, over }: BalanceHeroProps)
         </Text>
         <MoneyText amount={amount} currency={currency} danger={over} className="mt-3.5" />
       </View>
-      <Pip pose={over ? 'dizzy' : 'cheers-arms'} size={112} />
+      {/* A star and a receipt drift around Pip, out of step with each other. */}
+      <View>
+        <Pip pose={over ? 'dizzy' : 'cheers-arms'} size={112} />
+        <FloatingDecor
+          source={star}
+          size={26}
+          tilt={12}
+          lift={6}
+          duration={3200}
+          delay={0}
+          position={{ top: -10, left: -14 }}
+        />
+        <FloatingDecor
+          source={paper}
+          size={30}
+          tilt={-10}
+          lift={7}
+          duration={3800}
+          delay={700}
+          position={{ bottom: 6, right: -12 }}
+        />
+      </View>
     </View>
   );
 }

@@ -21,7 +21,8 @@ export default function AppLayout() {
       <Stack.Screen name="(tabs)" />
       {/* Eintrag, Foto, Sprache and Einnahme slide up full screen. */}
       <Stack.Screen name="capture" options={{ presentation: 'fullScreenModal' }} />
-      <Stack.Screen name="check-in" options={fromBottom} />
+      {/* The check-in flow pushes in from the right like any other screen. */}
+      <Stack.Screen name="check-in" />
       <Stack.Screen name="paywall" options={overModal} />
       <Stack.Screen name="limit" options={overModal} />
       <Stack.Screen name="rating" options={overModal} />
