@@ -25,6 +25,10 @@ const PAD_BOTTOM = 4;
 const PAD_RIGHT = 10;
 // Half the line width, so its rounded start isn't cut off at the edge.
 const PAD_LEFT = 2;
+// The today ring (r 7 + half its stroke) can sit on the zero line: the
+// drawing reaches this far below the plot, into the gap above the labels.
+const OVERHANG = 9;
+const LABEL_GAP = 8;
 const GRID_LINES = 3;
 const HOLD_MS = 180;
 
@@ -113,9 +117,9 @@ export function TrendChart({ trend, hue, ticks, onScrub }: TrendChartProps) {
       <GestureDetector gesture={gesture}>
         <View
           onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
-          style={{ height: HEIGHT }}>
+          style={{ height: HEIGHT + OVERHANG }}>
           {width > 0 ? (
-            <Svg width={width} height={HEIGHT}>
+            <Svg width={width} height={HEIGHT + OVERHANG}>
               <Defs>
                 <LinearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
                   <Stop offset="0" stopColor={color} stopOpacity={0.16} />
@@ -194,7 +198,7 @@ export function TrendChart({ trend, hue, ticks, onScrub }: TrendChartProps) {
           ) : null}
         </View>
       </GestureDetector>
-      <View className="mt-2 h-4">
+      <View className="h-4" style={{ marginTop: LABEL_GAP - OVERHANG }}>
         {ticks.map((tick) => (
           <Text
             key={tick.index}
