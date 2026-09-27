@@ -140,7 +140,7 @@ export function CheckInsScreen() {
           <>
             <TextField
               containerClassName="mt-[18px]"
-              size="md"
+              shape="pill"
               leadingIcon="magnifying-glass"
               placeholder={t('common.search')}
               value={query}

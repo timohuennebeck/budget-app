@@ -15,9 +15,8 @@ import {
   useSetCategoryLimit,
 } from '@/features/categories/hooks/use-category-limits';
 import { useCategoryLookup } from '@/features/categories/hooks/use-category-lookup';
-import { EntryList } from '@/features/entries/components/entry-list';
 import { useEntries, useRecentEntries } from '@/features/entries/hooks/use-entries';
-import { groupByDay, spendByCategory } from '@/features/entries/lib/entry-stats';
+import { spendByCategory } from '@/features/entries/lib/entry-stats';
 import { usePendingIntent } from '@/features/onboarding/data/pending-intent';
 import { useCurrency, useProfile } from '@/features/profile/hooks/use-profile';
 import { GradientBackground } from '@/shared/components/gradient-background';
@@ -33,9 +32,9 @@ import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 
 import { CaptureActions } from './capture-actions';
+import { RecentEntries } from './recent-entries';
 import { EmptyEntriesCard } from './empty-entries-card';
 
-const RECENT_DAYS = 2;
 const NO_LIMITS = new Map<string, number>();
 
 // Übersicht (2l / 3a): what's left this month, spend per category, budget
@@ -67,7 +66,6 @@ export function OverviewScreen() {
     () => (profile ? summarizeBudget(profile, categories, limits, entries) : null),
     [profile, categories, limits, entries],
   );
-  const groups = useMemo(() => groupByDay(entries).slice(0, RECENT_DAYS), [entries]);
   const recentTotals = useMemo(() => spendByCategory(recent), [recent]);
   const editing = categories.find((category) => category.id === editingId);
   const money = (value: number) => formatMoney(value, { currency, compact: true });
@@ -133,10 +131,23 @@ export function OverviewScreen() {
           currency={currency}
         />
 
-        {summary.cards.length ? (
+        {recent.length ? (
           <>
             <SectionHeader
               className="mt-6 mb-2.5"
+              title={t('overview.entries')}
+              actionLabel={t('overview.showAll')}
+              onAction={() => router.navigate('/entries')}
+            />
+            <RecentEntries entries={recent} categories={lookup} currency={currency} />
+          </>
+        ) : (
+          <EmptyEntriesCard />
+        )}
+        {summary.cards.length ? (
+          <>
+            <SectionHeader
+              className="mt-[26px] mb-2.5"
               title={t('overview.budgets')}
               actionLabel={t('common.edit')}
               onAction={() => router.push('/settings/budgets')}
@@ -151,20 +162,6 @@ export function OverviewScreen() {
             />
           </>
         ) : null}
-
-        {hasEntries ? (
-          <>
-            <SectionHeader
-              className="mt-[26px] mb-2.5"
-              title={t('overview.entries')}
-              actionLabel={t('overview.showAll')}
-              onAction={() => router.navigate('/entries')}
-            />
-            <EntryList groups={groups} categories={lookup} currency={currency} />
-          </>
-        ) : (
-          <EmptyEntriesCard />
-        )}
       </ScrollView>
 
       <BudgetSheet

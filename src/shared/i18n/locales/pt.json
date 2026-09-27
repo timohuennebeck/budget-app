@@ -325,7 +325,9 @@
     "spentThisMonth": "Gastos",
     "actionEntry": "Registo",
     "actionPhoto": "Foto",
-    "actionVoice": "Voz"
+    "actionVoice": "Voz",
+    "spentOn": "em {{category}}",
+    "share": "{{percent}} % do total"
   },
   "budgets": {
     "edit": "Editar {{name}}",

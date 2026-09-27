@@ -106,7 +106,7 @@ export function CategoryPickerScreen({
       <ScreenHeader title={t('categories.category')} />
       <TextField
         containerClassName="mt-3"
-        size="md"
+        shape="pill"
         leadingIcon="magnifying-glass"
         value={query}
         onChangeText={setQuery}

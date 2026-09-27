@@ -20,6 +20,8 @@ export interface TextFieldProps extends TextInputProps {
   size?: 'md' | 'lg';
   /** `filled` is the borderless grey search field */
   variant?: 'outline' | 'filled';
+  /** `pill`: fully rounded ends, used by the search fields */
+  shape?: 'rounded' | 'pill';
   containerClassName?: string;
 }
 
@@ -31,6 +33,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
     clearable,
     size = 'lg',
     variant = 'outline',
+    shape = 'rounded',
     containerClassName,
     secureTextEntry,
     onFocus,
@@ -56,12 +59,16 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
       <View
         className={cn(
           'flex-row items-center gap-2.5 px-4',
-          size === 'lg' ? 'h-14 rounded-[18px]' : 'h-[46px] rounded-[18px]',
+          size === 'lg' ? 'h-14' : 'h-[46px]',
+          shape === 'pill' ? 'rounded-full px-5' : 'rounded-[18px]',
           variant === 'filled'
             ? 'h-[50px] rounded-2xl bg-field'
             : 'border border-line-strong bg-surface',
         )}>
-        <SelectionRing visible={focused && variant !== 'filled'} className="rounded-[18px]" />
+        <SelectionRing
+          visible={focused && variant !== 'filled'}
+          className={shape === 'pill' ? 'rounded-full' : 'rounded-[18px]'}
+        />
         {leadingIcon ? <Icon name={leadingIcon} size={17} color={colors.subtle} /> : null}
         <Input
           ref={ref}

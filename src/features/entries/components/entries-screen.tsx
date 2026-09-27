@@ -130,7 +130,7 @@ export function EntriesScreen() {
         <TextField
           ref={searchInput}
           containerClassName="mt-[18px]"
-          size="md"
+          shape="pill"
           leadingIcon="magnifying-glass"
           placeholder={t('common.search')}
           value={query}
@@ -172,7 +172,7 @@ export function EntriesScreen() {
               }
             />
           ) : groups.length ? (
-            <EntryList groups={groups} categories={lookup} currency={currency} headers="outside" />
+            <EntryList groups={groups} categories={lookup} currency={currency} />
           ) : (
             <Text variant="body" className="px-1 pt-6 text-center">
               {t('entries.emptyMonth')}

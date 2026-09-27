@@ -15,8 +15,11 @@ export interface BudgetCard {
 
 export interface SpendSegment {
   categoryId: string;
+  name: string;
   hue: number;
   amount: number;
+  /** The category's monthly limit, if it has one */
+  limit: number | null;
 }
 
 export interface BudgetSummary {
@@ -75,8 +78,10 @@ export function summarizeBudget(
       .filter((category) => (byCategory.get(category.id) ?? 0) > 0)
       .map((category) => ({
         categoryId: category.id,
+        name: category.name,
         hue: category.hue,
         amount: byCategory.get(category.id)!,
+        limit: limits.get(category.id) ?? null,
       }))
       .sort((a, b) => b.amount - a.amount),
     // The per-category cards only show in that mode; totals still use limits.

@@ -20,8 +20,6 @@ interface EntryRowsProps {
 
 interface EntryListProps extends Omit<EntryRowsProps, 'entries'> {
   groups: DayGroup[];
-  /** `inline`: day label inside the card (Start), `outside`: above with total (Einträge) */
-  headers?: 'inline' | 'outside';
 }
 
 function EntryRows({ entries, categories, currency }: EntryRowsProps) {
@@ -41,34 +39,25 @@ function EntryRows({ entries, categories, currency }: EntryRowsProps) {
   });
 }
 
-/** Entries grouped by day, one card per day. */
-export function EntryList({ groups, categories, currency, headers = 'inline' }: EntryListProps) {
+/** Entries grouped by day: the day and its total above one card per day. */
+export function EntryList({ groups, categories, currency }: EntryListProps) {
   return (
     <View className="gap-3">
-      {groups.map((group) =>
-        headers === 'inline' ? (
-          <Card key={group.key} className="py-1">
-            <Text size={12.5} weight="semibold" className="px-4 pt-2.5 pb-0.5 text-subtle">
+      {groups.map((group) => (
+        <View key={group.key} className="gap-2">
+          <View className="flex-row justify-between px-1.5">
+            <Text size={13} weight="semibold" className="text-muted">
               {group.label}
             </Text>
+            <Text size={13} weight="semibold" className="text-muted">
+              {formatMoney(group.total, { currency, signed: true })}
+            </Text>
+          </View>
+          <Card className="py-1">
             <EntryRows entries={group.entries} categories={categories} currency={currency} />
           </Card>
-        ) : (
-          <View key={group.key} className="gap-2">
-            <View className="flex-row justify-between px-1.5">
-              <Text size={13} weight="semibold" className="text-muted">
-                {group.label}
-              </Text>
-              <Text size={13} weight="semibold" className="text-muted">
-                {formatMoney(group.total, { currency, signed: true })}
-              </Text>
-            </View>
-            <Card className="py-1">
-              <EntryRows entries={group.entries} categories={categories} currency={currency} />
-            </Card>
-          </View>
-        ),
-      )}
+        </View>
+      ))}
     </View>
   );
 }

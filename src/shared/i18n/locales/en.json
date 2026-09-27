@@ -317,7 +317,9 @@
     "spentThisMonth": "Spent",
     "actionEntry": "Entry",
     "actionPhoto": "Photo",
-    "actionVoice": "Voice"
+    "actionVoice": "Voice",
+    "spentOn": "on {{category}}",
+    "share": "{{percent}} % of all"
   },
   "budgets": {
     "edit": "Edit {{name}}",

@@ -75,6 +75,11 @@ export function formatTime(date: Date) {
   return new Intl.DateTimeFormat(locale(), { hour: '2-digit', minute: '2-digit' }).format(date);
 }
 
+/** "25. Sept." */
+export function formatDayMonth(date: Date) {
+  return new Intl.DateTimeFormat(locale(), { day: 'numeric', month: 'short' }).format(date);
+}
+
 /** "Do., 25. Sep." */
 export function formatShortDate(date: Date) {
   return new Intl.DateTimeFormat(locale(), {
