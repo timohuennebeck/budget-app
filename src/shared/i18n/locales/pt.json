@@ -318,6 +318,7 @@
     "actionEntry": "Registo",
     "actionPhoto": "Foto",
     "actionVoice": "Voz",
+    "actionIncome": "Rendimento",
     "spentOn": "em {{category}}",
     "share": "{{percent}} % do total",
     "leftIn": "Resta em {{month}}",
@@ -377,7 +378,7 @@
     "heroMissedTitle": "Esta semana não estimaste",
     "allMonths": "Todos os meses",
     "notOpenYet": "Ainda não abriu",
-    "opensIn": "Abre daqui a {{time}}",
+    "opensIn": "Daqui a {{time}}",
     "nextIn": "O próximo daqui a {{time}}",
     "countdownDays": "{{days}} d {{hours}} h",
     "countdownHours": "{{hours}} h {{minutes}} min"
@@ -469,5 +470,10 @@
     "amount": "Montante",
     "merchant": "Comerciante",
     "actionName": "Registar pagamento"
+  },
+  "income": {
+    "title": "O que entrou?",
+    "subtitle": "Salário, um reembolso ou algo que vendeste. Adiciona o que recebeste.",
+    "save": "Guardar rendimento"
   }
 }

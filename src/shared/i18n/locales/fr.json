@@ -318,6 +318,7 @@
     "actionEntry": "Dépense",
     "actionPhoto": "Photo",
     "actionVoice": "Voix",
+    "actionIncome": "Revenu",
     "spentOn": "pour {{category}}",
     "share": "{{percent}} % du total",
     "leftIn": "Reste en {{month}}",
@@ -377,7 +378,7 @@
     "heroMissedTitle": "Tu n’as pas estimé cette semaine",
     "allMonths": "Tous les mois",
     "notOpenYet": "Pas encore ouvert",
-    "opensIn": "Ouvre dans {{time}}",
+    "opensIn": "Dans {{time}}",
     "nextIn": "Prochain dans {{time}}",
     "countdownDays": "{{days}} j {{hours}} h",
     "countdownHours": "{{hours}} h {{minutes}} min"
@@ -469,5 +470,10 @@
     "amount": "Montant",
     "merchant": "Commerçant",
     "actionName": "Noter un paiement"
+  },
+  "income": {
+    "title": "Qu’est-ce qui est entré ?",
+    "subtitle": "Salaire, remboursement ou une vente. Ajoute ce que tu as reçu.",
+    "save": "Enregistrer le revenu"
   }
 }

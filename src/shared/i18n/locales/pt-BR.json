@@ -318,6 +318,7 @@
     "actionEntry": "Registro",
     "actionPhoto": "Foto",
     "actionVoice": "Voz",
+    "actionIncome": "Receita",
     "spentOn": "em {{category}}",
     "share": "{{percent}} % do total",
     "leftIn": "Resta em {{month}}",
@@ -377,7 +378,7 @@
     "heroMissedTitle": "Você não estimou esta semana",
     "allMonths": "Todos os meses",
     "notOpenYet": "Ainda não abriu",
-    "opensIn": "Abre em {{time}}",
+    "opensIn": "Em {{time}}",
     "nextIn": "O próximo em {{time}}",
     "countdownDays": "{{days}} d {{hours}} h",
     "countdownHours": "{{hours}} h {{minutes}} min"
@@ -469,5 +470,10 @@
     "amount": "Valor",
     "merchant": "Estabelecimento",
     "actionName": "Registrar pagamento"
+  },
+  "income": {
+    "title": "O que entrou?",
+    "subtitle": "Salário, um reembolso ou algo que você vendeu. Adicione o que recebeu.",
+    "save": "Salvar receita"
   }
 }

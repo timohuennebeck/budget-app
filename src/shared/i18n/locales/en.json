@@ -310,6 +310,7 @@
     "actionEntry": "Entry",
     "actionPhoto": "Photo",
     "actionVoice": "Voice",
+    "actionIncome": "Income",
     "spentOn": "on {{category}}",
     "share": "{{percent}} % of all",
     "leftIn": "Left in {{month}}",
@@ -368,7 +369,7 @@
     "heroMissedTitle": "You didn’t guess this week",
     "allMonths": "All months",
     "notOpenYet": "Not open yet",
-    "opensIn": "Opens in {{time}}",
+    "opensIn": "In {{time}}",
     "nextIn": "Next in {{time}}",
     "countdownDays": "{{days}}d {{hours}}h",
     "countdownHours": "{{hours}}h {{minutes}}m"
@@ -459,5 +460,10 @@
     "amount": "Amount",
     "merchant": "Merchant",
     "actionName": "Log payment"
+  },
+  "income": {
+    "title": "What came in?",
+    "subtitle": "Salary, a refund or something you sold. Add what you received.",
+    "save": "Save income"
   }
 }

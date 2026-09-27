@@ -310,6 +310,7 @@
     "actionEntry": "Eintrag",
     "actionPhoto": "Foto",
     "actionVoice": "Sprache",
+    "actionIncome": "Einnahme",
     "spentOn": "für {{category}}",
     "share": "{{percent}} % von allem",
     "leftIn": "Übrig im {{month}}",
@@ -368,7 +369,7 @@
     "heroMissedTitle": "Diese Woche hast du nicht geschätzt",
     "allMonths": "Alle Monate",
     "notOpenYet": "Noch nicht offen",
-    "opensIn": "Öffnet in {{time}}",
+    "opensIn": "In {{time}}",
     "nextIn": "Nächster in {{time}}",
     "countdownDays": "{{days}} T {{hours}} Std",
     "countdownHours": "{{hours}} Std {{minutes}} Min"
@@ -459,5 +460,10 @@
     "amount": "Betrag",
     "merchant": "Händler",
     "actionName": "Zahlung erfassen"
+  },
+  "income": {
+    "title": "Was kam rein?",
+    "subtitle": "Gehalt, Erstattung oder ein Verkauf. Trag ein, was du bekommen hast.",
+    "save": "Einnahme speichern"
   }
 }

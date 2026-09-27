@@ -318,6 +318,7 @@
     "actionEntry": "Gasto",
     "actionPhoto": "Foto",
     "actionVoice": "Voz",
+    "actionIncome": "Ingreso",
     "spentOn": "en {{category}}",
     "share": "{{percent}} % del total",
     "leftIn": "Te queda en {{month}}",
@@ -377,7 +378,7 @@
     "heroMissedTitle": "Esta semana no estimaste",
     "allMonths": "Todos los meses",
     "notOpenYet": "Aún no abierto",
-    "opensIn": "Se abre en {{time}}",
+    "opensIn": "En {{time}}",
     "nextIn": "El próximo en {{time}}",
     "countdownDays": "{{days}} d {{hours}} h",
     "countdownHours": "{{hours}} h {{minutes}} min"
@@ -469,5 +470,10 @@
     "amount": "Importe",
     "merchant": "Comercio",
     "actionName": "Anotar pago"
+  },
+  "income": {
+    "title": "¿Qué has recibido?",
+    "subtitle": "Nómina, un reembolso o algo que vendiste. Añade lo que te ha entrado.",
+    "save": "Guardar ingreso"
   }
 }

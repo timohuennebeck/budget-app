@@ -1,4 +1,5 @@
 import { router, useNavigation } from 'expo-router';
+import { useEffect } from 'react';
 import { View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +14,7 @@ import { useRatingPrompt } from '@/features/rating/hooks/use-rating-prompt';
 import { Screen } from '@/shared/components/screen';
 import { StatusHero } from '@/shared/components/status-hero';
 import { formatMoney, roundMoney } from '@/shared/lib/money';
+import { playSound } from '@/shared/lib/sounds';
 import { Button } from '@/shared/ui/button';
 import { Pip } from '@/shared/ui/pip';
 
@@ -58,7 +60,7 @@ export function SavedScreen({ mode }: { mode: CaptureMode }) {
         key: draft.id,
         ...entryVisual(draft.kind, category),
         title: draft.title,
-        subtitle: `${draft.kind === 'income' ? t('entries.income') : t('entries.noCategory')} · ${t('common.today')}`,
+        subtitle: `${category?.name ?? (draft.kind === 'income' ? t('entries.income') : t('entries.noCategory'))} · ${t('common.today')}`,
         amount: draft.amount,
         kind: draft.kind,
       });
@@ -86,6 +88,17 @@ export function SavedScreen({ mode }: { mode: CaptureMode }) {
   const income = drafts
     .filter((draft) => draft.kind === 'income')
     .reduce((sum, draft) => sum + draft.amount, 0);
+  const spent = drafts
+    .filter((draft) => draft.kind === 'expense')
+    .reduce((sum, draft) => sum + draft.amount, 0);
+
+  // Money in sounds right, money out sounds wrong; once, when the screen opens.
+  const gained = income > spent;
+  const hasDrafts = drafts.length > 0;
+  useEffect(() => {
+    if (hasDrafts) playSound(gained ? 'correct' : 'incorrect');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const next = () => {
     if (mode === 'onboarding') return router.replace('/budget-type');

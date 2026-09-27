@@ -9,22 +9,27 @@ import { Icon, type IconName } from '@/shared/ui/icon';
 import { Pressable } from '@/shared/ui/pressable';
 import { Text } from '@/shared/ui/text';
 
-type CapturePath = '/capture' | '/capture/camera' | '/capture/voice';
+type CapturePath = '/capture' | '/capture/camera' | '/capture/voice' | '/capture/income';
 
-type ActionLabel = 'overview.actionEntry' | 'overview.actionPhoto' | 'overview.actionVoice';
+type ActionLabel =
+  | 'overview.actionEntry'
+  | 'overview.actionPhoto'
+  | 'overview.actionVoice'
+  | 'overview.actionIncome';
 
 const ACTIONS: { path: CapturePath; icon: IconName; label: ActionLabel; primary?: boolean }[] = [
   { path: '/capture', icon: 'plus', label: 'overview.actionEntry', primary: true },
   { path: '/capture/camera', icon: 'camera', label: 'overview.actionPhoto' },
   { path: '/capture/voice', icon: 'microphone', label: 'overview.actionVoice' },
+  { path: '/capture/income', icon: 'coins', label: 'overview.actionIncome' },
 ];
 
-/** Eintrag, Foto and Sprache under the headline number on Start (2l-b). */
+/** Eintrag, Foto, Sprache and Einnahme under the headline number on Start (2l-b). */
 export function CaptureActions() {
   const { t } = useTranslation();
   const allowance = useEntriesAllowance();
   return (
-    <View className="mt-7 flex-row justify-center gap-11">
+    <View className="mt-7 flex-row">
       {ACTIONS.map(({ path, icon, label, primary }) => (
         <Pressable
           key={path}
@@ -32,7 +37,7 @@ export function CaptureActions() {
           accessibilityRole="button"
           accessibilityLabel={t(label)}
           onPress={() => router.push(allowance.canAdd() ? path : '/limit')}
-          className="items-center gap-2">
+          className="flex-1 items-center gap-2">
           <View
             className={cn(
               'size-[58px] items-center justify-center rounded-full',

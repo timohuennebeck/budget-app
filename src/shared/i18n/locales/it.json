@@ -318,6 +318,7 @@
     "actionEntry": "Spesa",
     "actionPhoto": "Foto",
     "actionVoice": "Voce",
+    "actionIncome": "Entrata",
     "spentOn": "per {{category}}",
     "share": "{{percent}} % del totale",
     "leftIn": "Rimasto a {{month}}",
@@ -377,7 +378,7 @@
     "heroMissedTitle": "Questa settimana non hai stimato",
     "allMonths": "Tutti i mesi",
     "notOpenYet": "Non ancora aperto",
-    "opensIn": "Si apre tra {{time}}",
+    "opensIn": "Tra {{time}}",
     "nextIn": "Il prossimo tra {{time}}",
     "countdownDays": "{{days}} g {{hours}} h",
     "countdownHours": "{{hours}} h {{minutes}} min"
@@ -469,5 +470,10 @@
     "amount": "Importo",
     "merchant": "Esercente",
     "actionName": "Registra pagamento"
+  },
+  "income": {
+    "title": "Cosa è entrato?",
+    "subtitle": "Stipendio, un rimborso o qualcosa che hai venduto. Aggiungi quello che hai ricevuto.",
+    "save": "Salva entrata"
   }
 }
