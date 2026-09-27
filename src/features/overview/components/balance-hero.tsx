@@ -7,7 +7,7 @@ import { Text } from '@/shared/ui/text';
 import { FloatingDecor } from './floating-decor';
 
 const star = require('@/assets/images/decor/star.png');
-const paper = require('@/assets/images/decor/paper.png');
+const coin = require('@/assets/images/decor/coin.png');
 
 interface BalanceHeroProps {
   label: string;
@@ -27,7 +27,7 @@ export function BalanceHero({ label, amount, currency, over }: BalanceHeroProps)
         </Text>
         <MoneyText amount={amount} currency={currency} danger={over} className="mt-3.5" />
       </View>
-      {/* A star and a receipt drift around Pip, out of step with each other. */}
+      {/* A star and a coin drift around Pip, out of step with each other. */}
       <View>
         <Pip pose={over ? 'dizzy' : 'cheers-arms'} size={112} />
         <FloatingDecor
@@ -40,7 +40,7 @@ export function BalanceHero({ label, amount, currency, over }: BalanceHeroProps)
           position={{ top: -10, left: -14 }}
         />
         <FloatingDecor
-          source={paper}
+          source={coin}
           size={30}
           tilt={-10}
           lift={7}

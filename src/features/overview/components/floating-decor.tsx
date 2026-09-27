@@ -22,7 +22,7 @@ interface FloatingDecorProps {
   position: { top?: number; bottom?: number; left?: number; right?: number };
 }
 
-/** A small sticker (star, receipt) that drifts and sways beside Pip on Start. */
+/** A small sticker (star, coin) that drifts and sways beside Pip on Start. */
 export function FloatingDecor({
   source,
   size,
