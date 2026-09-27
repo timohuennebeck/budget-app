@@ -97,7 +97,9 @@ export function CategoryBudgetScreen({ id }: { id: string }) {
         />
         {scrub !== null ? (
           <Text size={15} className="mt-2.5 text-muted">
-            {t('budgets.onDay', { amount: money(dayAmount(scrub)) })}
+            {dayAmount(scrub) > 0
+              ? t('budgets.onDay', { amount: money(dayAmount(scrub)) })
+              : t('budgets.noSpendOnDay')}
           </Text>
         ) : (
           <Text size={15} className="mt-2.5 text-muted">
