@@ -328,7 +328,18 @@
     "noLimit": "No limit",
     "over": "over · of {{limit}}",
     "peerAverage": "Avg. {{amount}} for people your age",
-    "showAll": "Show {{count}} more categories"
+    "showAll": "Show {{count}} more categories",
+    "inMonth": "In {{month}}",
+    "ofLimit": "of {{limit}}",
+    "daysLeft_one": "{{count}} day left",
+    "daysLeft_other": "{{count}} days left",
+    "lastDay": "last day",
+    "trendUnder": "You're well under plan. At this pace you'll end at <b>{{amount}}</b>.",
+    "trendOnTrack": "You're right on plan. At this pace you'll end at <b>{{amount}}</b>.",
+    "trendAhead": "You're slightly over plan. At this pace you'll end at <b>{{amount}}</b>.",
+    "trendOver": "You're already <b>{{amount}}</b> over your limit.",
+    "trendNoLimit": "At this pace you'll end this month at <b>{{amount}}</b>.",
+    "noEntriesYet": "No entries this month yet."
   },
   "checkIn": {
     "accuracy": "{{percent}}% accurate",

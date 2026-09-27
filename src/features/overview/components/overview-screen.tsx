@@ -158,6 +158,7 @@ export function OverviewScreen() {
             <BudgetCarousel
               cards={summary.cards}
               currency={currency}
+              onOpen={(id) => router.push({ pathname: '/budget/[id]', params: { id } })}
               onEdit={(id) => {
                 setEditingId(id);
                 sheet.present();

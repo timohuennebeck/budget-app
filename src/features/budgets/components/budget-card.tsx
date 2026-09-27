@@ -16,6 +16,9 @@ interface BudgetCardProps {
   currency: string;
   /** Set by the grid: half the row */
   width: number;
+  /** Card tap: the category's month with the trend chart */
+  onOpen: () => void;
+  /** Pencil tap: the limit sheet */
   onEdit: () => void;
 }
 
@@ -28,6 +31,7 @@ export function BudgetCard({
   remaining,
   currency,
   width,
+  onOpen,
   onEdit,
 }: BudgetCardProps) {
   const { t } = useTranslation();
@@ -35,17 +39,21 @@ export function BudgetCard({
   const money = (value: number) => formatMoney(value, { currency, compact: true });
 
   return (
-    // The whole card opens the limit sheet, like the tiles in onboarding.
+    // The card opens the category's month; the pencil edits the limit.
     <Pressable
-      onPress={onEdit}
-      accessibilityLabel={t('budgets.edit', { name })}
+      onPress={onOpen}
+      accessibilityLabel={name}
       className="gap-3.5 rounded-3xl border border-line bg-surface p-3.5"
       style={{ width }}>
       <View className="flex-row items-start justify-between">
         <CategoryAvatar icon={icon} hue={hue} />
-        <View className="size-9 items-center justify-center rounded-full bg-field">
+        <Pressable
+          onPress={onEdit}
+          accessibilityLabel={t('budgets.edit', { name })}
+          hitSlop={8}
+          className="size-9 items-center justify-center rounded-full bg-field">
           <Icon name="pencil-simple" size={16} />
-        </View>
+        </Pressable>
       </View>
       <View className="gap-0.5">
         <Text size={15.5} weight="semibold" tracking={-0.01} numberOfLines={1}>

@@ -13,11 +13,12 @@ const PER_PAGE = 4;
 interface BudgetCarouselProps {
   cards: BudgetCardData[];
   currency: string;
+  onOpen: (categoryId: string) => void;
   onEdit: (categoryId: string) => void;
 }
 
 /** Budget cards in pages of 2×2 that snap one page at a time, with dots (Start). */
-export function BudgetCarousel({ cards, currency, onEdit }: BudgetCarouselProps) {
+export function BudgetCarousel({ cards, currency, onOpen, onEdit }: BudgetCarouselProps) {
   const { width } = useWindowDimensions();
   const [page, setPage] = useState(0);
   const cardWidth = (width - EDGE * 2 - GAP) / 2;
@@ -51,6 +52,7 @@ export function BudgetCarousel({ cards, currency, onEdit }: BudgetCarouselProps)
                 remaining={card.remaining}
                 currency={currency}
                 width={cardWidth}
+                onOpen={() => onOpen(card.category.id)}
                 onEdit={() => onEdit(card.category.id)}
               />
             ))}

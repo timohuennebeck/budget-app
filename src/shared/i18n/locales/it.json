@@ -336,7 +336,18 @@
     "noLimit": "Nessun limite",
     "over": "oltre · su {{limit}}",
     "peerAverage": "Ø {{amount}} tra i tuoi coetanei",
-    "showAll": "Mostra altre {{count}} categorie"
+    "showAll": "Mostra altre {{count}} categorie",
+    "inMonth": "A {{month}}",
+    "ofLimit": "su {{limit}}",
+    "daysLeft_one": "ancora {{count}} giorno",
+    "daysLeft_other": "ancora {{count}} giorni",
+    "lastDay": "ultimo giorno",
+    "trendUnder": "Sei ben sotto il piano. A questo ritmo finirai a <b>{{amount}}</b>.",
+    "trendOnTrack": "Sei esattamente in linea. A questo ritmo finirai a <b>{{amount}}</b>.",
+    "trendAhead": "Sei leggermente sopra il piano. A questo ritmo finirai a <b>{{amount}}</b>.",
+    "trendOver": "Hai già superato il limite di <b>{{amount}}</b>.",
+    "trendNoLimit": "A questo ritmo finirai il mese a <b>{{amount}}</b>.",
+    "noEntriesYet": "Ancora nessuna voce questo mese."
   },
   "checkIn": {
     "accuracy": "Preciso al {{percent}}%",
